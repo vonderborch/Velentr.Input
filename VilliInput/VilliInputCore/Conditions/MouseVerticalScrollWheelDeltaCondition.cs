@@ -8,91 +8,28 @@ using VilliInput.MouseInput;
 
 namespace VilliInput.Conditions
 {
-    public class MouseVerticalScrollWheelDeltaCondition : MouseSensorCondition
+    public class MouseVerticalScrollWheelDeltaCondition : SensorCondition
     {
+        public MouseSensor Sensor { get; private set; }
+
         public Rectangle? Boundaries { get; private set; }
 
         public bool UseRelativeCoordinates { get; private set; }
 
-        public uint SecondsForPressed { get; private set; }
-
-        public uint SecondsForReleased { get; private set; }
-
-        public MouseVerticalScrollWheelDeltaCondition(bool windowMustBeActive = true, Rectangle? boundaries = null, bool useRelativeCoordinates = false, uint secondsForPressed = 0, uint secondsForReleased = 0, InputValueLogic? inputValueComparator = null) : base(MouseSensor.VerticalScrollWheel, windowMustBeActive, inputValueComparator)
+        public MouseVerticalScrollWheelDeltaCondition(bool windowMustBeActive = true, Rectangle? boundaries = null, bool useRelativeCoordinates = false, uint secondsForPressed = 0, uint secondsForReleased = 0, InputValueLogic? inputValueComparator = null) : base(secondsForPressed, secondsForReleased, windowMustBeActive, inputValueComparator)
         {
+            Sensor = MouseSensor.VerticalScrollWheel;
+
             Boundaries = boundaries;
             UseRelativeCoordinates = useRelativeCoordinates;
-
-            SecondsForPressed = secondsForPressed;
-            SecondsForReleased = secondsForReleased;
         }
 
-        private bool ActionValid(bool ignoredConsumed, uint actionTime)
+        protected override bool ActionValid(bool ignoredConsumed, uint actionTime)
         {
             return (!WindowMustBeActive || (Villi.IsWindowActive && MouseHelpers.IsMouseInWindow))
                    && (ignoredConsumed || Villi.System.Mouse.IsSensorConsumed(Sensor))
                    && (actionTime == 0 || Helpers.ElapsedSeconds(CurrentStateStart, Villi.CurrentTime) >= actionTime)
                    && (Boundaries == null || MouseHelpers.PointerInBoundaries((Rectangle)Boundaries, UseRelativeCoordinates, Villi.Window.ClientBounds));
-        }
-
-        public override bool Pressed(bool consumable = true, bool ignoredConsumed = false)
-        {
-            if (MouseHelpers.ScrolledVertically && CurrentState != ConditionState.Pressed)
-            {
-                UpdateState(ConditionState.Pressed);
-            }
-            else if (!MouseHelpers.ScrolledVertically && CurrentState == ConditionState.Pressed)
-            {
-                UpdateState(ConditionState.Released);
-            }
-
-            if (ActionValid(ignoredConsumed, SecondsForPressed) && MouseHelpers.ScrolledVertically)
-            {
-                InternalPressed(consumable);
-                return true;
-            }
-
-            return false;
-        }
-
-        public override bool PressStarted(bool consumable = true, bool ignoredConsumed = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool Released(bool consumable = true, bool ignoredConsumed = false)
-        {
-            if (!MouseHelpers.ScrolledVertically && CurrentState != ConditionState.Released)
-            {
-                UpdateState(ConditionState.Released);
-            }
-            else if (MouseHelpers.ScrolledVertically && CurrentState == ConditionState.Released)
-            {
-                UpdateState(ConditionState.Pressed);
-            }
-
-            if (ActionValid(ignoredConsumed, SecondsForPressed) && !MouseHelpers.ScrolledVertically)
-            {
-                InternalReleased(consumable);
-                return true;
-            }
-
-            return false;
-        }
-
-        public override bool ReleaseStarted(bool consumable = true, bool ignoredConsumed = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool ValueValid()
-        {
-            if (ValidValueComparator == null)
-            {
-                throw new NullReferenceException("ValidValueComparator cannot be null!");
-            }
-
-            return Helpers.ValidValueComparator(GetInputValue(), (InputValueLogic)ValidValueComparator);
         }
 
         public override InputValue GetInputValue()
@@ -120,6 +57,21 @@ namespace VilliInput.Conditions
                 ScrollValue = MouseHelpers.CurrentVerticalScrollWheelValue,
                 WindowMustBeActive = this.WindowMustBeActive,
             };
+        }
+
+        public override bool IsPressed()
+        {
+            return MouseHelpers.ScrolledVertically;
+        }
+
+        public override bool IsReleased()
+        {
+            return !MouseHelpers.ScrolledVertically;
+        }
+
+        public override void Consume()
+        {
+            Villi.System.Mouse.ConsumeSensor(Sensor);
         }
     }
 }

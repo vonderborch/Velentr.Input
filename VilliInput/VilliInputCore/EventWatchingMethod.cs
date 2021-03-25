@@ -10,5 +10,6 @@ namespace VilliInput
         PressStarted,
         Released,
         ReleaseStarted,
+        ValueValid,
     }
 }

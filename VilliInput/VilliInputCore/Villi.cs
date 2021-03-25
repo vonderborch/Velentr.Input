@@ -106,6 +106,11 @@ namespace VilliInput
                         {
                             condition.Item1.ReleaseStarted(condition.Item2, condition.Item3);
                         }
+
+                        if (eventWatching.Key.HasFlag(EventWatchingMethod.ValueValid))
+                        {
+                            condition.Item1.ValueValid();
+                        }
                     }
                 }
             }
