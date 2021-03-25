@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
-namespace VilliInput.MouseInput
+namespace VilliInput.TouchInput
 {
 
     public class TouchService : InputService

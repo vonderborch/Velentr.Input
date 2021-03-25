@@ -54,6 +54,11 @@ namespace VilliInput
                 {
                     return ValidValueComparatorHelper((Vector2)value.ValueVector2, (Vector2)comparator.ConditionalValue.ValueVector2, comparator.Comparator);
                 }
+
+                if (value.ValueFloat != null)
+                {
+                    return ValidValueComparatorHelper((float)value.ValueFloat, (float)comparator.ConditionalValue.ValueFloat, comparator.Comparator);
+                }
             }
             catch
             {
@@ -85,6 +90,27 @@ namespace VilliInput
         }
 
         private static bool ValidValueComparatorHelper(int value, int comparedValue, Comparison comparator)
+        {
+            switch (comparator)
+            {
+                case Comparison.GreaterThan:
+                    return value > comparedValue;
+                case Comparison.GreaterThenOrEqual:
+                    return value >= comparedValue;
+                case Comparison.Equal:
+                    return value == comparedValue;
+                case Comparison.NotEquals:
+                    return value != comparedValue;
+                case Comparison.LessThan:
+                    return value < comparedValue;
+                case Comparison.LessThanOrEqual:
+                    return value <= comparedValue;
+            }
+
+            return false;
+        }
+
+        private static bool ValidValueComparatorHelper(float value, float comparedValue, Comparison comparator)
         {
             switch (comparator)
             {

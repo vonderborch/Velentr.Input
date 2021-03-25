@@ -120,10 +120,5 @@ namespace VilliInput.Conditions.Internal
         {
             throw new NotImplementedException();
         }
-
-        internal override VilliEventArguments GetArguments()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

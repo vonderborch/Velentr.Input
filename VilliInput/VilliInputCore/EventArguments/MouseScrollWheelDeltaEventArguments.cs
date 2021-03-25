@@ -6,7 +6,7 @@ using VilliInput.MouseInput;
 
 namespace VilliInput.EventArguments
 {
-    public class MouseHorizontalScrollWheelDeltaEventArguments : VilliEventArguments
+    public class MouseScrollWheelDeltaEventArguments : VilliEventArguments
     {
         public MouseSensor Sensor { get; internal set; }
 

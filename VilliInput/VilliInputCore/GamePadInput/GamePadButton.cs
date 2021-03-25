@@ -17,9 +17,9 @@ namespace VilliInput.GamePadInput
         LeftStick,
         RightStick,
         BigButton,
-        Down,
-        Left,
-        Right,
-        Up,
+        DPadDown,
+        DPadLeft,
+        DPadRight,
+        DPadUp,
     }
 }

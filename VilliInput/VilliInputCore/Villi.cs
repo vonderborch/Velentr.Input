@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using VilliInput.Conditions;
+using VilliInput.GamePadInput;
+using VilliInput.KeyboardInput;
 using VilliInput.MouseInput;
 
 namespace VilliInput
@@ -11,6 +13,8 @@ namespace VilliInput
         private MouseService mouseService;
 
         private KeyboardService keyboardService;
+
+        private GamePadService gamePadService;
 
         private static Rectangle window;
 
@@ -55,6 +59,10 @@ namespace VilliInput
 
         public KeyboardService Keyboard => keyboardService;
 
+        public GamePadService GamePad => gamePadService;
+
+        public Constants Settings => Constants.Instance;
+
         public void Setup(Game game, bool enableMouseService = true, bool enableKeyboardService = true, bool enableGamePadService = true, bool enableTouchService = true)
         {
             Game = game;
@@ -68,6 +76,9 @@ namespace VilliInput
 
             keyboardService = enableKeyboardService ? new KeyboardService() : null;
             keyboardService?.Setup();
+
+            gamePadService = enableGamePadService ? new GamePadService() : null;
+            gamePadService?.Setup();
         }
 
         public void Update(GameTime gameTime)
@@ -79,6 +90,7 @@ namespace VilliInput
             // update input services if they exist and we want to update them
             Mouse?.Update();
             Keyboard?.Update();
+            GamePad?.Update();
 
             // Update any InputConditions we've been told to monitor to allow for Event-Driven Behavior
             if (eventDrivenConditions.Count > 0)

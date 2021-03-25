@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using VilliInput.KeyboardInput;
 
-namespace VilliInput.MouseInput
+namespace VilliInput.KeyboardInput
 {
 
     public class KeyboardService : InputService

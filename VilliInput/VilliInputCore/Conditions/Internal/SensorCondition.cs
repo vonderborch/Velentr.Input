@@ -10,7 +10,7 @@ namespace VilliInput.Conditions.Internal
 
         public uint SecondsForReleased { get; private set; }
 
-        protected SensorCondition(bool windowMustBeActive, uint secondsForPressed = 0, uint secondsForReleased = 0, InputValueLogic? inputValueComparator = null) : base(InputSource.Mouse, windowMustBeActive, true, false, true, false, true, inputValueComparator)
+        protected SensorCondition(InputSource source, bool windowMustBeActive, uint secondsForPressed = 0, uint secondsForReleased = 0, InputValueLogic? inputValueComparator = null) : base(source, windowMustBeActive, true, false, true, false, true, inputValueComparator)
         {
             SecondsForPressed = secondsForPressed;
             SecondsForReleased = secondsForReleased;
