@@ -13,9 +13,9 @@ namespace VilliInput.MouseInput
 
         private static readonly List<MouseButton> buttons = new List<MouseButton>(Enum.GetValues(typeof(MouseButton)).Cast<MouseButton>().ToList());
 
-        protected static Dictionary<MouseButton, ulong> ButtonConsumed = new Dictionary<MouseButton, ulong>(Enum.GetNames(typeof(MouseButton)).Length);
+        public static Dictionary<MouseButton, ulong> ButtonConsumed = new Dictionary<MouseButton, ulong>(Enum.GetNames(typeof(MouseButton)).Length);
 
-        protected static Dictionary<MouseSensor, ulong> SensorConsumed = new Dictionary<MouseSensor, ulong>(Enum.GetNames(typeof(MouseSensor)).Length);
+        public static Dictionary<MouseSensor, ulong> SensorConsumed = new Dictionary<MouseSensor, ulong>(Enum.GetNames(typeof(MouseSensor)).Length);
 
         public static MouseState PreviousState { get; private set; }
 

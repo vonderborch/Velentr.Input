@@ -10,6 +10,8 @@ namespace VilliInput
     {
         private MouseService mouseService;
 
+        private KeyboardService keyboardService;
+
         private static Rectangle window;
 
         private static Point centerCoordinates;
@@ -51,6 +53,8 @@ namespace VilliInput
 
         public MouseService Mouse => mouseService;
 
+        public KeyboardService Keyboard => keyboardService;
+
         public void Setup(Game game, bool enableMouseService = true, bool enableKeyboardService = true, bool enableGamePadService = true, bool enableTouchService = true)
         {
             Game = game;
@@ -60,6 +64,10 @@ namespace VilliInput
         public void SetupInputSources(bool enableMouseService = true, bool enableKeyboardService = true, bool enableGamePadService = true, bool enableTouchService = true)
         {
             mouseService = enableMouseService ? new MouseService() : null;
+            mouseService?.Setup();
+
+            keyboardService = enableKeyboardService ? new KeyboardService() : null;
+            keyboardService?.Setup();
         }
 
         public void Update(GameTime gameTime)
@@ -70,6 +78,7 @@ namespace VilliInput
 
             // update input services if they exist and we want to update them
             Mouse?.Update();
+            Keyboard?.Update();
 
             // Update any InputConditions we've been told to monitor to allow for Event-Driven Behavior
             if (eventDrivenConditions.Count > 0)

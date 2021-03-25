@@ -18,7 +18,7 @@ namespace VilliInput.Conditions
 
         public uint SecondsForReleased { get; private set; }
 
-        public MouseVerticalScrollWheelDeltaCondition(bool windowMustBeActive = true, Rectangle? boundaries = null, bool useRelativeCoordinates = false, uint secondsForPressed = 0, uint secondsForReleased = 0) : base(MouseSensor.VerticalScrollWheel, windowMustBeActive)
+        public MouseVerticalScrollWheelDeltaCondition(bool windowMustBeActive = true, Rectangle? boundaries = null, bool useRelativeCoordinates = false, uint secondsForPressed = 0, uint secondsForReleased = 0, InputValueLogic? inputValueComparator = null) : base(MouseSensor.VerticalScrollWheel, windowMustBeActive, inputValueComparator)
         {
             Boundaries = boundaries;
             UseRelativeCoordinates = useRelativeCoordinates;
@@ -83,6 +83,21 @@ namespace VilliInput.Conditions
         public override bool ReleaseStarted(bool consumable = true, bool ignoredConsumed = false)
         {
             throw new NotImplementedException();
+        }
+
+        public override bool ValueValid()
+        {
+            if (ValidValueComparator == null)
+            {
+                throw new NullReferenceException("ValidValueComparator cannot be null!");
+            }
+
+            return Helpers.ValidValueComparator(GetInputValue(), (InputValueLogic)ValidValueComparator);
+        }
+
+        public override InputValue GetInputValue()
+        {
+            return new InputValue(null, MouseHelpers.VerticalScrollDelta);
         }
 
         internal override VilliEventArguments GetArguments()

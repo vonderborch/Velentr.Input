@@ -11,7 +11,7 @@ namespace VilliInput.Conditions
 
         private VilliEventArguments arguments;
 
-        public AnyCondition(bool windowMustBeActive = true, params InputCondition[] conditions) : base(InputSource.AnyConditional, windowMustBeActive)
+        public AnyCondition(bool windowMustBeActive = true, params InputCondition[] conditions) : base(InputSource.AnyConditional, windowMustBeActive, true, true, true, true, true)
         {
             this.Conditions = conditions;
         }
@@ -20,7 +20,14 @@ namespace VilliInput.Conditions
         {
             for (var i = 0; i < Conditions.Length; i++)
             {
-                Conditions[i].Consume();
+                try
+                {
+                    Conditions[i].Consume();
+                }
+                catch
+                {
+                    // ignored
+                }
             }
         }
 
@@ -29,11 +36,18 @@ namespace VilliInput.Conditions
             arguments = null;
             for (var i = 0; i < Conditions.Length; i++)
             {
-                if (Conditions[i].Pressed(false, ignoredConsumed))
+                try
                 {
-                    arguments = Conditions[i].GetArguments();
-                    InternalPressed(consumable);
-                    return true;
+                    if (Conditions[i].Pressed(false, ignoredConsumed))
+                    {
+                        arguments = Conditions[i].GetArguments();
+                        InternalPressed(consumable);
+                        return true;
+                    }
+                }
+                catch
+                {
+                    // ignored
                 }
             }
 
@@ -45,11 +59,18 @@ namespace VilliInput.Conditions
             arguments = null;
             for (var i = 0; i < Conditions.Length; i++)
             {
-                if (Conditions[i].PressStarted(false, ignoredConsumed))
+                try
                 {
-                    arguments = Conditions[i].GetArguments();
-                    InternalPressStarted(consumable);
-                    return true;
+                    if (Conditions[i].PressStarted(false, ignoredConsumed))
+                    {
+                        arguments = Conditions[i].GetArguments();
+                        InternalPressStarted(consumable);
+                        return true;
+                    }
+                }
+                catch
+                {
+                    // ignored
                 }
             }
 
@@ -61,11 +82,18 @@ namespace VilliInput.Conditions
             arguments = null;
             for (var i = 0; i < Conditions.Length; i++)
             {
-                if (Conditions[i].Released(false, ignoredConsumed))
+                try
                 {
-                    arguments = Conditions[i].GetArguments();
-                    InternalReleased(consumable);
-                    return true;
+                    if (Conditions[i].Released(false, ignoredConsumed))
+                    {
+                        arguments = Conditions[i].GetArguments();
+                        InternalReleased(consumable);
+                        return true;
+                    }
+                }
+                catch
+                {
+                    // ignored
                 }
             }
 
@@ -77,15 +105,50 @@ namespace VilliInput.Conditions
             arguments = null;
             for (var i = 0; i < Conditions.Length; i++)
             {
-                if (Conditions[i].ReleaseStarted(false, ignoredConsumed))
+                try
                 {
-                    arguments = Conditions[i].GetArguments();
-                    InternalReleaseStarted(consumable);
-                    return true;
+                    if (Conditions[i].ReleaseStarted(false, ignoredConsumed))
+                    {
+                        arguments = Conditions[i].GetArguments();
+                        InternalReleaseStarted(consumable);
+                        return true;
+                    }
+                }
+                catch
+                {
+                    // ignored
                 }
             }
 
             return false;
+        }
+
+        public override bool ValueValid()
+        {
+            arguments = null;
+            for (var i = 0; i < Conditions.Length; i++)
+            {
+                try
+                {
+                    if (Conditions[i].ValueValid())
+                    {
+                        arguments = Conditions[i].GetArguments();
+                        InternalValueValid();
+                        return true;
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+
+            return false;
+        }
+
+        public override InputValue GetInputValue()
+        {
+            throw new NotImplementedException();
         }
 
         internal override VilliEventArguments GetArguments()

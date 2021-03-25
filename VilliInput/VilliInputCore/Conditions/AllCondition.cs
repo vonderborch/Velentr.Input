@@ -14,7 +14,7 @@ namespace VilliInput.Conditions
 
         private List<VilliEventArguments> arguments;
 
-        public AllCondition(bool windowMustBeActive = true, bool orderMatters = false, params InputCondition[] conditions) : base(InputSource.AllConditional, windowMustBeActive)
+        public AllCondition(bool windowMustBeActive = true, bool orderMatters = false, params InputCondition[] conditions) : base(InputSource.AllConditional, windowMustBeActive, true, true, true, true, true)
         {
             Conditions = conditions;
             OrderMatters = orderMatters;
@@ -142,6 +142,40 @@ namespace VilliInput.Conditions
 
             InternalReleaseStarted(consumable);
             return true;
+        }
+
+        public override bool ValueValid()
+        {
+            GameTime time = null;
+            arguments = new List<VilliEventArguments>(Conditions.Length);
+
+            for (var i = 0; i < Conditions.Length; i++)
+            {
+                if (!Conditions[i].ValueValid())
+                {
+                    return false;
+                }
+                else
+                {
+                    if (time == null || time.TotalGameTime <= Conditions[i].CurrentStateStart.TotalGameTime)
+                    {
+                        time = Conditions[i].CurrentStateStart;
+                        arguments.Add(Conditions[i].GetArguments());
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            InternalValueValid();
+            return true;
+        }
+
+        public override InputValue GetInputValue()
+        {
+            throw new NotImplementedException();
         }
 
         internal override VilliEventArguments GetArguments()

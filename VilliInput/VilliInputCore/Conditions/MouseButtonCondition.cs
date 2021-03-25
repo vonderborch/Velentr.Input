@@ -1,10 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
+using VilliInput.Conditions.Internal;
 using VilliInput.EventArguments;
 using VilliInput.MouseInput;
 
 namespace VilliInput.Conditions
 {
-    public class MouseButtonCondition : InputCondition
+    public class MouseButtonCondition : ButtonCondition
     {
         public MouseButton Button { get; private set; }
 
@@ -12,18 +14,11 @@ namespace VilliInput.Conditions
 
         public bool UseRelativeCoordinates { get; private set; }
 
-        public uint SecondsForPressed { get; private set; }
-
-        public uint SecondsForReleased { get; private set; }
-
-        public MouseButtonCondition(MouseButton button, bool windowMustBeActive = true, Rectangle? boundaries = null, bool useRelativeCoordinates = false, uint secondsForPressed = 0, uint secondsForReleased = 0) : base(InputSource.Mouse, windowMustBeActive)
+        public MouseButtonCondition(MouseButton button, bool windowMustBeActive = true, Rectangle? boundaries = null, bool useRelativeCoordinates = false, uint secondsForPressed = 0, uint secondsForReleased = 0) : base(InputSource.Mouse, windowMustBeActive, secondsForPressed, secondsForReleased, true, true, true, true, false, null)
         {
             Button = button;
             Boundaries = boundaries;
             UseRelativeCoordinates = useRelativeCoordinates;
-
-            SecondsForPressed = secondsForPressed;
-            SecondsForReleased = secondsForReleased;
         }
 
         public override void Consume()
@@ -31,7 +26,7 @@ namespace VilliInput.Conditions
             Villi.System.Mouse.ConsumeButton(Button);
         }
 
-        private bool ActionValid(bool ignoredConsumed, uint actionTime)
+        protected override bool ActionValid(bool ignoredConsumed, uint actionTime)
         {
             return (!WindowMustBeActive || (Villi.IsWindowActive && MouseHelpers.IsMouseInWindow))
                    && (ignoredConsumed || Villi.System.Mouse.IsButtonConsumed(Button))
@@ -39,86 +34,24 @@ namespace VilliInput.Conditions
                    && (Boundaries == null || MouseHelpers.PointerInBoundaries((Rectangle)Boundaries, UseRelativeCoordinates, Villi.Window.ClientBounds));
         }
 
-        public override bool Pressed(bool consumable = true, bool ignoredConsumed = false)
+        protected override bool IsPressed()
         {
-            var isPressed = MouseHelpers.IsPressed(Button);
-            if (isPressed && CurrentState != ConditionState.Pressed)
-            {
-                UpdateState(ConditionState.Pressed);
-            }
-            else if (!isPressed && CurrentState == ConditionState.Pressed)
-            {
-                UpdateState(ConditionState.Released);
-            }
-
-            if (ActionValid(ignoredConsumed, SecondsForPressed) && isPressed)
-            {
-                InternalPressed(consumable);
-                return true;
-            }
-            return false;
+            return MouseHelpers.IsPressed(Button);
         }
 
-        public override bool PressStarted(bool consumable = true, bool ignoredConsumed = false)
+        protected override bool WasPressed()
         {
-            var isPressed = MouseHelpers.IsPressed(Button);
-            var wasPressed = MouseHelpers.WasPressed(Button);
-            if (isPressed && CurrentState != ConditionState.Pressed)
-            {
-                UpdateState(ConditionState.Pressed);
-            }
-            else if (!isPressed && CurrentState == ConditionState.Pressed)
-            {
-                UpdateState(ConditionState.Released);
-            }
-
-            if (ActionValid(ignoredConsumed, 0) && isPressed && !wasPressed)
-            {
-                InternalPressStarted(consumable);
-                return true;
-            }
-            return false;
+            return MouseHelpers.WasPressed(Button);
         }
 
-        public override bool Released(bool consumable = true, bool ignoredConsumed = false)
+        protected override bool IsReleased()
         {
-            var isReleased = MouseHelpers.IsReleased(Button);
-            if (isReleased && CurrentState != ConditionState.Pressed)
-            {
-                UpdateState(ConditionState.Released);
-            }
-            else if (!isReleased && CurrentState == ConditionState.Released)
-            {
-                UpdateState(ConditionState.Pressed);
-            }
-
-            if (ActionValid(ignoredConsumed, SecondsForPressed) && isReleased)
-            {
-                InternalReleased(consumable);
-                return true;
-            }
-            return false;
+            return MouseHelpers.IsReleased(Button);
         }
 
-        public override bool ReleaseStarted(bool consumable = true, bool ignoredConsumed = false)
+        protected override bool WasReleased()
         {
-            var isReleased = MouseHelpers.IsReleased(Button);
-            var wasReleased = MouseHelpers.WasReleased(Button);
-            if (isReleased && CurrentState != ConditionState.Pressed)
-            {
-                UpdateState(ConditionState.Released);
-            }
-            else if (!isReleased && CurrentState == ConditionState.Released)
-            {
-                UpdateState(ConditionState.Pressed);
-            }
-
-            if (ActionValid(ignoredConsumed, 0) && isReleased && !wasReleased)
-            {
-                InternalReleaseStarted(consumable);
-                return true;
-            }
-            return false;
+            return MouseHelpers.WasReleased(Button);
         }
 
         internal override VilliEventArguments GetArguments()

@@ -15,8 +15,10 @@ namespace VilliInput.Conditions
         public VilliEvent PressStartedEvent = new VilliEvent();
 
         public VilliEvent ReleasedEvent = new VilliEvent();
-                          
+
         public VilliEvent ReleaseStartedEvent = new VilliEvent();
+
+        public VilliEvent ValueValidEvent = new VilliEvent();
 
         public bool WindowMustBeActive { get; private set; }
 
@@ -24,10 +26,30 @@ namespace VilliInput.Conditions
 
         public GameTime CurrentStateStart { get; protected set; }
 
-        protected InputCondition(InputSource source, bool windowMustBeActive = true)
+        public bool ImplementedPressed { get; protected set; }
+
+        public bool ImplementedPressStarted { get; protected set; }
+
+        public bool ImplementedReleased { get; protected set; }
+
+        public bool ImplementedReleaseStarted { get; protected set; }
+
+        public bool ImplementedValidValue { get; protected set; }
+
+        public InputValueLogic? ValidValueComparator { get; protected set; }
+
+        protected InputCondition(InputSource source, bool windowMustBeActive = true, bool implementedPressed = false, bool implementedPressStarted = false, bool implementedReleased = false, bool implementedReleaseStarted = false, bool implementedValidValue = false, InputValueLogic? inputValueComparator = null)
         {
             Source = source;
             WindowMustBeActive = windowMustBeActive;
+
+            ImplementedPressed = implementedPressed;
+            ImplementedPressStarted = implementedPressStarted;
+            ImplementedReleased = implementedReleased;
+            ImplementedReleaseStarted = implementedReleaseStarted;
+            ImplementedValidValue = implementedValidValue;
+
+            ValidValueComparator = inputValueComparator;
         }
 
         public abstract bool Pressed(bool consumable = true, bool ignoredConsumed = false);
@@ -37,6 +59,10 @@ namespace VilliInput.Conditions
         public abstract bool Released(bool consumable = true, bool ignoredConsumed = false);
 
         public abstract bool ReleaseStarted(bool consumable = true, bool ignoredConsumed = false);
+
+        public abstract bool ValueValid();
+
+        public abstract InputValue GetInputValue();
 
         public abstract void Consume();
 
@@ -86,6 +112,11 @@ namespace VilliInput.Conditions
             }
 
             ReleaseStartedEvent.TriggerEvent(this, GetArguments());
+        }
+
+        protected void InternalValueValid()
+        {
+            ValueValidEvent.TriggerEvent(this, GetArguments());
         }
     }
 }

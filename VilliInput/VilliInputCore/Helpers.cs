@@ -25,5 +25,126 @@ namespace VilliInput
 
             return (coordinates.ToVector2() * scale - scaledOrigin).ToPoint();
         }
+
+        public static bool ValidValueComparator(InputValue value, InputValueLogic comparator)
+        {
+            try
+            {
+                if (value.ValueUInt != null)
+                {
+                    return ValidValueComparatorHelper((uint) value.ValueUInt, (uint) comparator.ConditionalValue.ValueUInt, comparator.Comparator);
+                }
+
+                if (value.ValueInt != null)
+                {
+                    return ValidValueComparatorHelper((int)value.ValueInt, (int)comparator.ConditionalValue.ValueInt, comparator.Comparator);
+                }
+
+                if (value.ValuePoint != null)
+                {
+                    return ValidValueComparatorHelper((Point) value.ValuePoint, (Point) comparator.ConditionalValue.ValuePoint, comparator.Comparator);
+                }
+
+                if (value.ValueVector2 != null)
+                {
+                    return ValidValueComparatorHelper((Vector2)value.ValueVector2, (Vector2)comparator.ConditionalValue.ValueVector2, comparator.Comparator);
+                }
+
+                if (value.ValueVector2 != null)
+                {
+                    return ValidValueComparatorHelper((Vector2)value.ValueVector2, (Vector2)comparator.ConditionalValue.ValueVector2, comparator.Comparator);
+                }
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return false;
+        }
+
+        private static bool ValidValueComparatorHelper(uint value, uint comparedValue, Comparison comparator)
+        {
+            switch (comparator)
+            {
+                case Comparison.GreaterThan:
+                    return value > comparedValue;
+                case Comparison.GreaterThenOrEqual:
+                    return value >= comparedValue;
+                case Comparison.Equal:
+                    return value == comparedValue;
+                case Comparison.NotEquals:
+                    return value != comparedValue;
+                case Comparison.LessThan:
+                    return value < comparedValue;
+                case Comparison.LessThanOrEqual:
+                    return value <= comparedValue;
+            }
+
+            return false;
+        }
+
+        private static bool ValidValueComparatorHelper(int value, int comparedValue, Comparison comparator)
+        {
+            switch (comparator)
+            {
+                case Comparison.GreaterThan:
+                    return value > comparedValue;
+                case Comparison.GreaterThenOrEqual:
+                    return value >= comparedValue;
+                case Comparison.Equal:
+                    return value == comparedValue;
+                case Comparison.NotEquals:
+                    return value != comparedValue;
+                case Comparison.LessThan:
+                    return value < comparedValue;
+                case Comparison.LessThanOrEqual:
+                    return value <= comparedValue;
+            }
+
+            return false;
+        }
+
+        private static bool ValidValueComparatorHelper(Point value, Point comparedValue, Comparison comparator)
+        {
+            switch (comparator)
+            {
+                case Comparison.GreaterThan:
+                    return value.X > comparedValue.X || value.Y > comparedValue.Y;
+                case Comparison.GreaterThenOrEqual:
+                    return value.X >= comparedValue.X || value.Y >= comparedValue.Y;
+                case Comparison.Equal:
+                    return value == comparedValue;
+                case Comparison.NotEquals:
+                    return value != comparedValue;
+                case Comparison.LessThan:
+                    return value.X < comparedValue.X || value.Y < comparedValue.Y;
+                case Comparison.LessThanOrEqual:
+                    return value.X <= comparedValue.X || value.Y <= comparedValue.Y;
+            }
+
+            return false;
+        }
+
+        private static bool ValidValueComparatorHelper(Vector2 value, Vector2 comparedValue, Comparison comparator)
+        {
+            switch (comparator)
+            {
+                case Comparison.GreaterThan:
+                    return value.X > comparedValue.X || value.Y > comparedValue.Y;
+                case Comparison.GreaterThenOrEqual:
+                    return value.X >= comparedValue.X || value.Y >= comparedValue.Y;
+                case Comparison.Equal:
+                    return value == comparedValue;
+                case Comparison.NotEquals:
+                    return value != comparedValue;
+                case Comparison.LessThan:
+                    return value.X < comparedValue.X || value.Y < comparedValue.Y;
+                case Comparison.LessThanOrEqual:
+                    return value.X <= comparedValue.X || value.Y <= comparedValue.Y;
+            }
+
+            return false;
+        }
     }
 }

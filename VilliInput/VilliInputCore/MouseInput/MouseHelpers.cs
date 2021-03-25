@@ -8,7 +8,7 @@ namespace VilliInput.MouseInput
 {
     public static class MouseHelpers
     {
-        internal static Dictionary<MouseButton, Func<MouseState, Microsoft.Xna.Framework.Input.ButtonState>> ButtonMapping = new Dictionary<MouseButton, Func<MouseState, Microsoft.Xna.Framework.Input.ButtonState>>()
+        internal static Dictionary<MouseButton, Func<MouseState, Microsoft.Xna.Framework.Input.ButtonState>> ButtonMapping = new Dictionary<MouseButton, Func<MouseState, Microsoft.Xna.Framework.Input.ButtonState>>(Enum.GetNames(typeof(MouseButton)).Length)
         {
             {MouseButton.LeftButton, state => state.LeftButton},
             {MouseButton.MiddleButton, state => state.MiddleButton},

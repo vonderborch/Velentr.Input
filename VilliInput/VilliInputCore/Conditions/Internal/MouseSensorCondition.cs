@@ -8,7 +8,7 @@ namespace VilliInput.Conditions.Internal
     {
         public MouseSensor Sensor { get; private set; }
 
-        protected MouseSensorCondition(MouseSensor sensor, bool windowMustBeActive = true) : base(InputSource.Mouse, windowMustBeActive)
+        protected MouseSensorCondition(MouseSensor sensor, bool windowMustBeActive, InputValueLogic? inputValueComparator) : base(InputSource.Mouse, windowMustBeActive, true, false, true, false, true, inputValueComparator)
         {
             Sensor = sensor;
         }
