@@ -128,7 +128,7 @@ namespace VilliInput
             }
         }
 
-        public void AddEventDrivenConditionForScanning(InputCondition condition, bool consumable, bool ignoreConsumed, EventWatchingMethod methodsToWatch)
+        public void AddEventDrivenConditionForScanning(InputCondition condition, EventWatchingMethod methodsToWatch, bool consumable = true, bool ignoreConsumed = false)
         {
             if (!eventDrivenConditions.ContainsKey(methodsToWatch))
             {
