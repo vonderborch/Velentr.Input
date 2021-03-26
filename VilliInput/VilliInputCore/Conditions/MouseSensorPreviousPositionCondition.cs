@@ -90,7 +90,7 @@ namespace VilliInput.Conditions
             return Villi.System.Mouse.IsSensorConsumed(Sensor);
         }
 
-        internal override VilliEventArguments GetArguments()
+        protected override VilliEventArguments GetArguments()
         {
             return new MouseSensorMovementEventArguments()
             {

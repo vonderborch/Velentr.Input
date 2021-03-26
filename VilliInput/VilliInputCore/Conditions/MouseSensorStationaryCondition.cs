@@ -17,7 +17,7 @@ namespace VilliInput.Conditions
             Sensor = sensor;
         }
 
-        internal override VilliEventArguments GetArguments()
+        protected override VilliEventArguments GetArguments()
         {
             return new MouseSensorMovementEventArguments()
             {

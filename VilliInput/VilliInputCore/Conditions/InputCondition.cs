@@ -66,7 +66,7 @@ namespace VilliInput.Conditions
 
         public abstract bool IsConsumed();
 
-        internal abstract VilliEventArguments GetArguments();
+        protected abstract VilliEventArguments GetArguments();
 
         protected abstract bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet);
 

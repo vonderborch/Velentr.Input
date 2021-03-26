@@ -16,7 +16,7 @@ namespace VilliInput.Conditions
             Button = button;
         }
 
-        internal override VilliEventArguments GetArguments()
+        protected override VilliEventArguments GetArguments()
         {
             return new MouseButtonEventArguments()
             {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace VilliInput.Helpers
 {
-    public class Cache<K, V> : IEnumerable<(K, V, int)>
+    public class Cache<K, V> : IEnumerable<(K, V, int)>, IEnumerable
     {
         public List<K> Order;
 
@@ -118,16 +118,38 @@ namespace VilliInput.Helpers
             return (key, value, index);
         }
 
-        public IEnumerator<(K, V, int)> GetEnumerator()
+        IEnumerator<(K, V, int)> GetEnumerator()
         {
-            return new Enumerator(this);
+            return this.InternalGetEnumerator();
+        }
+
+        IEnumerator<(K, V, int)> IEnumerable<(K, V, int)>.GetEnumerator()
+        {
+            return this.InternalGetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return new Enumerator(this);
+            return this.InternalGetEnumerator();
         }
 
+
+        IEnumerator<(K, V, int)> InternalGetEnumerator()
+        {
+            var enumeratorVersion = this.version;
+            for (var i = 0; i < Count; i++)
+            {
+                if (enumeratorVersion != this.version)
+                {
+                    throw new InvalidOperationException("Collection modified");
+                }
+
+                var key = Order[i];
+                yield return (key, Values[key], i);
+            }
+        }
+
+        /*
         public class Enumerator : IEnumerator<(K, V, int)>
         {
             private Cache<K, V> _stack;
@@ -213,5 +235,6 @@ namespace VilliInput.Helpers
                 GC.SuppressFinalize(this);
             }
         }
+        */
     }
 }
