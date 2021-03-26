@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using VilliInput.Conditions;
-using VilliInput.MouseInput;
+﻿using System.Collections.Generic;
+using VilliInput.OLD.Conditions;
 
 namespace VilliInput.EventArguments
 {
-    public class AllConditionEventArguments : VilliEventArguments
+    public class AllConditionEventArguments : OLD.EventArguments.VilliEventArguments
     {
 
         public InputCondition[] Conditions { get; internal set; }
 
         public bool OrderMatters { get; internal set; }
 
-        public List<VilliEventArguments> ConditionEventArguments { get; internal set; }
+        public List<OLD.EventArguments.VilliEventArguments> ConditionEventArguments { get; internal set; }
     }
 }

@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using VilliInput.Enums;
 
 namespace VilliInput
 {
@@ -9,5 +12,6 @@ namespace VilliInput
         public abstract void Setup();
 
         public abstract void Update();
+
     }
 }

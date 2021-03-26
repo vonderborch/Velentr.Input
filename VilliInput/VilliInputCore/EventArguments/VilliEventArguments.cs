@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using Microsoft.Xna.Framework;
 using VilliInput.Conditions;
+using VilliInput.Enums;
 
 namespace VilliInput.EventArguments
 {
@@ -8,14 +11,14 @@ namespace VilliInput.EventArguments
     {
         public InputSource InputSource { get; internal set; }
 
-        public InputCondition ConditionSource { get; internal set; }
-
-        public ConditionState ConditionState { get; internal set; }
+        public InputCondition Condition { get; internal set; }
 
         public GameTime ConditionStateStartTime { get; internal set; }
 
         public uint ConditionStateTimeSeconds { get; internal set; }
 
         public bool WindowMustBeActive { get; internal set; }
+
+        public uint MilliSecondsForConditionMet { get; internal set; }
     }
 }

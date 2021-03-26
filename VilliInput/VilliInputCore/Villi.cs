@@ -1,21 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Microsoft.Xna.Framework;
 using VilliInput.Conditions;
-using VilliInput.GamePadInput;
-using VilliInput.KeyboardInput;
-using VilliInput.MouseInput;
+using VilliInput.Helpers;
+using VilliInput.Mouse;
 
 namespace VilliInput
 {
     public sealed class Villi
     {
-        private MouseService mouseService;
-
-        private KeyboardService keyboardService;
-
-        private GamePadService gamePadService;
-
         private static Rectangle window;
 
         private static Point centerCoordinates;
@@ -37,7 +31,9 @@ namespace VilliInput
 
         public static int WindowHeight => Window.ClientBounds.Height;
 
-        private Dictionary<EventWatchingMethod, List<Tuple<InputCondition, bool, bool>>> eventDrivenConditions = new Dictionary<EventWatchingMethod, List<Tuple<InputCondition, bool, bool>>>();
+        public Cache<string, InputCondition> TrackedConditions = new Cache<string, InputCondition>();
+
+        public MouseService Mouse { get; private set; }
 
         public static Point CenterCoordinates
         {
@@ -55,13 +51,7 @@ namespace VilliInput
 
         public static ulong CurrentFrame { get; private set; }
 
-        public MouseService Mouse => mouseService;
-
-        public KeyboardService Keyboard => keyboardService;
-
-        public GamePadService GamePad => gamePadService;
-
-        public Constants Settings => Constants.Instance;
+        public Constants Settings => Constants.Settings;
 
         public void Setup(Game game, bool enableMouseService = true, bool enableKeyboardService = true, bool enableGamePadService = true, bool enableTouchService = true)
         {
@@ -71,14 +61,26 @@ namespace VilliInput
 
         public void SetupInputSources(bool enableMouseService = true, bool enableKeyboardService = true, bool enableGamePadService = true, bool enableTouchService = true)
         {
-            mouseService = enableMouseService ? new MouseService() : null;
-            mouseService?.Setup();
+            if (enableMouseService)
+            {
+                Mouse = new MouseService();
+                Mouse.Setup();
+            }
 
-            keyboardService = enableKeyboardService ? new KeyboardService() : null;
-            keyboardService?.Setup();
+            if (enableKeyboardService)
+            {
 
-            gamePadService = enableGamePadService ? new GamePadService() : null;
-            gamePadService?.Setup();
+            }
+
+            if (enableGamePadService)
+            {
+
+            }
+
+            if (enableTouchService)
+            {
+
+            }
         }
 
         public void Update(GameTime gameTime)
@@ -89,52 +91,32 @@ namespace VilliInput
 
             // update input services if they exist and we want to update them
             Mouse?.Update();
-            Keyboard?.Update();
-            GamePad?.Update();
 
-            // Update any InputConditions we've been told to monitor to allow for Event-Driven Behavior
-            if (eventDrivenConditions.Count > 0)
+            // update all tracked input conditions
+            foreach (var item in TrackedConditions)
             {
-                foreach (var eventWatching in eventDrivenConditions)
-                {
-                    foreach (var condition in eventWatching.Value)
-                    {
-                        if (eventWatching.Key.HasFlag(EventWatchingMethod.Pressed))
-                        {
-                            condition.Item1.Pressed(condition.Item2, condition.Item3);
-                        }
-
-                        if (eventWatching.Key.HasFlag(EventWatchingMethod.PressStarted))
-                        {
-                            condition.Item1.PressStarted(condition.Item2, condition.Item3);
-                        }
-
-                        if (eventWatching.Key.HasFlag(EventWatchingMethod.Released))
-                        {
-                            condition.Item1.Released(condition.Item2, condition.Item3);
-                        }
-
-                        if (eventWatching.Key.HasFlag(EventWatchingMethod.ReleaseStarted))
-                        {
-                            condition.Item1.ReleaseStarted(condition.Item2, condition.Item3);
-                        }
-
-                        if (eventWatching.Key.HasFlag(EventWatchingMethod.ValueValid))
-                        {
-                            condition.Item1.ValueValid();
-                        }
-                    }
-                }
+                item.Item2.ConditionMet();
             }
         }
 
-        public void AddEventDrivenConditionForScanning(InputCondition condition, EventWatchingMethod methodsToWatch, bool consumable = true, bool ignoreConsumed = false)
+        public bool AddInputConditionToTracking(string name, InputCondition condition, int layerDepth = int.MaxValue, bool forceAdd = false)
         {
-            if (!eventDrivenConditions.ContainsKey(methodsToWatch))
-            {
-                eventDrivenConditions.Add(methodsToWatch, new List<Tuple<InputCondition, bool, bool>>());
-            }
-            eventDrivenConditions[methodsToWatch].Add(new Tuple<InputCondition, bool, bool>(condition, consumable, ignoreConsumed));
+            return TrackedConditions.AddItem(name, condition, layerDepth, forceAdd) != null;
+        }
+
+        public int TotalInputConditionsTracked()
+        {
+            return TrackedConditions.Count;
+        }
+
+        public (string, InputCondition, int) RemoveInputConditionFromTracking(string name)
+        {
+            return TrackedConditions.RemoveItem(name);
+        }
+
+        public (string, InputCondition, int) RemoveInputConditionFromTracking(int layerDepth)
+        {
+            return TrackedConditions.RemoveItem(layerDepth);
         }
     }
 }

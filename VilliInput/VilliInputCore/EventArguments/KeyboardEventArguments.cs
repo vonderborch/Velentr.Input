@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using VilliInput.KeyboardInput;
-using VilliInput.MouseInput;
+﻿using VilliInput.OLD.KeyboardInput;
 
 namespace VilliInput.EventArguments
 {
-    public class KeyboardEventArguments : VilliEventArguments
+    public class KeyboardEventArguments : OLD.EventArguments.VilliEventArguments
     {
         public Key Key { get; internal set; }
 

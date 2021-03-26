@@ -1,122 +1,89 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Text;
 using Microsoft.Xna.Framework;
+using VilliInput.Enums;
 using VilliInput.EventArguments;
+using ValueType = VilliInput.Enums.ValueType;
 
 namespace VilliInput.Conditions
 {
     public abstract class InputCondition
     {
+        public VilliEvent Event = new VilliEvent();
 
-        public InputSource Source;
+        protected InputCondition(InputSource source, bool windowMustBeActive, bool consumable, bool allowedIfConsumed, uint milliSecondsForConditionMet)
+        {
+            InputSource = source;
+            WindowMustBeActive = windowMustBeActive;
 
-        public VilliEvent PressedEvent = new VilliEvent();
+            Consumable = consumable;
+            AllowedIfConsumed = allowedIfConsumed;
 
-        public VilliEvent PressStartedEvent = new VilliEvent();
+            MilliSecondsForConditionMet = milliSecondsForConditionMet;
+        }
 
-        public VilliEvent ReleasedEvent = new VilliEvent();
+        public InputSource InputSource { get; protected set; }
 
-        public VilliEvent ReleaseStartedEvent = new VilliEvent();
+        public bool ConditionMetState { get; protected set; }
 
-        public VilliEvent ValueValidEvent = new VilliEvent();
+        public bool Consumable { get; protected set; }
 
-        public bool WindowMustBeActive { get; private set; }
-
-        public ConditionState CurrentState { get; protected set; }
+        public bool AllowedIfConsumed { get; protected set; }
 
         public GameTime CurrentStateStart { get; protected set; }
 
-        public bool ImplementedPressed { get; protected set; }
+        public bool WindowMustBeActive { get; protected set; }
 
-        public bool ImplementedPressStarted { get; protected set; }
+        public ValueLogic? ValueLogic { get; protected set; }
 
-        public bool ImplementedReleased { get; protected set; }
+        public uint MilliSecondsForConditionMet { get; private set; }
 
-        public bool ImplementedReleaseStarted { get; protected set; }
-
-        public bool ImplementedValidValue { get; protected set; }
-
-        public InputValueLogic? ValidValueComparator { get; protected set; }
-
-        protected InputCondition(InputSource source, bool windowMustBeActive = true, bool implementedPressed = false, bool implementedPressStarted = false, bool implementedReleased = false, bool implementedReleaseStarted = false, bool implementedValidValue = false, InputValueLogic? inputValueComparator = null)
+        public bool ConditionMet()
         {
-            Source = source;
-            WindowMustBeActive = windowMustBeActive;
-
-            ImplementedPressed = implementedPressed;
-            ImplementedPressStarted = implementedPressStarted;
-            ImplementedReleased = implementedReleased;
-            ImplementedReleaseStarted = implementedReleaseStarted;
-            ImplementedValidValue = implementedValidValue;
-
-            ValidValueComparator = inputValueComparator;
+            return InternalConditionMet(Consumable, AllowedIfConsumed);
         }
 
-        public abstract bool Pressed(bool consumable = true, bool ignoredConsumed = false);
+        public bool ConditionMet(bool consumable, bool allowedIfConsumed)
+        {
+            return InternalConditionMet(consumable, allowedIfConsumed);
+        }
 
-        public abstract bool PressStarted(bool consumable = true, bool ignoredConsumed = false);
 
-        public abstract bool Released(bool consumable = true, bool ignoredConsumed = false);
+        public abstract bool InternalConditionMet(bool consumable, bool allowedIfConsumed);
 
-        public abstract bool ReleaseStarted(bool consumable = true, bool ignoredConsumed = false);
+        public Value GetValue()
+        {
+            return ValueLogic == null
+                ? new Value(ValueType.None)
+                : InternalGetValue();
+        }
 
-        public abstract bool ValueValid();
-
-        public abstract InputValue GetInputValue();
+        protected abstract Value InternalGetValue();
 
         public abstract void Consume();
 
+        public abstract bool IsConsumed();
+
         internal abstract VilliEventArguments GetArguments();
 
-        protected void UpdateState(ConditionState newState)
+        protected abstract bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet);
+
+        protected void UpdateState(bool newState)
         {
-            CurrentState = newState;
+            ConditionMetState = newState;
             CurrentStateStart = Villi.CurrentTime;
         }
 
-        protected void InternalPressed(bool consumable)
+        protected void ConditionMetCleanup(bool consumable, VilliEventArguments arguments)
         {
             if (consumable)
             {
                 Consume();
             }
 
-            PressedEvent.TriggerEvent(this, GetArguments());
-        }
-
-        protected void InternalPressStarted(bool consumable)
-        {
-            if (consumable)
-            {
-                Consume();
-            }
-
-            PressStartedEvent.TriggerEvent(this, GetArguments());
-        }
-
-        protected void InternalReleased(bool consumable)
-        {
-            if (consumable)
-            {
-                Consume();
-            }
-
-            ReleasedEvent.TriggerEvent(this, GetArguments());
-        }
-
-        protected void InternalReleaseStarted(bool consumable)
-        {
-            if (consumable)
-            {
-                Consume();
-            }
-
-            ReleaseStartedEvent.TriggerEvent(this, GetArguments());
-        }
-
-        protected void InternalValueValid()
-        {
-            ValueValidEvent.TriggerEvent(this, GetArguments());
+            Event.TriggerEvent(this, arguments);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Text;
 using Microsoft.Xna.Framework.Input;
 
@@ -11,7 +10,7 @@ namespace VilliInput
         static Constants() { }
         private Constants() { }
 
-        public static Constants Instance { get; } = new Constants();
+        public static Constants Settings { get; } = new Constants();
 
         public GamePadDeadZone DefaultGamePadDeadZone { get; set; } = GamePadDeadZone.None;
 
@@ -20,6 +19,10 @@ namespace VilliInput
         public const string PlayerIndexExceptionMessage = "playerIndex must be 0 or greater, and less than the maximum supported gamepads on the system";
 
         public const string PlayerIndexExceptionMessageButtonState = "playerIndex must be less than the maximum supported gamepads on the system";
+
+        public float MaxFloatDifference { get; set; } = 0.00001f;
+
+        public double MaxDoubleDifference { get; set; } = 0.0000001d;
 
     }
 }

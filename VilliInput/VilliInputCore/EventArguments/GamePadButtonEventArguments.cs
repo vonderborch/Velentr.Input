@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using VilliInput.GamePadInput;
+﻿using VilliInput.OLD.GamePadInput;
 
 namespace VilliInput.EventArguments
 {
-    public class GamePadButtonEventArguments : VilliEventArguments
+    public class GamePadButtonEventArguments : OLD.EventArguments.VilliEventArguments
     {
         public GamePadButton Button { get; internal set; }
 

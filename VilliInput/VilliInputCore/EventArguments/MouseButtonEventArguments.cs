@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using VilliInput.MouseInput;
+﻿using Microsoft.Xna.Framework;
+using VilliInput.Mouse;
 
 namespace VilliInput.EventArguments
 {
@@ -13,10 +10,6 @@ namespace VilliInput.EventArguments
         public Rectangle? Boundaries { get; internal set; }
 
         public bool UseRelativeCoordinates { get; internal set; }
-
-        public uint SecondsForPressed { get; internal set; }
-
-        public uint SecondsForReleased { get; internal set; }
 
         public Point MouseCoordinates { get; internal set; }
 

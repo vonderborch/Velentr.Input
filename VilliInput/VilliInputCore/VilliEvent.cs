@@ -6,53 +6,53 @@ namespace VilliInput
 {
     public class VilliEvent
     {
-        List<EventHandler<VilliEventArguments>> delegates = new List<EventHandler<VilliEventArguments>>();
+        internal List<EventHandler<VilliEventArguments>> Delegates = new List<EventHandler<VilliEventArguments>>();
 
-        private event EventHandler<VilliEventArguments> internalEvent;
+        internal event EventHandler<VilliEventArguments> InternalEvent;
 
         public event EventHandler<VilliEventArguments> Event
         {
             add
             {
-                internalEvent += value;
-                delegates.Add(value);
+                InternalEvent += value;
+                Delegates.Add(value);
             }
 
             remove
             {
-                internalEvent -= value;
-                delegates.Remove(value);
+                InternalEvent -= value;
+                Delegates.Remove(value);
             }
         }
 
         public void Clear()
         {
-            System.Collections.IList list = delegates;
+            System.Collections.IList list = Delegates;
             for (int i = 0; i < list.Count; i++)
             {
                 EventHandler<VilliEventArguments> eh = (EventHandler<VilliEventArguments>)list[i];
-                internalEvent -= eh;
+                InternalEvent -= eh;
             }
-            delegates.Clear();
+            Delegates.Clear();
         }
 
         public void TriggerEvent(object sender, VilliEventArguments e)
         {
-            internalEvent?.Invoke(sender, e);
+            InternalEvent?.Invoke(sender, e);
         }
 
         public static VilliEvent operator +(VilliEvent left, EventHandler<VilliEventArguments> right)
         {
-            left.internalEvent += right;
-            left.delegates.Add(right);
+            left.InternalEvent += right;
+            left.Delegates.Add(right);
 
             return left;
         }
 
         public static VilliEvent operator -(VilliEvent left, EventHandler<VilliEventArguments> right)
         {
-            left.internalEvent -= right;
-            left.delegates.Remove(right);
+            left.InternalEvent -= right;
+            left.Delegates.Remove(right);
 
             return left;
         }

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using VilliInput;
+using VilliInput.OLD;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 
 namespace VilliInputDevEnv
