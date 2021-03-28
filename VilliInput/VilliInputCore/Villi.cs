@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using VilliInput.Conditions;
 using VilliInput.Helpers;
+using VilliInput.Keyboard;
 using VilliInput.Mouse;
 
 namespace VilliInput
@@ -19,9 +20,9 @@ namespace VilliInput
 
         public static Villi System { get; } = new Villi();
 
-        internal static Game Game { get; private set; }
+        public static Game Game { get; private set; }
 
-        internal static GameTime CurrentTime { get; private set; }
+        public static GameTime CurrentTime { get; private set; }
 
         public static GameWindow Window => Game.Window;
 
@@ -33,7 +34,11 @@ namespace VilliInput
 
         public Cache<string, InputCondition> TrackedConditions = new Cache<string, InputCondition>();
 
+        public ulong ConditionIndex { get; private set; } = 0;
+
         public MouseService Mouse { get; private set; }
+
+        public KeyboardService Keyboard { get; private set; }
 
         public static Point CenterCoordinates
         {
@@ -69,7 +74,8 @@ namespace VilliInput
 
             if (enableKeyboardService)
             {
-
+                Keyboard = new KeyboardService();
+                Keyboard.Setup();
             }
 
             if (enableGamePadService)
@@ -91,6 +97,7 @@ namespace VilliInput
 
             // update input services if they exist and we want to update them
             Mouse?.Update();
+            Keyboard?.Update();
 
             // update all tracked input conditions
             foreach (var item in TrackedConditions)
@@ -99,8 +106,13 @@ namespace VilliInput
             }
         }
 
-        public bool AddInputConditionToTracking(string name, InputCondition condition, int layerDepth = int.MaxValue, bool forceAdd = false)
+        public bool AddInputConditionToTracking(InputCondition condition, string name = null, int layerDepth = int.MaxValue, bool forceAdd = false)
         {
+            if (name == null)
+            {
+                name = $"Condition_{(ConditionIndex++)}";
+            }
+
             return TrackedConditions.AddItem(name, condition, layerDepth, forceAdd) != null;
         }
 

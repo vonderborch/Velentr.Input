@@ -9,7 +9,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Keyboard\" />
     <Folder Include="GamePad\" />
     <Folder Include="Voice\" />
     <Folder Include="Touch\" />

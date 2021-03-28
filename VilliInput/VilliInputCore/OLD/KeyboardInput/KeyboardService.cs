@@ -20,8 +20,8 @@ namespace VilliInput.OLD.KeyboardInput
 
         public override void Setup()
         {
-            PreviousState = Keyboard.GetState();
-            CurrentState = Keyboard.GetState();
+            PreviousState = Microsoft.Xna.Framework.Input.Keyboard.GetState();
+            CurrentState = Microsoft.Xna.Framework.Input.Keyboard.GetState();
 
             // Update the mapping to match XNA's (right now we've got parity. In the future, this might need to be changed to better handle other keyboards, etc.)
             foreach (var key in Enum.GetValues(typeof(Key)))
@@ -33,7 +33,7 @@ namespace VilliInput.OLD.KeyboardInput
         public override void Update()
         {
             PreviousState = CurrentState;
-            CurrentState = Keyboard.GetState();
+            CurrentState = Microsoft.Xna.Framework.Input.Keyboard.GetState();
         }
 
         public void ConsumeKey(Key key)

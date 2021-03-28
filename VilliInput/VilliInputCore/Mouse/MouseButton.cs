@@ -2,10 +2,10 @@
 {
     public enum MouseButton
     {
-        LeftButton,
-        RightButton,
-        MiddleButton,
-        XButton1,
-        XButton2,
+        LeftButton = 1,
+        RightButton = 2,
+        MiddleButton = 4,
+        XButton1 = 8,
+        XButton2 = 16,
     }
 }

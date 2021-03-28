@@ -15,7 +15,7 @@ namespace VilliInput.EventArguments
 
         public GameTime ConditionStateStartTime { get; internal set; }
 
-        public uint ConditionStateTimeSeconds { get; internal set; }
+        public uint ConditionStateTimeMilliSeconds { get; internal set; }
 
         public bool WindowMustBeActive { get; internal set; }
 

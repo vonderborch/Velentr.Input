@@ -104,7 +104,7 @@ namespace VilliInput.Conditions
                 MilliSecondsForConditionMet = this.MilliSecondsForConditionMet,
                 UseRelativeCoordinates = this.UseRelativeCoordinates,
                 ConditionStateStartTime = this.CurrentStateStart,
-                ConditionStateTimeSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime),
+                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime),
                 WindowMustBeActive = this.WindowMustBeActive,
                 CurrentValue = this.InternalGetValue(),
             };

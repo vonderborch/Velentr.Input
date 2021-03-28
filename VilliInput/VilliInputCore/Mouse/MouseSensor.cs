@@ -2,9 +2,9 @@
 {
     public enum MouseSensor
     {
-        VerticalScrollWheel,
-        HorizontalScrollWheel,
-        Pointer,
-        ScrollWheels,
+        VerticalScrollWheel = 1,
+        HorizontalScrollWheel = 2,
+        ScrollWheels = 3,
+        Pointer = 4,
     }
 }
