@@ -141,7 +141,7 @@ namespace VilliInput.Mouse
         {
             return Helper.CoordinateInRectangle(
                 scaleCoordinatesToArea
-                    ? Helper.ScalePointToChild(CurrentCursorPosition, parentBoundaries ?? OLD.Villi.Window.ClientBounds, boundaries)
+                    ? Helper.ScalePointToChild(CurrentCursorPosition, parentBoundaries ?? Villi.Window.ClientBounds, boundaries)
                     : CurrentCursorPosition,
                 boundaries
             );

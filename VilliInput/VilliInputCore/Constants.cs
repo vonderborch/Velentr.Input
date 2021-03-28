@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 
 namespace VilliInput
 {
@@ -12,7 +9,7 @@ namespace VilliInput
 
         public static Constants Settings { get; } = new Constants();
 
-        public GamePadDeadZone DefaultGamePadDeadZone { get; set; } = GamePadDeadZone.None;
+        public GamePadDeadZone DefaultGamePadDeadZone { get; set; } = GamePadDeadZone.IndependentAxes;
 
         public int SecondsBetweenGamePadConnectionCheck { get; set; } = 15;
 

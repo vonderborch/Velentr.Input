@@ -1,14 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace VilliInput.OLD.VoiceInput
+namespace VilliInput.Voice
 {
-
     public class VoiceService : InputService
     {
-        public VoiceService()
-        {
-            throw new NotImplementedException();
-        }
 
         public override void Setup()
         {
@@ -19,5 +16,6 @@ namespace VilliInput.OLD.VoiceInput
         {
             throw new NotImplementedException();
         }
+
     }
 }

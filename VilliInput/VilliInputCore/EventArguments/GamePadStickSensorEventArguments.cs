@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
-using VilliInput.OLD.GamePadInput;
+using VilliInput.GamePad;
 
 namespace VilliInput.EventArguments
 {
-    public class GamePadStickSensorEventArguments : OLD.EventArguments.VilliEventArguments
+    public class GamePadStickSensorEventArguments : VilliEventArguments
     {
         public GamePadSensor Sensor { get; internal set; }
 
@@ -11,9 +11,7 @@ namespace VilliInput.EventArguments
 
         public GamePadInputMode InputMode { get; internal set; }
 
-        public uint SecondsForPressed { get; internal set; }
-
-        public uint SecondsForReleased { get; internal set; }
+        public GamePadSensorValueMode SensorValueMode { get; internal set; }
 
         public Vector2 Delta { get; internal set; }
 

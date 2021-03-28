@@ -2,6 +2,7 @@
 {
     public enum GamePadSensorValueMode
     {
+        SingleGamePad,
         Max,
         MaxX,
         MaxY,

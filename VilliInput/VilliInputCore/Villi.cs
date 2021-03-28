@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using VilliInput.Conditions;
+using VilliInput.GamePad;
 using VilliInput.Helpers;
 using VilliInput.Keyboard;
 using VilliInput.Mouse;
+using VilliInput.Touch;
+using VilliInput.Voice;
 
 namespace VilliInput
 {
@@ -40,6 +43,12 @@ namespace VilliInput
 
         public KeyboardService Keyboard { get; private set; }
 
+        public GamePadService GamePad { get; private set; }
+
+        public TouchService Touch { get; private set; }
+
+        public VoiceService Voice { get; private set; }
+
         public static Point CenterCoordinates
         {
             get
@@ -64,7 +73,7 @@ namespace VilliInput
             SetupInputSources(enableMouseService, enableKeyboardService, enableGamePadService, enableTouchService);
         }
 
-        public void SetupInputSources(bool enableMouseService = true, bool enableKeyboardService = true, bool enableGamePadService = true, bool enableTouchService = true)
+        public void SetupInputSources(bool enableMouseService = true, bool enableKeyboardService = true, bool enableGamePadService = true, bool enableTouchService = true, bool enableVoiceService = true)
         {
             if (enableMouseService)
             {
@@ -80,12 +89,20 @@ namespace VilliInput
 
             if (enableGamePadService)
             {
-
+                GamePad = new GamePadService();
+                GamePad.Setup();
             }
 
             if (enableTouchService)
             {
+                Touch = new TouchService();
+                Touch.Setup();
+            }
 
+            if (enableVoiceService)
+            {
+                //Voice = new VoiceService();
+                //Voice.Setup();
             }
         }
 
@@ -98,6 +115,9 @@ namespace VilliInput
             // update input services if they exist and we want to update them
             Mouse?.Update();
             Keyboard?.Update();
+            GamePad?.Update();
+            Touch?.Update();
+            //Voice?.Update();
 
             // update all tracked input conditions
             foreach (var item in TrackedConditions)

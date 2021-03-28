@@ -1,8 +1,8 @@
-﻿using VilliInput.OLD.GamePadInput;
+﻿using VilliInput.GamePad;
 
 namespace VilliInput.EventArguments
 {
-    public class GamePadTriggerSensorEventArguments : OLD.EventArguments.VilliEventArguments
+    public class GamePadTriggerSensorEventArguments : VilliEventArguments
     {
         public GamePadSensor Sensor { get; internal set; }
 
@@ -10,9 +10,7 @@ namespace VilliInput.EventArguments
 
         public GamePadInputMode InputMode { get; internal set; }
 
-        public uint SecondsForPressed { get; internal set; }
-
-        public uint SecondsForReleased { get; internal set; }
+        public GamePadSensorValueMode SensorValueMode { get; internal set; }
 
         public float Delta { get; internal set; }
 
