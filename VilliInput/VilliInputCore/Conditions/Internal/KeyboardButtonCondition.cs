@@ -17,7 +17,7 @@ namespace VilliInput.Conditions.Internal
             Key = key;
         }
 
-        protected override VilliEventArguments GetArguments()
+        public override VilliEventArguments GetArguments()
         {
             return new KeyboardButtonEventArguments()
             {

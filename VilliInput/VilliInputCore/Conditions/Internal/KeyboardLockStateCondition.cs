@@ -16,7 +16,7 @@ namespace VilliInput.Conditions.Internal
             LockType = lockType;
         }
 
-        protected override VilliEventArguments GetArguments()
+        public override VilliEventArguments GetArguments()
         {
             return new KeyboardLockStateEventArguments()
             {

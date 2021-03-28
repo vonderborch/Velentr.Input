@@ -36,7 +36,7 @@ namespace VilliInput.Conditions
             return Villi.System.Keyboard.IsKeysPressedDeltaConsumed();
         }
 
-        protected override VilliEventArguments GetArguments()
+        public override VilliEventArguments GetArguments()
         {
             return new KeyboardKeysPressedCountEventArguments()
             {
