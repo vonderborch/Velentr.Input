@@ -1,4 +1,5 @@
-﻿using VilliInput.Conditions;
+﻿using System.Collections.Generic;
+using VilliInput.Conditions;
 
 namespace VilliInput.EventArguments
 {
@@ -8,5 +9,12 @@ namespace VilliInput.EventArguments
         public InputCondition[] Conditions { get; internal set; }
 
         public EventArguments.VilliEventArguments ValidConditionArguments { get; internal set; }
+
+        public override VilliEventArguments Clone()
+        {
+            var copy = (AnyConditionalEventArguments)this.MemberwiseClone();
+            copy.ValidConditionArguments = ValidConditionArguments.Clone();
+            return copy;
+        }
     }
 }

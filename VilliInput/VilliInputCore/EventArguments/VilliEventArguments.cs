@@ -20,5 +20,8 @@ namespace VilliInput.EventArguments
         public bool WindowMustBeActive { get; internal set; }
 
         public uint MilliSecondsForConditionMet { get; internal set; }
+
+        public abstract VilliEventArguments Clone();
+
     }
 }

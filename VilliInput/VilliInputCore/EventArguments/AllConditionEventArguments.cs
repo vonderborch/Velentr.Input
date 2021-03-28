@@ -11,5 +11,19 @@ namespace VilliInput.EventArguments
         public bool OrderMatters { get; internal set; }
 
         public List<VilliEventArguments> ConditionEventArguments { get; internal set; }
+
+        public override VilliEventArguments Clone()
+        {
+            var copy = (AllConditionEventArguments)this.MemberwiseClone();
+
+            copy.ConditionEventArguments = new List<VilliEventArguments>(ConditionEventArguments.Count);
+            for (var i = 0; i < ConditionEventArguments.Count; i++)
+            {
+                copy.ConditionEventArguments.Add(ConditionEventArguments[i].Clone());
+            }
+
+            return copy;
+        }
+
     }
 }

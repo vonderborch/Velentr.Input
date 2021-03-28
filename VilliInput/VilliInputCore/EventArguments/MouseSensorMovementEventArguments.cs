@@ -16,5 +16,10 @@ namespace VilliInput.EventArguments
         public Point RelativeMouseCoordinates { get; internal set; }
 
         public Value CurrentValue { get; internal set; }
+
+        public override VilliEventArguments Clone()
+        {
+            return (MouseSensorMovementEventArguments)this.MemberwiseClone();
+        }
     }
 }

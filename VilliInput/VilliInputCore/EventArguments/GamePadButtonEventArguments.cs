@@ -9,5 +9,10 @@ namespace VilliInput.EventArguments
         public int PlayerIndex { get; internal set; }
 
         public GamePadInputMode InputMode { get; internal set; }
+
+        public override VilliEventArguments Clone()
+        {
+            return (GamePadButtonEventArguments)this.MemberwiseClone();
+        }
     }
 }

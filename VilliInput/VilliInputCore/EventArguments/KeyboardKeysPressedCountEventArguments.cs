@@ -5,5 +5,10 @@
         public int NumberOfKeysPressed { get; internal set; }
 
         public int NumberOfKeysPressedDelta { get; internal set; }
+
+        public override VilliEventArguments Clone()
+        {
+            return (KeyboardKeysPressedCountEventArguments)this.MemberwiseClone();
+        }
     }
 }

@@ -16,5 +16,10 @@ namespace VilliInput.EventArguments
         public Vector2 Delta { get; internal set; }
 
         public Vector2 CurrentPosition { get; internal set; }
+
+        public override VilliEventArguments Clone()
+        {
+            return (GamePadStickSensorEventArguments)this.MemberwiseClone();
+        }
     }
 }

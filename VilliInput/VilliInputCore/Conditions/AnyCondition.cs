@@ -78,7 +78,7 @@ namespace VilliInput.Conditions
                 ConditionStateStartTime = this.CurrentStateStart,
                 ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime),
                 WindowMustBeActive = this.WindowMustBeActive,
-                ValidConditionArguments = this._arguments,
+                ValidConditionArguments = this._arguments.Clone(),
             };
         }
 

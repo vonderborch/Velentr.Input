@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using NClone;
 using VilliInput.Enums;
 using VilliInput.EventArguments;
 using VilliInput.Helpers;
@@ -93,7 +92,7 @@ namespace VilliInput.Conditions
             var args = new List<VilliEventArguments>(_arguments.Count);
             foreach (var arg in _arguments)
             {
-                args.Add(Clone.ObjectGraph(arg));
+                args.Add(arg.Clone());
             }
 
             return new AllConditionEventArguments()

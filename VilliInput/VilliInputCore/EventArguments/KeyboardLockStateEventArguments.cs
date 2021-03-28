@@ -7,5 +7,10 @@ namespace VilliInput.EventArguments
         public KeyboardLock LockType { get; internal set; }
 
         public int NumberOfKeysPressed { get; internal set; }
+
+        public override VilliEventArguments Clone()
+        {
+            return (KeyboardLockStateEventArguments)this.MemberwiseClone();
+        }
     }
 }

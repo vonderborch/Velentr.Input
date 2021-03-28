@@ -15,5 +15,10 @@ namespace VilliInput.EventArguments
         public float Delta { get; internal set; }
 
         public float CurrentPosition { get; internal set; }
+
+        public override VilliEventArguments Clone()
+        {
+            return (GamePadTriggerSensorEventArguments)this.MemberwiseClone();
+        }
     }
 }

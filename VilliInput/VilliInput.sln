@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VilliInputDevEnv", "VilliInputDevEnv\VilliInputDevEnv.csproj", "{6153402B-C1E6-446F-9520-4E0DC8F00184}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VilliInputDevEnv", "VilliInputDevEnv\VilliInputDevEnv.csproj", "{6153402B-C1E6-446F-9520-4E0DC8F00184}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VilliInputCore", "VilliInputCore\VilliInputCore.csproj", "{5373355B-A77A-4B55-B924-F63FB075153F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VilliInputCore", "VilliInputCore\VilliInputCore.csproj", "{5373355B-A77A-4B55-B924-F63FB075153F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VilliInput.Monogame", "VilliInput.Monogame\VilliInput.Monogame.csproj", "{009E7EEB-E04C-4404-A2CB-88D2FFD33223}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VilliInput.Monogame", "VilliInput.Monogame\VilliInput.Monogame.csproj", "{009E7EEB-E04C-4404-A2CB-88D2FFD33223}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{A2B27B02-EA38-4E56-BC09-A8A5A7789B3F}"
 	ProjectSection(SolutionItems) = preProject
@@ -15,6 +15,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FNA", "FNA", "{A7E7AC60-CDB0-48F4-B982-A370705B16DA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MonoGame", "MonoGame", "{1E2FF976-9660-4D1D-973D-19CF11EDFCD4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VilliInput.FNA", "VilliInput.FNA\VilliInput.FNA.csproj", "{E5DC9965-FDD3-483F-BCCA-C19D4ADCDC80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,9 +40,18 @@ Global
 		{009E7EEB-E04C-4404-A2CB-88D2FFD33223}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{009E7EEB-E04C-4404-A2CB-88D2FFD33223}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{009E7EEB-E04C-4404-A2CB-88D2FFD33223}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5DC9965-FDD3-483F-BCCA-C19D4ADCDC80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5DC9965-FDD3-483F-BCCA-C19D4ADCDC80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5DC9965-FDD3-483F-BCCA-C19D4ADCDC80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5DC9965-FDD3-483F-BCCA-C19D4ADCDC80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6153402B-C1E6-446F-9520-4E0DC8F00184} = {1E2FF976-9660-4D1D-973D-19CF11EDFCD4}
+		{009E7EEB-E04C-4404-A2CB-88D2FFD33223} = {1E2FF976-9660-4D1D-973D-19CF11EDFCD4}
+		{E5DC9965-FDD3-483F-BCCA-C19D4ADCDC80} = {A7E7AC60-CDB0-48F4-B982-A370705B16DA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5081EA36-0886-4BA3-ABD2-DD5D453B49FF}

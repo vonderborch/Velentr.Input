@@ -7,5 +7,10 @@ namespace VilliInput.EventArguments
         public Key Key { get; internal set; }
 
         public int NumberOfKeysPressed { get; internal set; }
+
+        public override VilliEventArguments Clone()
+        {
+            return (KeyboardButtonEventArguments)this.MemberwiseClone();
+        }
     }
 }
