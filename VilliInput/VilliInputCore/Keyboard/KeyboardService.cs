@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Input;
 using VilliInput.Enums;
-using VilliInput.KeyboardInput;
 
 namespace VilliInput.Keyboard
 {

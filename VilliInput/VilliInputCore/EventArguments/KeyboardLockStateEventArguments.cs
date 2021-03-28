@@ -1,5 +1,4 @@
 ﻿using VilliInput.Keyboard;
-using VilliInput.KeyboardInput;
 
 namespace VilliInput.EventArguments
 {

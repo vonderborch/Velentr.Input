@@ -10,7 +10,6 @@
     <PackageReference Include="NClone" Version="1.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="GamePad\" />
     <Folder Include="Voice\" />
     <Folder Include="Touch\" />
   </ItemGroup>

@@ -22,6 +22,12 @@ namespace VilliInput.Conditions
             OrderMatters = orderMatters;
         }
 
+        public AllCondition(params Conditions.InputCondition[] conditions) : base(InputSource.AnyConditional, true, false, true, 0)
+        {
+            Conditions = conditions;
+            OrderMatters = false;
+        }
+
         public override bool InternalConditionMet(bool consumable, bool allowedIfConsumed)
         {
             GameTime time = null;

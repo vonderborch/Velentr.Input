@@ -18,6 +18,10 @@ namespace VilliInput
 
         public const string PlayerIndexExceptionMessage = "playerIndex must be 0 or greater, and less than the maximum supported gamepads on the system";
 
+        public const string InvalidGamePadStickSensor = "Invalid sensor! Must use GamePadSensor.LeftStick or GamePadSensor.RightStick!";
+
+        public const string InvalidGamePadTriggerSensor = "Invalid sensor! Must use GamePadSensor.LeftTrigger or GamePadSensor.RightTrigger!";
+
         public const string PlayerIndexExceptionMessageButtonState = "playerIndex must be less than the maximum supported gamepads on the system";
 
         public float MaxFloatDifference { get; set; } = 0.00001f;

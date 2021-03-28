@@ -35,7 +35,7 @@ namespace VilliInput.OLD.GamePadInput
                     PlayerIndex = i,
                     PreviousState = GamePadState.Default,
                     CurrentState = GamePadState.Default,
-                    Capabilities = GamePad.GetCapabilities(i),
+                    Capabilities = Microsoft.Xna.Framework.Input.GamePad.GetCapabilities(i),
                     DeadZone = Villi.System.Settings.DefaultGamePadDeadZone,
                 };
 
@@ -60,7 +60,7 @@ namespace VilliInput.OLD.GamePadInput
                     ConnectedGamePadIndexes.Clear();
                     for (var i = 0; i < GamePads.Length; i++)
                     {
-                        GamePads[i].Capabilities = GamePad.GetCapabilities(i);
+                        GamePads[i].Capabilities = Microsoft.Xna.Framework.Input.GamePad.GetCapabilities(i);
 
                         if (GamePads[i].IsConnected)
                         {
@@ -76,7 +76,7 @@ namespace VilliInput.OLD.GamePadInput
                 if (GamePads[i].IsConnected)
                 {
                     GamePads[i].PreviousState = GamePads[i].CurrentState;
-                    GamePads[i].CurrentState = GamePad.GetState(i, GamePads[i].DeadZone);
+                    GamePads[i].CurrentState = Microsoft.Xna.Framework.Input.GamePad.GetState(i, GamePads[i].DeadZone);
                 }
             }
         }
@@ -87,8 +87,8 @@ namespace VilliInput.OLD.GamePadInput
             for (var i = 0; i < GamePadHelpers.MaximumGamePads; i++)
             {
                 GamePads[i].PreviousState = GamePads[i].CurrentState;
-                GamePads[i].CurrentState = GamePad.GetState(i, GamePads[i].DeadZone);
-                GamePads[i].Capabilities = GamePad.GetCapabilities(i);
+                GamePads[i].CurrentState = Microsoft.Xna.Framework.Input.GamePad.GetState(i, GamePads[i].DeadZone);
+                GamePads[i].Capabilities = Microsoft.Xna.Framework.Input.GamePad.GetCapabilities(i);
             }
 
             LastConnectionCheckTime = Villi.CurrentTime;
@@ -152,7 +152,7 @@ namespace VilliInput.OLD.GamePadInput
                 return false;
             }
 
-            return GamePad.SetVibration(playerIndex, leftMotor, rightMotor);
+            return Microsoft.Xna.Framework.Input.GamePad.SetVibration(playerIndex, leftMotor, rightMotor);
         }
     }
 }

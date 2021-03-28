@@ -2,7 +2,6 @@
 using VilliInput.Enums;
 using VilliInput.EventArguments;
 using VilliInput.Keyboard;
-using VilliInput.KeyboardInput;
 
 namespace VilliInput.Conditions
 {

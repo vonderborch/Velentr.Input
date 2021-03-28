@@ -26,9 +26,9 @@ namespace VilliInput.OLD.GamePadInput
             {GamePadButton.DPadUp, state => state.DPad.Up},
         };
 
-        public static int MaximumGamePads => GamePad.MaximumGamePadCount;
+        public static int MaximumGamePads => Microsoft.Xna.Framework.Input.GamePad.MaximumGamePadCount;
 
-        public static int HighestGamePadIndex => GamePad.MaximumGamePadCount - 1;
+        public static int HighestGamePadIndex => Microsoft.Xna.Framework.Input.GamePad.MaximumGamePadCount - 1;
 
         public static bool IsButtonPressed(GamePadButton button, int playerIndex)
         {

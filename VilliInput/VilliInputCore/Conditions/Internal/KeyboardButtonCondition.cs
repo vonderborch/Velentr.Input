@@ -3,7 +3,6 @@ using VilliInput.Enums;
 using VilliInput.EventArguments;
 using VilliInput.Helpers;
 using VilliInput.Keyboard;
-using VilliInput.KeyboardInput;
 using VilliInput.Mouse;
 
 namespace VilliInput.Conditions.Internal

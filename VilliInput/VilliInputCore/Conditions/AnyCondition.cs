@@ -16,6 +16,11 @@ namespace VilliInput.Conditions
             Conditions = conditions;
         }
 
+        public AnyCondition(params Conditions.InputCondition[] conditions) : base(InputSource.AnyConditional, true, false, true, 0)
+        {
+            Conditions = conditions;
+        }
+
         public override bool InternalConditionMet(bool consumable, bool allowedIfConsumed)
         {
             _arguments = null;

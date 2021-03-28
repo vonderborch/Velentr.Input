@@ -1,4 +1,4 @@
-﻿namespace VilliInput.KeyboardInput
+﻿namespace VilliInput.Keyboard
 {
     public enum Key
     {

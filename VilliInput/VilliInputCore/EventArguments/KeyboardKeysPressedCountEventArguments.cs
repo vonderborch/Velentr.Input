@@ -1,6 +1,4 @@
-﻿using VilliInput.KeyboardInput;
-
-namespace VilliInput.EventArguments
+﻿namespace VilliInput.EventArguments
 {
     public class KeyboardKeysPressedCountEventArguments : VilliEventArguments
     {
