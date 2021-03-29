@@ -1,29 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using VilliInput.Enums;
 using VilliInput.EventArguments;
 using VilliInput.Helpers;
-using VilliInput.Mouse;
 using VilliInput.Touch;
 
 namespace VilliInput.Conditions
 {
+
     public class TouchGestureCondition : InputCondition
     {
-        public GestureType GestureType { get; private set; }
-
-        private readonly Rectangle? _parentBoundaries;
 
         private readonly Rectangle? _boundaries;
 
-        public Rectangle Boundaries => _boundaries ?? Villi.Window.ClientBounds;
-
-        public bool UseRelativeCoordinates { get; private set; }
-
-        public Rectangle ParentBoundaries => _parentBoundaries ?? Villi.Window.ClientBounds;
+        private readonly Rectangle? _parentBoundaries;
 
         private List<Gesture> _gestures;
 
@@ -34,6 +26,14 @@ namespace VilliInput.Conditions
             _boundaries = boundaries;
             _parentBoundaries = parentBoundaries;
         }
+
+        public GestureType GestureType { get; }
+
+        public Rectangle Boundaries => _boundaries ?? Villi.Window.ClientBounds;
+
+        public bool UseRelativeCoordinates { get; }
+
+        public Rectangle ParentBoundaries => _parentBoundaries ?? Villi.Window.ClientBounds;
 
 
         public override bool InternalConditionMet(bool consumable, bool allowedIfConsumed)
@@ -51,11 +51,9 @@ namespace VilliInput.Conditions
 
                 return false;
             }
-            else
-            {
-                UpdateState(false);
-                return false;
-            }
+
+            UpdateState(false);
+            return false;
         }
 
         protected override Value InternalGetValue()
@@ -79,25 +77,26 @@ namespace VilliInput.Conditions
 
         public override VilliEventArguments GetArguments()
         {
-            return new TouchEventArguments()
+            return new TouchEventArguments
             {
-                Boundaries = this.Boundaries,
-                GestureType = this.GestureType,
+                Boundaries = Boundaries,
+                GestureType = GestureType,
                 Condition = this,
-                InputSource = this.InputSource,
-                MilliSecondsForConditionMet = this.MilliSecondsForConditionMet,
-                UseRelativeCoordinates = this.UseRelativeCoordinates,
-                ConditionStateStartTime = this.CurrentStateStart,
+                InputSource = InputSource,
+                MilliSecondsForConditionMet = MilliSecondsForConditionMet,
+                UseRelativeCoordinates = UseRelativeCoordinates,
+                ConditionStateStartTime = CurrentStateStart,
                 ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime),
-                WindowMustBeActive = this.WindowMustBeActive,
-                Gestures = new List<Gesture>(_gestures),
+                WindowMustBeActive = WindowMustBeActive,
+                Gestures = new List<Gesture>(_gestures)
             };
         }
 
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
-            return (!WindowMustBeActive || Villi.IsWindowActive);
+            return !WindowMustBeActive || Villi.IsWindowActive;
         }
 
     }
+
 }

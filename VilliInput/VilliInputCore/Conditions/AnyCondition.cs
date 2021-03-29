@@ -5,21 +5,23 @@ using VilliInput.Helpers;
 
 namespace VilliInput.Conditions
 {
+
     public class AnyCondition : InputCondition
     {
-        public InputCondition[] Conditions { get; private set; }
 
         private VilliEventArguments _arguments;
 
-        public AnyCondition(bool windowMustBeActive = true, params Conditions.InputCondition[] conditions) : base(InputSource.AnyConditional, windowMustBeActive, false, true, 0)
+        public AnyCondition(bool windowMustBeActive = true, params InputCondition[] conditions) : base(InputSource.AnyConditional, windowMustBeActive, false, true, 0)
         {
             Conditions = conditions;
         }
 
-        public AnyCondition(params Conditions.InputCondition[] conditions) : base(InputSource.AnyConditional, true, false, true, 0)
+        public AnyCondition(params InputCondition[] conditions) : base(InputSource.AnyConditional, true, false, true, 0)
         {
             Conditions = conditions;
         }
+
+        public InputCondition[] Conditions { get; }
 
         public override bool InternalConditionMet(bool consumable, bool allowedIfConsumed)
         {
@@ -70,15 +72,15 @@ namespace VilliInput.Conditions
 
         public override VilliEventArguments GetArguments()
         {
-            return new AnyConditionalEventArguments()
+            return new AnyConditionalEventArguments
             {
-                Conditions = this.Conditions,
+                Conditions = Conditions,
                 Condition = this,
-                InputSource = this.InputSource,
-                ConditionStateStartTime = this.CurrentStateStart,
+                InputSource = InputSource,
+                ConditionStateStartTime = CurrentStateStart,
                 ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime),
-                WindowMustBeActive = this.WindowMustBeActive,
-                ValidConditionArguments = this._arguments.Clone(),
+                WindowMustBeActive = WindowMustBeActive,
+                ValidConditionArguments = _arguments.Clone()
             };
         }
 
@@ -88,4 +90,5 @@ namespace VilliInput.Conditions
         }
 
     }
+
 }

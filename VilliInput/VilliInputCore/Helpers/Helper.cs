@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace VilliInput.Helpers
 {
+
     public static class Helper
     {
 
@@ -23,7 +24,7 @@ namespace VilliInput.Helpers
 
         public static Point ScalePointToChild(Point coordinates, Rectangle parentArea, Rectangle childArea)
         {
-            var scale = new Vector2(parentArea.Width / (float)childArea.Width, parentArea.Height / (float)childArea.Height);
+            var scale = new Vector2(parentArea.Width / (float) childArea.Width, parentArea.Height / (float) childArea.Height);
             var scaledOrigin = new Vector2(childArea.X * scale.X, childArea.Y * scale.Y);
 
             return (coordinates.ToVector2() * scale - scaledOrigin).ToPoint();
@@ -43,5 +44,7 @@ namespace VilliInput.Helpers
         {
             return Math.Abs(value1 - value2) <= maxDifference;
         }
+
     }
+
 }

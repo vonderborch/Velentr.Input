@@ -4,16 +4,9 @@ using XnaGestureType = Microsoft.Xna.Framework.Input.Touch.GestureType;
 
 namespace VilliInput
 {
+
     public sealed class Constants
     {
-        static Constants() { }
-        private Constants() { }
-
-        public static Constants Settings { get; } = new Constants();
-
-        public GamePadDeadZone DefaultGamePadDeadZone { get; set; } = GamePadDeadZone.IndependentAxes;
-
-        public int SecondsBetweenGamePadConnectionCheck { get; set; } = 15;
 
         public const string PlayerIndexExceptionMessage = "playerIndex must be 0 or greater, and less than the maximum supported gamepads on the system";
 
@@ -22,6 +15,16 @@ namespace VilliInput
         public const string InvalidGamePadTriggerSensor = "Invalid sensor! Must use GamePadSensor.LeftTrigger or GamePadSensor.RightTrigger!";
 
         public const string PlayerIndexExceptionMessageButtonState = "playerIndex must be less than the maximum supported gamepads on the system";
+
+        static Constants() { }
+
+        private Constants() { }
+
+        public static Constants Settings { get; } = new Constants();
+
+        public GamePadDeadZone DefaultGamePadDeadZone { get; set; } = GamePadDeadZone.IndependentAxes;
+
+        public int SecondsBetweenGamePadConnectionCheck { get; set; } = 15;
 
         public TouchEngines TouchEngine { get; set; } = TouchEngines.XNA_derived;
 
@@ -32,4 +35,5 @@ namespace VilliInput
         public double MaxDoubleDifference { get; set; } = 0.0000001d;
 
     }
+
 }

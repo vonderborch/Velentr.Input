@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework.Input.Touch;
 
 namespace VilliInput.Touch.Engines
 {
+
     public class XnaDerivedEngine : TouchEngine
     {
 
@@ -64,4 +64,5 @@ namespace VilliInput.Touch.Engines
         }
 
     }
+
 }

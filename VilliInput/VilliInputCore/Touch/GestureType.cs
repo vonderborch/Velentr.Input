@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace VilliInput.Touch
+﻿namespace VilliInput.Touch
 {
     public enum GestureType
     {
@@ -65,6 +61,6 @@ namespace VilliInput.Touch
         /// <summary>
         /// The user touched the screen and performed either top to bottom or bottom to top drag gesture.
         /// </summary>
-        VerticalDrag = 512,
+        VerticalDrag = 512
     }
 }

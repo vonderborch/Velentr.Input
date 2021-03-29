@@ -1,17 +1,13 @@
-﻿using Microsoft.Xna.Framework;
-using VilliInput.Conditions.Internal;
-using VilliInput.EventArguments;
+﻿using VilliInput.Conditions.Internal;
 using VilliInput.GamePad;
-using VilliInput.Helpers;
-using VilliInput.Mouse;
 
 namespace VilliInput.Conditions
 {
+
     public class GamePadButtonSensorMovedCondition : GamePadSensorBooleanCondition
     {
-        public GamePadButtonSensorMovedCondition(GamePadSensor sensor, int playerIndex = 0, GamePadInputMode inputMode = GamePadInputMode.SingleGamePad, GamePadSensorValueMode sensorValueMode = GamePadSensorValueMode.SingleGamePad, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = true, uint milliSecondsForConditionMet = 0) : base(sensor, playerIndex, inputMode, sensorValueMode, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
-        {
-        }
+
+        public GamePadButtonSensorMovedCondition(GamePadSensor sensor, int playerIndex = 0, GamePadInputMode inputMode = GamePadInputMode.SingleGamePad, GamePadSensorValueMode sensorValueMode = GamePadSensorValueMode.SingleGamePad, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = true, uint milliSecondsForConditionMet = 0) : base(sensor, playerIndex, inputMode, sensorValueMode, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet) { }
 
         protected override bool InternalCurrent(int playerIndex)
         {
@@ -22,5 +18,7 @@ namespace VilliInput.Conditions
         {
             return true;
         }
+
     }
+
 }

@@ -8,8 +8,10 @@ using VilliInput.Helpers;
 
 namespace VilliInput.Mouse
 {
+
     public class MouseService : InputService
     {
+
         private static readonly List<MouseButton> buttons = new List<MouseButton>(Enum.GetValues(typeof(MouseButton)).Cast<MouseButton>().ToList());
 
         internal static Dictionary<MouseButton, ulong> ButtonLastConsumed = new Dictionary<MouseButton, ulong>(Enum.GetNames(typeof(MouseButton)).Length);
@@ -22,7 +24,7 @@ namespace VilliInput.Mouse
             {MouseButton.MiddleButton, state => state.MiddleButton},
             {MouseButton.RightButton, state => state.RightButton},
             {MouseButton.XButton1, state => state.XButton1},
-            {MouseButton.XButton2, state => state.XButton2},
+            {MouseButton.XButton2, state => state.XButton2}
         };
 
         public MouseService()
@@ -35,6 +37,40 @@ namespace VilliInput.Mouse
         public static MouseState CurrentState { get; private set; }
 
         public bool ResetMouseCoordsToCenterOfScreen { get; set; } = false;
+
+        public static int CurrentHorizontalScrollWheelValue => CurrentState.HorizontalScrollWheelValue;
+
+        public static int PreviousHorizontalScrollWheelValue => PreviousState.HorizontalScrollWheelValue;
+
+        public static int CurrentVerticalScrollWheelValue => CurrentState.ScrollWheelValue;
+
+        public static int PreviousVerticalScrollWheelValue => PreviousState.ScrollWheelValue;
+
+        public static int HorizontalScrollDelta => CurrentHorizontalScrollWheelValue - PreviousHorizontalScrollWheelValue;
+
+        public static int VerticalScrollDelta => CurrentVerticalScrollWheelValue - PreviousVerticalScrollWheelValue;
+
+        public static Point ScrollDelta => new Point(HorizontalScrollDelta, VerticalScrollDelta);
+
+        public static Point CurrentScrollPositions => new Point(CurrentHorizontalScrollWheelValue, CurrentVerticalScrollWheelValue);
+
+        public static Point PreviousScrollPositions => new Point(PreviousHorizontalScrollWheelValue, PreviousVerticalScrollWheelValue);
+
+        public static Point CurrentCursorPosition => CurrentState.Position;
+
+        public static Point PreviousCursorPosition => PreviousState.Position;
+
+        public static Point CursorPositionDelta => CurrentCursorPosition - PreviousCursorPosition;
+
+        public static bool ScrolledVertically => VerticalScrollDelta != 0;
+
+        public static bool ScrolledHorizontally => HorizontalScrollDelta != 0;
+
+        public static bool Scrolled => ScrolledVertically || ScrolledHorizontally;
+
+        public static bool CursorMoved => CursorPositionDelta != Point.Zero;
+
+        public static bool IsMouseInWindow => Villi.IsWindowActive && Helper.CoordinateInRectangle(CurrentCursorPosition, Villi.Window.ClientBounds);
 
         public override void Setup()
         {
@@ -103,40 +139,6 @@ namespace VilliInput.Mouse
             return ButtonMapping[button](PreviousState) == ButtonState.Released;
         }
 
-        public static int CurrentHorizontalScrollWheelValue => CurrentState.HorizontalScrollWheelValue;
-
-        public static int PreviousHorizontalScrollWheelValue => PreviousState.HorizontalScrollWheelValue;
-
-        public static int CurrentVerticalScrollWheelValue => CurrentState.ScrollWheelValue;
-
-        public static int PreviousVerticalScrollWheelValue => PreviousState.ScrollWheelValue;
-
-        public static int HorizontalScrollDelta => CurrentHorizontalScrollWheelValue - PreviousHorizontalScrollWheelValue;
-
-        public static int VerticalScrollDelta => CurrentVerticalScrollWheelValue - PreviousVerticalScrollWheelValue;
-
-        public static Point ScrollDelta => new Point(HorizontalScrollDelta, VerticalScrollDelta);
-
-        public static Point CurrentScrollPositions => new Point(CurrentHorizontalScrollWheelValue, CurrentVerticalScrollWheelValue);
-
-        public static Point PreviousScrollPositions => new Point(PreviousHorizontalScrollWheelValue, PreviousVerticalScrollWheelValue);
-
-        public static Point CurrentCursorPosition => CurrentState.Position;
-
-        public static Point PreviousCursorPosition => PreviousState.Position;
-
-        public static Point CursorPositionDelta => CurrentCursorPosition - PreviousCursorPosition;
-
-        public static bool ScrolledVertically => VerticalScrollDelta != 0;
-
-        public static bool ScrolledHorizontally => HorizontalScrollDelta != 0;
-
-        public static bool Scrolled => ScrolledVertically || ScrolledHorizontally;
-
-        public static bool CursorMoved => CursorPositionDelta != Point.Zero;
-
-        public static bool IsMouseInWindow => Villi.IsWindowActive && Helpers.Helper.CoordinateInRectangle(CurrentCursorPosition, Villi.Window.ClientBounds);
-
         public static bool CursorInBounds(Rectangle boundaries, bool scaleCoordinatesToArea = false, Rectangle? parentBoundaries = null)
         {
             return Helper.CoordinateInRectangle(
@@ -146,5 +148,7 @@ namespace VilliInput.Mouse
                 boundaries
             );
         }
+
     }
+
 }

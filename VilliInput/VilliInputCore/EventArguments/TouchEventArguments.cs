@@ -4,8 +4,10 @@ using VilliInput.Touch;
 
 namespace VilliInput.EventArguments
 {
+
     public class TouchEventArguments : VilliEventArguments
     {
+
         public GestureType GestureType { get; internal set; }
 
         public Rectangle? Boundaries { get; internal set; }
@@ -16,7 +18,9 @@ namespace VilliInput.EventArguments
 
         public override VilliEventArguments Clone()
         {
-            return (TouchEventArguments)this.MemberwiseClone();
+            return (TouchEventArguments) MemberwiseClone();
         }
+
     }
+
 }

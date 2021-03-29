@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace VilliInput.Touch.Engines
 {
+
     public class Win7Engine : TouchEngine
     {
 
@@ -34,4 +33,5 @@ namespace VilliInput.Touch.Engines
         }
 
     }
+
 }

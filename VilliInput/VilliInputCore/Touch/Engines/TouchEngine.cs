@@ -4,23 +4,25 @@ using VilliInput.Helpers;
 
 namespace VilliInput.Touch.Engines
 {
+
     public abstract class TouchEngine
     {
-        protected Dictionary<GestureType, List<Gesture>> Gestures;
 
         protected Dictionary<int, ulong> GestureLastConsumed;
 
-        public TouchEngines Engine { get; private set; }
-
-        public bool TouchPanelConnected { get; protected set; }
-
-        public int MaxTouchPoints { get; protected set; }
+        protected Dictionary<GestureType, List<Gesture>> Gestures;
 
         protected TouchEngine(TouchEngines engine)
         {
             Engine = engine;
             GestureLastConsumed = new Dictionary<int, ulong>();
         }
+
+        public TouchEngines Engine { get; }
+
+        public bool TouchPanelConnected { get; protected set; }
+
+        public int MaxTouchPoints { get; protected set; }
 
         public abstract void Setup();
 
@@ -37,6 +39,7 @@ namespace VilliInput.Touch.Engines
             {
                 return frame == Villi.CurrentFrame;
             }
+
             return false;
         }
 
@@ -62,7 +65,8 @@ namespace VilliInput.Touch.Engines
             }
 
             return validGestures;
-
         }
+
     }
+
 }

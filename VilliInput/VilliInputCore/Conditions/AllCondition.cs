@@ -7,25 +7,27 @@ using VilliInput.Helpers;
 
 namespace VilliInput.Conditions
 {
+
     public class AllCondition : InputCondition
     {
-        public InputCondition[] Conditions { get; private set; }
-
-        public bool OrderMatters { get; private set; }
 
         private List<VilliEventArguments> _arguments;
 
-        public AllCondition(bool windowMustBeActive = true, bool orderMatters = false, params Conditions.InputCondition[] conditions) : base(InputSource.AnyConditional, windowMustBeActive, false, true, 0)
+        public AllCondition(bool windowMustBeActive = true, bool orderMatters = false, params InputCondition[] conditions) : base(InputSource.AnyConditional, windowMustBeActive, false, true, 0)
         {
             Conditions = conditions;
             OrderMatters = orderMatters;
         }
 
-        public AllCondition(params Conditions.InputCondition[] conditions) : base(InputSource.AnyConditional, true, false, true, 0)
+        public AllCondition(params InputCondition[] conditions) : base(InputSource.AnyConditional, true, false, true, 0)
         {
             Conditions = conditions;
             OrderMatters = false;
         }
+
+        public InputCondition[] Conditions { get; }
+
+        public bool OrderMatters { get; }
 
         public override bool InternalConditionMet(bool consumable, bool allowedIfConsumed)
         {
@@ -40,17 +42,15 @@ namespace VilliInput.Conditions
                     {
                         return false;
                     }
+
+                    if (time == null || time.TotalGameTime <= Conditions[i].CurrentStateStart.TotalGameTime)
+                    {
+                        time = Conditions[i].CurrentStateStart;
+                        _arguments.Add(Conditions[i].GetArguments());
+                    }
                     else
                     {
-                        if (time == null || time.TotalGameTime <= Conditions[i].CurrentStateStart.TotalGameTime)
-                        {
-                            time = Conditions[i].CurrentStateStart;
-                            _arguments.Add(Conditions[i].GetArguments());
-                        }
-                        else
-                        {
-                            return false;
-                        }
+                        return false;
                     }
                 }
                 catch
@@ -95,15 +95,15 @@ namespace VilliInput.Conditions
                 args.Add(arg.Clone());
             }
 
-            return new AllConditionEventArguments()
+            return new AllConditionEventArguments
             {
-                Conditions = this.Conditions,
+                Conditions = Conditions,
                 Condition = this,
-                InputSource = this.InputSource,
-                ConditionStateStartTime = this.CurrentStateStart,
+                InputSource = InputSource,
+                ConditionStateStartTime = CurrentStateStart,
                 ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime),
-                WindowMustBeActive = this.WindowMustBeActive,
-                ConditionEventArguments = args,
+                WindowMustBeActive = WindowMustBeActive,
+                ConditionEventArguments = args
             };
         }
 
@@ -113,4 +113,5 @@ namespace VilliInput.Conditions
         }
 
     }
+
 }

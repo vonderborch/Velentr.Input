@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
 using VilliInput.Conditions;
 using VilliInput.Enums;
 
 namespace VilliInput.EventArguments
 {
+
     public abstract class VilliEventArguments : EventArgs
     {
+
         public InputSource InputSource { get; internal set; }
 
         public InputCondition Condition { get; internal set; }
@@ -24,4 +24,5 @@ namespace VilliInput.EventArguments
         public abstract VilliEventArguments Clone();
 
     }
+
 }

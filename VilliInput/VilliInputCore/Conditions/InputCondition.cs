@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using VilliInput.Enums;
 using VilliInput.EventArguments;
-using ValueType = VilliInput.Enums.ValueType;
 
 namespace VilliInput.Conditions
 {
+
     public abstract class InputCondition
     {
+
         public VilliEvent Event = new VilliEvent();
 
         protected InputCondition(InputSource source, bool windowMustBeActive, bool consumable, bool allowedIfConsumed, uint milliSecondsForConditionMet)
@@ -38,7 +35,7 @@ namespace VilliInput.Conditions
 
         public ValueLogic? ValueLogic { get; protected set; }
 
-        public uint MilliSecondsForConditionMet { get; private set; }
+        public uint MilliSecondsForConditionMet { get; }
 
         public bool ConditionMet()
         {
@@ -85,5 +82,7 @@ namespace VilliInput.Conditions
 
             Event.TriggerEvent(this, arguments);
         }
+
     }
+
 }

@@ -3,8 +3,10 @@ using VilliInput.GamePad;
 
 namespace VilliInput.EventArguments
 {
+
     public class GamePadStickSensorEventArguments : VilliEventArguments
     {
+
         public GamePadSensor Sensor { get; internal set; }
 
         public int PlayerIndex { get; internal set; }
@@ -19,7 +21,9 @@ namespace VilliInput.EventArguments
 
         public override VilliEventArguments Clone()
         {
-            return (GamePadStickSensorEventArguments)this.MemberwiseClone();
+            return (GamePadStickSensorEventArguments) MemberwiseClone();
         }
+
     }
+
 }

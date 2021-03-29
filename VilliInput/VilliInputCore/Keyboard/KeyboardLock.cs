@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace VilliInput.Keyboard
+﻿namespace VilliInput.Keyboard
 {
+
     public enum KeyboardLock
     {
+
         CapsLock,
-        NumLock,
+
+        NumLock
+
     }
+
 }

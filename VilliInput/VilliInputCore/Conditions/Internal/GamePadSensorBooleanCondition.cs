@@ -1,20 +1,14 @@
 ﻿using System;
 using VilliInput.Enums;
 using VilliInput.EventArguments;
-using VilliInput.Helpers;
 using VilliInput.GamePad;
+using VilliInput.Helpers;
 
 namespace VilliInput.Conditions.Internal
 {
+
     public abstract class GamePadSensorBooleanCondition : BooleanCondition
     {
-        public GamePadSensor Sensor { get; private set; }
-
-        public int PlayerIndex { get; protected set; }
-
-        public GamePadInputMode InputMode { get; protected set; }
-
-        public GamePadSensorValueMode SensorValueMode { get; protected set; }
 
         protected GamePadSensorBooleanCondition(GamePadSensor sensor, int playerIndex = 0, GamePadInputMode inputMode = GamePadInputMode.SingleGamePad, GamePadSensorValueMode sensorValueMode = GamePadSensorValueMode.SingleGamePad, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = true, uint milliSecondsForConditionMet = 0) : base(InputSource.GamePad, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
         {
@@ -29,43 +23,51 @@ namespace VilliInput.Conditions.Internal
             }
         }
 
+        public GamePadSensor Sensor { get; }
+
+        public int PlayerIndex { get; protected set; }
+
+        public GamePadInputMode InputMode { get; protected set; }
+
+        public GamePadSensorValueMode SensorValueMode { get; protected set; }
+
         public override VilliEventArguments GetArguments()
         {
             switch (Sensor)
             {
                 case GamePadSensor.RightStick:
                 case GamePadSensor.LeftStick:
-                    return new GamePadStickSensorEventArguments()
+                    return new GamePadStickSensorEventArguments
                     {
-                        Sensor = this.Sensor,
-                        PlayerIndex = this.PlayerIndex,
-                        InputMode = this.InputMode,
-                        SensorValueMode = this.SensorValueMode,
+                        Sensor = Sensor,
+                        PlayerIndex = PlayerIndex,
+                        InputMode = InputMode,
+                        SensorValueMode = SensorValueMode,
                         Condition = this,
-                        InputSource = this.InputSource,
-                        MilliSecondsForConditionMet = this.MilliSecondsForConditionMet,
-                        ConditionStateStartTime = this.CurrentStateStart,
+                        InputSource = InputSource,
+                        MilliSecondsForConditionMet = MilliSecondsForConditionMet,
+                        ConditionStateStartTime = CurrentStateStart,
                         ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime),
-                        WindowMustBeActive = this.WindowMustBeActive,
-                        Delta = GamePadService.GetStickDelta(Sensor, PlayerIndex, InputMode, this.SensorValueMode),
-                        CurrentPosition = GamePadService.GetStickPosition(Sensor, PlayerIndex, InputMode, this.SensorValueMode),
+                        WindowMustBeActive = WindowMustBeActive,
+                        Delta = GamePadService.GetStickDelta(Sensor, PlayerIndex, InputMode, SensorValueMode),
+                        CurrentPosition = GamePadService.GetStickPosition(Sensor, PlayerIndex, InputMode, SensorValueMode)
                     };
                 case GamePadSensor.LeftTrigger:
                 case GamePadSensor.RightTrigger:
-                    return new GamePadTriggerSensorEventArguments()
+                    return new GamePadTriggerSensorEventArguments
                     {
-                        Sensor = this.Sensor,
-                        PlayerIndex = this.PlayerIndex,
-                        InputMode = this.InputMode,
-                        SensorValueMode = this.SensorValueMode,
+                        Sensor = Sensor,
+                        PlayerIndex = PlayerIndex,
+                        InputMode = InputMode,
+                        SensorValueMode = SensorValueMode,
                         Condition = this,
-                        InputSource = this.InputSource,
-                        MilliSecondsForConditionMet = this.MilliSecondsForConditionMet,
-                        ConditionStateStartTime = this.CurrentStateStart,
+                        InputSource = InputSource,
+                        MilliSecondsForConditionMet = MilliSecondsForConditionMet,
+                        ConditionStateStartTime = CurrentStateStart,
                         ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime),
-                        WindowMustBeActive = this.WindowMustBeActive,
-                        Delta = GamePadService.GetTriggerDelta(Sensor, PlayerIndex, InputMode, this.SensorValueMode),
-                        CurrentPosition = GamePadService.GetTriggerPosition(Sensor, PlayerIndex, InputMode, this.SensorValueMode),
+                        WindowMustBeActive = WindowMustBeActive,
+                        Delta = GamePadService.GetTriggerDelta(Sensor, PlayerIndex, InputMode, SensorValueMode),
+                        CurrentPosition = GamePadService.GetTriggerPosition(Sensor, PlayerIndex, InputMode, SensorValueMode)
                     };
             }
 
@@ -163,9 +165,9 @@ namespace VilliInput.Conditions.Internal
 
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
-            return ((!WindowMustBeActive || Villi.IsWindowActive)
+            return (!WindowMustBeActive || Villi.IsWindowActive)
                    && (allowedIfConsumed || IsConsumed())
-                   && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime) >= milliSecondsForConditionMet));
+                   && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime) >= milliSecondsForConditionMet);
         }
 
         public override bool IsConsumed()
@@ -198,5 +200,7 @@ namespace VilliInput.Conditions.Internal
 
             return false;
         }
+
     }
+
 }

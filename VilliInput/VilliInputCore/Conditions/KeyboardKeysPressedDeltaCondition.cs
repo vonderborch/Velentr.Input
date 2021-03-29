@@ -5,17 +5,18 @@ using VilliInput.EventArguments;
 using VilliInput.Helpers;
 using VilliInput.Keyboard;
 using VilliInput.Mouse;
+using ValueType = VilliInput.Enums.ValueType;
 
 namespace VilliInput.Conditions
 {
+
     public class KeyboardKeysPressedDeltaCondition : LogicCondition
     {
 
         public KeyboardKeysPressedDeltaCondition(ValueLogic logicValue, bool windowMustBeActive, bool consumable, bool allowedIfConsumed, uint milliSecondsForConditionMet) : base(InputSource.Keyboard, logicValue, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
         {
-
             logicValue.Value.Validate();
-            if (logicValue.Value.Type != Enums.ValueType.Int)
+            if (logicValue.Value.Type != ValueType.Int)
             {
                 throw new Exception("logicValue contains an invalid type for KeysPressedDelta, you must use a ValueType.Int!");
             }
@@ -23,7 +24,7 @@ namespace VilliInput.Conditions
 
         protected override Value InternalGetValue()
         {
-            return new Value(Enums.ValueType.Int, valueInt: KeyboardService.KeysPressedCountDelta());
+            return new Value(ValueType.Int, valueInt: KeyboardService.KeysPressedCountDelta());
         }
 
         public override void Consume()
@@ -38,25 +39,26 @@ namespace VilliInput.Conditions
 
         public override VilliEventArguments GetArguments()
         {
-            return new KeyboardKeysPressedCountEventArguments()
+            return new KeyboardKeysPressedCountEventArguments
             {
                 Condition = this,
-                InputSource = this.InputSource,
+                InputSource = InputSource,
                 NumberOfKeysPressed = KeyboardService.CurrentKeysPressed(),
-                NumberOfKeysPressedDelta =  KeyboardService.KeysPressedCountDelta(),
-                MilliSecondsForConditionMet = this.MilliSecondsForConditionMet,
-                ConditionStateStartTime = this.CurrentStateStart,
+                NumberOfKeysPressedDelta = KeyboardService.KeysPressedCountDelta(),
+                MilliSecondsForConditionMet = MilliSecondsForConditionMet,
+                ConditionStateStartTime = CurrentStateStart,
                 ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime),
-                WindowMustBeActive = this.WindowMustBeActive,
+                WindowMustBeActive = WindowMustBeActive
             };
         }
 
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
-            return ((!WindowMustBeActive || (Villi.IsWindowActive && MouseService.IsMouseInWindow))
+            return (!WindowMustBeActive || Villi.IsWindowActive && MouseService.IsMouseInWindow)
                    && (allowedIfConsumed || IsConsumed())
-                   && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime) >= milliSecondsForConditionMet));
+                   && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime) >= milliSecondsForConditionMet);
         }
 
     }
+
 }

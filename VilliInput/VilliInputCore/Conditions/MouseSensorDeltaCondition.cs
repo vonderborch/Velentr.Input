@@ -9,18 +9,11 @@ using ValueType = VilliInput.Enums.ValueType;
 
 namespace VilliInput.Conditions
 {
+
     public class MouseSensorDeltaCondition : LogicCondition
     {
 
-        public MouseSensor Sensor { get; private set; }
-
         private readonly Rectangle? _parentBoundaries;
-
-        public Rectangle? Boundaries { get; private set; }
-
-        public bool UseRelativeCoordinates { get; private set; }
-
-        public Rectangle? ParentBoundaries => _parentBoundaries ?? Villi.Window.ClientBounds;
 
         public MouseSensorDeltaCondition(MouseSensor sensor, ValueLogic logicValue, Rectangle? boundaries = null, bool useRelativeCoordinates = false, Rectangle? parentBoundaries = null, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = false, uint milliSecondsForConditionMet = 0) : base(InputSource.Mouse, logicValue, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
         {
@@ -64,21 +57,29 @@ namespace VilliInput.Conditions
             }
         }
 
+        public MouseSensor Sensor { get; }
+
+        public Rectangle? Boundaries { get; }
+
+        public bool UseRelativeCoordinates { get; }
+
+        public Rectangle? ParentBoundaries => _parentBoundaries ?? Villi.Window.ClientBounds;
+
         protected override Value InternalGetValue()
         {
             switch (Sensor)
             {
                 case MouseSensor.HorizontalScrollWheel:
-                    return new Value(Enums.ValueType.Int, valueInt: MouseService.HorizontalScrollDelta);
+                    return new Value(ValueType.Int, valueInt: MouseService.HorizontalScrollDelta);
                 case MouseSensor.Pointer:
-                    return new Value(Enums.ValueType.Int, valuePoint: MouseService.CursorPositionDelta);
+                    return new Value(ValueType.Int, valuePoint: MouseService.CursorPositionDelta);
                 case MouseSensor.ScrollWheels:
-                    return new Value(Enums.ValueType.Int, valuePoint: MouseService.ScrollDelta);
+                    return new Value(ValueType.Int, valuePoint: MouseService.ScrollDelta);
                 case MouseSensor.VerticalScrollWheel:
-                    return new Value(Enums.ValueType.Int, valueInt: MouseService.VerticalScrollDelta);
+                    return new Value(ValueType.Int, valueInt: MouseService.VerticalScrollDelta);
             }
 
-            return new Value(Enums.ValueType.None);
+            return new Value(ValueType.None);
         }
 
         public override void Consume()
@@ -93,30 +94,31 @@ namespace VilliInput.Conditions
 
         public override VilliEventArguments GetArguments()
         {
-            return new MouseSensorMovementEventArguments()
+            return new MouseSensorMovementEventArguments
             {
-                Boundaries = this.Boundaries,
-                Sensor = this.Sensor,
+                Boundaries = Boundaries,
+                Sensor = Sensor,
                 Condition = this,
-                InputSource = this.InputSource,
+                InputSource = InputSource,
                 MouseCoordinates = MouseService.CurrentCursorPosition,
                 RelativeMouseCoordinates = Helper.ScalePointToChild(MouseService.CurrentCursorPosition, ParentBoundaries ?? Villi.Window.ClientBounds, Boundaries ?? Villi.Window.ClientBounds),
-                MilliSecondsForConditionMet = this.MilliSecondsForConditionMet,
-                UseRelativeCoordinates = this.UseRelativeCoordinates,
-                ConditionStateStartTime = this.CurrentStateStart,
+                MilliSecondsForConditionMet = MilliSecondsForConditionMet,
+                UseRelativeCoordinates = UseRelativeCoordinates,
+                ConditionStateStartTime = CurrentStateStart,
                 ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime),
-                WindowMustBeActive = this.WindowMustBeActive,
-                CurrentValue = this.InternalGetValue(),
+                WindowMustBeActive = WindowMustBeActive,
+                CurrentValue = InternalGetValue()
             };
         }
 
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
-            return (!WindowMustBeActive || (Villi.IsWindowActive && MouseService.IsMouseInWindow))
+            return (!WindowMustBeActive || Villi.IsWindowActive && MouseService.IsMouseInWindow)
                    && (allowedIfConsumed || IsConsumed())
                    && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime) >= milliSecondsForConditionMet)
-                   && (Boundaries == null || MouseService.CursorInBounds((Rectangle)Boundaries, UseRelativeCoordinates, ParentBoundaries));
+                   && (Boundaries == null || MouseService.CursorInBounds((Rectangle) Boundaries, UseRelativeCoordinates, ParentBoundaries));
         }
 
     }
+
 }

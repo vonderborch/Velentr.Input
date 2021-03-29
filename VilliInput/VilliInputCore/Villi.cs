@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using VilliInput.Conditions;
 using VilliInput.GamePad;
 using VilliInput.Helpers;
@@ -12,13 +9,18 @@ using VilliInput.Voice;
 
 namespace VilliInput
 {
+
     public sealed class Villi
     {
+
         private static Rectangle window;
 
         private static Point centerCoordinates;
 
+        public Cache<string, InputCondition> TrackedConditions = new Cache<string, InputCondition>();
+
         static Villi() { }
+
         private Villi() { }
 
         public static Villi System { get; } = new Villi();
@@ -35,9 +37,7 @@ namespace VilliInput
 
         public static int WindowHeight => Window.ClientBounds.Height;
 
-        public Cache<string, InputCondition> TrackedConditions = new Cache<string, InputCondition>();
-
-        public ulong ConditionIndex { get; private set; } = 0;
+        public ulong ConditionIndex { get; private set; }
 
         public MouseService Mouse { get; private set; }
 
@@ -130,7 +130,7 @@ namespace VilliInput
         {
             if (name == null)
             {
-                name = $"Condition_{(ConditionIndex++)}";
+                name = $"Condition_{ConditionIndex++}";
             }
 
             return TrackedConditions.AddItem(name, condition, layerDepth, forceAdd) != null;
@@ -150,5 +150,7 @@ namespace VilliInput
         {
             return TrackedConditions.RemoveItem(layerDepth);
         }
+
     }
+
 }

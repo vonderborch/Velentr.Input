@@ -4,23 +4,25 @@ using ValueType = VilliInput.Enums.ValueType;
 
 namespace VilliInput
 {
+
     public struct Value
     {
-        public float? FloatValue { get; private set; }
 
-        public int? IntValue { get; private set; }
+        public float? FloatValue { get; }
 
-        public uint? UIntValue { get; private set; }
+        public int? IntValue { get; }
 
-        public double? DoubleValue { get; private set; }
+        public uint? UIntValue { get; }
 
-        public Point? PointValue { get; private set; }
+        public double? DoubleValue { get; }
 
-        public Vector2? Vector2Value { get; private set; }
+        public Point? PointValue { get; }
 
-        public Enums.ValueType Type { get; private set; }
+        public Vector2? Vector2Value { get; }
 
-        public Value(Enums.ValueType type, uint? valueUInt = null, int? valueInt = null, Point? valuePoint = null, Vector2? valueVector2 = null, float? valueFloat = null, double? valueDouble = null)
+        public ValueType Type { get; }
+
+        public Value(ValueType type, uint? valueUInt = null, int? valueInt = null, Point? valuePoint = null, Vector2? valueVector2 = null, float? valueFloat = null, double? valueDouble = null)
         {
             UIntValue = valueUInt;
             IntValue = valueInt;
@@ -82,5 +84,7 @@ namespace VilliInput
                     break;
             }
         }
+
     }
+
 }

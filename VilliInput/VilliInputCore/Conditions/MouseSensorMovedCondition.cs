@@ -7,32 +7,33 @@ using VilliInput.Mouse;
 
 namespace VilliInput.Conditions
 {
+
     public class MouseSensorMovedCondition : MouseBooleanCondition
     {
-
-        public MouseSensor Sensor { get; private set; }
 
         public MouseSensorMovedCondition(MouseSensor sensor, Rectangle? boundaries = null, bool useRelativeCoordinates = false, Rectangle? parentBoundaries = null, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = true, uint milliSecondsForConditionMet = 0) : base(boundaries, useRelativeCoordinates, parentBoundaries, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
         {
             Sensor = sensor;
         }
 
+        public MouseSensor Sensor { get; }
+
         public override VilliEventArguments GetArguments()
         {
-            return new MouseSensorMovementEventArguments()
+            return new MouseSensorMovementEventArguments
             {
-                Boundaries = this.Boundaries,
-                Sensor = this.Sensor,
+                Boundaries = Boundaries,
+                Sensor = Sensor,
                 Condition = this,
-                InputSource = this.InputSource,
+                InputSource = InputSource,
                 MouseCoordinates = MouseService.CurrentCursorPosition,
                 RelativeMouseCoordinates = Helper.ScalePointToChild(MouseService.CurrentCursorPosition, ParentBoundaries ?? Villi.Window.ClientBounds, Boundaries ?? Villi.Window.ClientBounds),
-                MilliSecondsForConditionMet = this.MilliSecondsForConditionMet,
-                UseRelativeCoordinates = this.UseRelativeCoordinates,
-                ConditionStateStartTime = this.CurrentStateStart,
+                MilliSecondsForConditionMet = MilliSecondsForConditionMet,
+                UseRelativeCoordinates = UseRelativeCoordinates,
+                ConditionStateStartTime = CurrentStateStart,
                 ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime),
-                WindowMustBeActive = this.WindowMustBeActive,
-                CurrentValue = this.InternalGetValue(),
+                WindowMustBeActive = WindowMustBeActive,
+                CurrentValue = InternalGetValue()
             };
         }
 
@@ -98,4 +99,5 @@ namespace VilliInput.Conditions
         }
 
     }
+
 }

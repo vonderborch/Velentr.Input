@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using VilliInput.Enums;
-using VilliInput.GamePad;
 
 namespace VilliInput.GamePad
 {
+
     public class GamePadService : InputService
     {
+
         internal static Dictionary<GamePadButton, Func<GamePadState, ButtonState>> ButtonMapping = new Dictionary<GamePadButton, Func<GamePadState, ButtonState>>(Enum.GetNames(typeof(GamePadButton)).Length)
         {
             {GamePadButton.A, state => state.Buttons.A},
@@ -25,27 +26,27 @@ namespace VilliInput.GamePad
             {GamePadButton.DPadDown, state => state.DPad.Down},
             {GamePadButton.DPadLeft, state => state.DPad.Left},
             {GamePadButton.DPadRight, state => state.DPad.Right},
-            {GamePadButton.DPadUp, state => state.DPad.Up},
+            {GamePadButton.DPadUp, state => state.DPad.Up}
         };
-
-        public static int MaximumGamePads => Microsoft.Xna.Framework.Input.GamePad.MaximumGamePadCount;
-
-        public static int HighestGamePadIndex => Microsoft.Xna.Framework.Input.GamePad.MaximumGamePadCount - 1;
-
-        public Dictionary<(int, GamePadButton), ulong> ButtonLastConsumed = new Dictionary<(int, GamePadButton), ulong>();
-
-        public Dictionary<(int, GamePadSensor), ulong> SensorConsumed = new Dictionary<(int, GamePadSensor), ulong>();
 
         public static VilliGamePad[] GamePads;
 
         public static List<int> ConnectedGamePadIndexes;
 
-        public GameTime LastConnectionCheckTime = null;
+        public Dictionary<(int, GamePadButton), ulong> ButtonLastConsumed = new Dictionary<(int, GamePadButton), ulong>();
+
+        public GameTime LastConnectionCheckTime;
+
+        public Dictionary<(int, GamePadSensor), ulong> SensorConsumed = new Dictionary<(int, GamePadSensor), ulong>();
 
         public GamePadService()
         {
             Source = InputSource.GamePad;
         }
+
+        public static int MaximumGamePads => Microsoft.Xna.Framework.Input.GamePad.MaximumGamePadCount;
+
+        public static int HighestGamePadIndex => Microsoft.Xna.Framework.Input.GamePad.MaximumGamePadCount - 1;
 
         public override void Setup()
         {
@@ -60,7 +61,7 @@ namespace VilliInput.GamePad
                     PreviousState = GamePadState.Default,
                     CurrentState = GamePadState.Default,
                     Capabilities = Microsoft.Xna.Framework.Input.GamePad.GetCapabilities(i),
-                    DeadZone = Villi.System.Settings.DefaultGamePadDeadZone,
+                    DeadZone = Villi.System.Settings.DefaultGamePadDeadZone
                 };
 
                 if (GamePads[i].IsConnected)
@@ -195,7 +196,6 @@ namespace VilliInput.GamePad
 
             return Microsoft.Xna.Framework.Input.GamePad.SetVibration(playerIndex, leftMotor, rightMotor);
         }
-
 
 
         public static bool IsButtonPressed(GamePadButton button, int playerIndex)
@@ -406,36 +406,42 @@ namespace VilliInput.GamePad
                                     {
                                         output = indexValue;
                                     }
+
                                     break;
                                 case GamePadSensorValueMode.MaxY:
                                     if (indexValue.Y > output.Y)
                                     {
                                         output = indexValue;
                                     }
+
                                     break;
                                 case GamePadSensorValueMode.Max:
                                     if (indexValue.X > output.X || indexValue.Y > output.Y)
                                     {
                                         output = indexValue;
                                     }
+
                                     break;
                                 case GamePadSensorValueMode.MinX:
                                     if (indexValue.X < output.X)
                                     {
                                         output = indexValue;
                                     }
+
                                     break;
                                 case GamePadSensorValueMode.MinY:
                                     if (indexValue.Y < output.Y)
                                     {
                                         output = indexValue;
                                     }
+
                                     break;
                                 case GamePadSensorValueMode.Min:
                                     if (indexValue.X < output.X || indexValue.Y < output.Y)
                                     {
                                         output = indexValue;
                                     }
+
                                     break;
                             }
                         }
@@ -526,6 +532,7 @@ namespace VilliInput.GamePad
                                     {
                                         output = indexValue;
                                     }
+
                                     break;
                                 case GamePadSensorValueMode.MinX:
                                 case GamePadSensorValueMode.MinY:
@@ -534,6 +541,7 @@ namespace VilliInput.GamePad
                                     {
                                         output = indexValue;
                                     }
+
                                     break;
                             }
                         }
@@ -622,36 +630,42 @@ namespace VilliInput.GamePad
                                     {
                                         output = indexValue;
                                     }
+
                                     break;
                                 case GamePadSensorValueMode.MaxY:
                                     if (indexValue.Y > output.Y)
                                     {
                                         output = indexValue;
                                     }
+
                                     break;
                                 case GamePadSensorValueMode.Max:
                                     if (indexValue.X > output.X || indexValue.Y > output.Y)
                                     {
                                         output = indexValue;
                                     }
+
                                     break;
                                 case GamePadSensorValueMode.MinX:
                                     if (indexValue.X < output.X)
                                     {
                                         output = indexValue;
                                     }
+
                                     break;
                                 case GamePadSensorValueMode.MinY:
                                     if (indexValue.Y < output.Y)
                                     {
                                         output = indexValue;
                                     }
+
                                     break;
                                 case GamePadSensorValueMode.Min:
                                     if (indexValue.X < output.X || indexValue.Y < output.Y)
                                     {
                                         output = indexValue;
                                     }
+
                                     break;
                             }
                         }
@@ -742,6 +756,7 @@ namespace VilliInput.GamePad
                                     {
                                         output = indexValue;
                                     }
+
                                     break;
                                 case GamePadSensorValueMode.MinX:
                                 case GamePadSensorValueMode.MinY:
@@ -750,6 +765,7 @@ namespace VilliInput.GamePad
                                     {
                                         output = indexValue;
                                     }
+
                                     break;
                             }
                         }
@@ -767,5 +783,7 @@ namespace VilliInput.GamePad
 
             return float.MinValue;
         }
+
     }
+
 }

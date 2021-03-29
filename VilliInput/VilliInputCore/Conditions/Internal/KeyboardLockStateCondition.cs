@@ -7,27 +7,29 @@ using VilliInput.Mouse;
 
 namespace VilliInput.Conditions.Internal
 {
+
     public abstract class KeyboardLockStateCondition : BooleanCondition
     {
-        public KeyboardLock LockType { get; private set; }
 
         protected KeyboardLockStateCondition(KeyboardLock lockType, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = true, uint milliSecondsForConditionMet = 0) : base(InputSource.Keyboard, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
         {
             LockType = lockType;
         }
 
+        public KeyboardLock LockType { get; }
+
         public override VilliEventArguments GetArguments()
         {
-            return new KeyboardLockStateEventArguments()
+            return new KeyboardLockStateEventArguments
             {
-                LockType = this.LockType,
+                LockType = LockType,
                 Condition = this,
-                InputSource = this.InputSource,
+                InputSource = InputSource,
                 NumberOfKeysPressed = KeyboardService.CurrentKeysPressed(),
-                MilliSecondsForConditionMet = this.MilliSecondsForConditionMet,
-                ConditionStateStartTime = this.CurrentStateStart,
+                MilliSecondsForConditionMet = MilliSecondsForConditionMet,
+                ConditionStateStartTime = CurrentStateStart,
                 ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime),
-                WindowMustBeActive = this.WindowMustBeActive,
+                WindowMustBeActive = WindowMustBeActive
             };
         }
 
@@ -38,7 +40,7 @@ namespace VilliInput.Conditions.Internal
 
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
-            return (!WindowMustBeActive || (Villi.IsWindowActive && MouseService.IsMouseInWindow))
+            return (!WindowMustBeActive || Villi.IsWindowActive && MouseService.IsMouseInWindow)
                    && (allowedIfConsumed || IsConsumed())
                    && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime) >= milliSecondsForConditionMet);
         }
@@ -52,5 +54,7 @@ namespace VilliInput.Conditions.Internal
         {
             return Villi.System.Keyboard.IsLockConsumed(LockType);
         }
+
     }
+
 }

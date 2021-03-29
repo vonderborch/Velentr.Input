@@ -3,8 +3,10 @@ using VilliInput.Mouse;
 
 namespace VilliInput.EventArguments
 {
+
     public class MouseSensorMovementEventArguments : VilliEventArguments
     {
+
         public MouseSensor Sensor { get; internal set; }
 
         public Rectangle? Boundaries { get; internal set; }
@@ -19,7 +21,9 @@ namespace VilliInput.EventArguments
 
         public override VilliEventArguments Clone()
         {
-            return (MouseSensorMovementEventArguments)this.MemberwiseClone();
+            return (MouseSensorMovementEventArguments) MemberwiseClone();
         }
+
     }
+
 }

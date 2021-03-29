@@ -2,13 +2,11 @@
 
 namespace VilliInput.Conditions.Internal
 {
+
     public abstract class BooleanCondition : InputCondition
     {
 
-        protected BooleanCondition(InputSource source, bool windowMustBeActive, bool consumable, bool allowedIfConsumed, uint milliSecondsForConditionMet) : base(source, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
-        {
-
-        }
+        protected BooleanCondition(InputSource source, bool windowMustBeActive, bool consumable, bool allowedIfConsumed, uint milliSecondsForConditionMet) : base(source, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet) { }
 
         public override bool InternalConditionMet(bool consumable, bool allowedIfConsumed)
         {
@@ -28,11 +26,14 @@ namespace VilliInput.Conditions.Internal
                 ConditionMetCleanup(consumable, GetArguments());
                 return true;
             }
+
             return false;
         }
 
         protected abstract bool CurrentStateValid();
+
         protected abstract bool PreviousStateValid();
 
     }
+
 }

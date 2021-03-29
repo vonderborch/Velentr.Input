@@ -4,18 +4,32 @@ using System.Collections.Generic;
 
 namespace VilliInput.Helpers
 {
+
     public class Cache<K, V> : IEnumerable<(K, V, int)>, IEnumerable
     {
+
         public List<K> Order;
 
         public Dictionary<K, V> Values;
 
-        public ulong version = 0;
+        public ulong version;
 
         public Cache(int capacity = 16)
         {
             Order = new List<K>(capacity);
             Values = new Dictionary<K, V>(capacity);
+        }
+
+        public int Count => Order.Count;
+
+        IEnumerator<(K, V, int)> IEnumerable<(K, V, int)>.GetEnumerator()
+        {
+            return InternalGetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return InternalGetEnumerator();
         }
 
         public void Clear()
@@ -25,8 +39,6 @@ namespace VilliInput.Helpers
 
             version = 0;
         }
-
-        public int Count => Order.Count;
 
         public int? AddItem(K key, V value, int index = int.MaxValue, bool forceAdd = false)
         {
@@ -54,13 +66,11 @@ namespace VilliInput.Helpers
                 version++;
                 return Order.Count - 1;
             }
-            else
-            {
-                Order.Insert(index, key);
-                Values.Add(key, value);
-                version++;
-                return index;
-            }
+
+            Order.Insert(index, key);
+            Values.Add(key, value);
+            version++;
+            return index;
         }
 
         public (K, V, int) GetItem(int index)
@@ -70,7 +80,7 @@ namespace VilliInput.Helpers
                 throw new IndexOutOfRangeException();
             }
 
-            K key = Order[index];
+            var key = Order[index];
             return (key, Values[key], index);
         }
 
@@ -108,8 +118,8 @@ namespace VilliInput.Helpers
                 throw new IndexOutOfRangeException();
             }
 
-            K key = Order[index];
-            V value = Values[key];
+            var key = Order[index];
+            var value = Values[key];
 
             Values.Remove(key);
             Order.RemoveAt(index);
@@ -118,28 +128,18 @@ namespace VilliInput.Helpers
             return (key, value, index);
         }
 
-        IEnumerator<(K, V, int)> GetEnumerator()
+        private IEnumerator<(K, V, int)> GetEnumerator()
         {
-            return this.InternalGetEnumerator();
-        }
-
-        IEnumerator<(K, V, int)> IEnumerable<(K, V, int)>.GetEnumerator()
-        {
-            return this.InternalGetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.InternalGetEnumerator();
+            return InternalGetEnumerator();
         }
 
 
-        IEnumerator<(K, V, int)> InternalGetEnumerator()
+        private IEnumerator<(K, V, int)> InternalGetEnumerator()
         {
-            var enumeratorVersion = this.version;
+            var enumeratorVersion = version;
             for (var i = 0; i < Count; i++)
             {
-                if (enumeratorVersion != this.version)
+                if (enumeratorVersion != version)
                 {
                     throw new InvalidOperationException("Collection modified");
                 }
@@ -236,5 +236,7 @@ namespace VilliInput.Helpers
             }
         }
         */
+
     }
+
 }

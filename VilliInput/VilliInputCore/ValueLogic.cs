@@ -1,15 +1,16 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using VilliInput.Enums;
-using ValueType = VilliInput.Enums.ValueType;
+using VilliInput.Helpers;
 
 namespace VilliInput
 {
+
     public struct ValueLogic
     {
-        public Value Value { get; private set; }
 
-        public Comparison Comparator { get; private set; }
+        public Value Value { get; }
+
+        public Comparison Comparator { get; }
 
         public ValueLogic(Value valueToCompare, Comparison comparator)
         {
@@ -24,17 +25,17 @@ namespace VilliInput
                 switch (Value.Type)
                 {
                     case ValueType.Double:
-                        return CompareHelper((double)Value.DoubleValue, (double)value.DoubleValue, Comparator);
+                        return CompareHelper((double) Value.DoubleValue, (double) value.DoubleValue, Comparator);
                     case ValueType.Float:
-                        return CompareHelper((float)Value.FloatValue, (float)value.FloatValue, Comparator);
+                        return CompareHelper((float) Value.FloatValue, (float) value.FloatValue, Comparator);
                     case ValueType.Int:
-                        return CompareHelper((int)Value.IntValue, (int)value.IntValue, Comparator);
+                        return CompareHelper((int) Value.IntValue, (int) value.IntValue, Comparator);
                     case ValueType.Point:
-                        return CompareHelper((Point)Value.PointValue, (Point)value.PointValue, Comparator);
+                        return CompareHelper((Point) Value.PointValue, (Point) value.PointValue, Comparator);
                     case ValueType.UInt:
-                        return CompareHelper((uint)Value.UIntValue, (uint)value.UIntValue, Comparator);
+                        return CompareHelper((uint) Value.UIntValue, (uint) value.UIntValue, Comparator);
                     case ValueType.Vector2:
-                        return CompareHelper((Vector2)Value.Vector2Value, (Vector2)value.Vector2Value, Comparator);
+                        return CompareHelper((Vector2) Value.Vector2Value, (Vector2) value.Vector2Value, Comparator);
                 }
             }
             catch { }
@@ -113,9 +114,9 @@ namespace VilliInput
                 case Comparison.GreaterThenOrEqual:
                     return value >= valueToCompare;
                 case Comparison.Equal:
-                    return Helpers.Helper.ApproximatelyEqual(value, valueToCompare, Villi.System.Settings.MaxFloatDifference);
+                    return Helper.ApproximatelyEqual(value, valueToCompare, Villi.System.Settings.MaxFloatDifference);
                 case Comparison.NotEquals:
-                    return !Helpers.Helper.ApproximatelyEqual(value, valueToCompare, Villi.System.Settings.MaxFloatDifference);
+                    return !Helper.ApproximatelyEqual(value, valueToCompare, Villi.System.Settings.MaxFloatDifference);
                 case Comparison.LessThanX:
                 case Comparison.LessThanY:
                 case Comparison.LessThan:
@@ -142,9 +143,9 @@ namespace VilliInput
                 case Comparison.GreaterThenOrEqual:
                     return value >= valueToCompare;
                 case Comparison.Equal:
-                    return Helpers.Helper.ApproximatelyEqual(value, valueToCompare, Villi.System.Settings.MaxDoubleDifference);
+                    return Helper.ApproximatelyEqual(value, valueToCompare, Villi.System.Settings.MaxDoubleDifference);
                 case Comparison.NotEquals:
-                    return !Helpers.Helper.ApproximatelyEqual(value, valueToCompare, Villi.System.Settings.MaxDoubleDifference);
+                    return !Helper.ApproximatelyEqual(value, valueToCompare, Villi.System.Settings.MaxDoubleDifference);
                 case Comparison.LessThanX:
                 case Comparison.LessThanY:
                 case Comparison.LessThan:
@@ -212,9 +213,9 @@ namespace VilliInput
                 case Comparison.GreaterThenOrEqual:
                     return value.X >= valueToCompare.X || value.Y >= valueToCompare.Y;
                 case Comparison.Equal:
-                    return Helpers.Helper.ApproximatelyEqual(value, valueToCompare, Villi.System.Settings.MaxFloatDifference);
+                    return Helper.ApproximatelyEqual(value, valueToCompare, Villi.System.Settings.MaxFloatDifference);
                 case Comparison.NotEquals:
-                    return !Helpers.Helper.ApproximatelyEqual(value, valueToCompare, Villi.System.Settings.MaxFloatDifference);
+                    return !Helper.ApproximatelyEqual(value, valueToCompare, Villi.System.Settings.MaxFloatDifference);
                 case Comparison.LessThanX:
                     return value.X < valueToCompare.X;
                 case Comparison.LessThanY:
@@ -231,5 +232,7 @@ namespace VilliInput
 
             return false;
         }
+
     }
+
 }

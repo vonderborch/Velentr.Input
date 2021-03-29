@@ -6,25 +6,28 @@ using VilliInput.Enums;
 
 namespace VilliInput.Keyboard
 {
+
     public class KeyboardService : InputService
     {
+
         internal static Dictionary<Key, Keys> KeyMapping = new Dictionary<Key, Keys>(Enum.GetNames(typeof(Key)).Length);
-
-        public Dictionary<Key, ulong> KeyLastConsumed = new Dictionary<Key, ulong>(Enum.GetNames(typeof(Key)).Length);
-
-        public Dictionary<KeyboardLock, ulong> KeyboardLockLastConsumed = new Dictionary<KeyboardLock, ulong>(Enum.GetNames(typeof(KeyboardLock)).Length);
 
         public ulong CurrentKeysPressedLastConsumed = ulong.MinValue;
 
-        public ulong KeysPressedDeltaLastConsumed = ulong.MinValue;
+        public Dictionary<KeyboardLock, ulong> KeyboardLockLastConsumed = new Dictionary<KeyboardLock, ulong>(Enum.GetNames(typeof(KeyboardLock)).Length);
 
-        public static KeyboardState PreviousState { get; private set; }
-        public static KeyboardState CurrentState { get; private set; }
+        public Dictionary<Key, ulong> KeyLastConsumed = new Dictionary<Key, ulong>(Enum.GetNames(typeof(Key)).Length);
+
+        public ulong KeysPressedDeltaLastConsumed = ulong.MinValue;
 
         public KeyboardService()
         {
             Source = InputSource.Keyboard;
         }
+
+        public static KeyboardState PreviousState { get; private set; }
+
+        public static KeyboardState CurrentState { get; private set; }
 
         public override void Setup()
         {
@@ -34,7 +37,7 @@ namespace VilliInput.Keyboard
             // Update the mapping to match XNA's (right now we've got parity. In the future, this might need to be changed to better handle other keyboards, etc.)
             foreach (var key in Enum.GetValues(typeof(Key)))
             {
-                KeyMapping[(Key)key] = (Keys)(int)key;
+                KeyMapping[(Key) key] = (Keys) (int) key;
             }
         }
 
@@ -152,13 +155,15 @@ namespace VilliInput.Keyboard
         public static List<Key> GetCurrentPressedKeys()
         {
             var rawKeys = CurrentState.GetPressedKeys();
-            return rawKeys.Select(t => (Key)((int)t)).ToList();
+            return rawKeys.Select(t => (Key) (int) t).ToList();
         }
 
         public static List<Key> GetPreviousPressedKeys()
         {
             var rawKeys = PreviousState.GetPressedKeys();
-            return rawKeys.Select(t => (Key)((int)t)).ToList();
+            return rawKeys.Select(t => (Key) (int) t).ToList();
         }
+
     }
+
 }

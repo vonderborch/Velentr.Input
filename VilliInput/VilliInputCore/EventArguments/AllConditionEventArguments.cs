@@ -3,6 +3,7 @@ using VilliInput.Conditions;
 
 namespace VilliInput.EventArguments
 {
+
     public class AllConditionEventArguments : VilliEventArguments
     {
 
@@ -14,7 +15,7 @@ namespace VilliInput.EventArguments
 
         public override VilliEventArguments Clone()
         {
-            var copy = (AllConditionEventArguments)this.MemberwiseClone();
+            var copy = (AllConditionEventArguments) MemberwiseClone();
 
             copy.ConditionEventArguments = new List<VilliEventArguments>(ConditionEventArguments.Count);
             for (var i = 0; i < ConditionEventArguments.Count; i++)
@@ -26,4 +27,5 @@ namespace VilliInput.EventArguments
         }
 
     }
+
 }

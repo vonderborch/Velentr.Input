@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace VilliInput.Voice
 {
+
     public class VoiceService : InputService
     {
 
@@ -18,4 +17,5 @@ namespace VilliInput.Voice
         }
 
     }
+
 }

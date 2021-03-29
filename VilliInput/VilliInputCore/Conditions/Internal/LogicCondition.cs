@@ -1,8 +1,10 @@
 ﻿using System;
 using VilliInput.Enums;
+using ValueType = VilliInput.Enums.ValueType;
 
 namespace VilliInput.Conditions.Internal
 {
+
     public abstract class LogicCondition : InputCondition
     {
 
@@ -28,18 +30,21 @@ namespace VilliInput.Conditions.Internal
                 ConditionMetCleanup(consumable, GetArguments());
                 return true;
             }
+
             return false;
         }
 
 
         public bool ValueValid()
         {
-            if (ValueLogic == null || ValueLogic?.Value.Type == Enums.ValueType.None)
+            if (ValueLogic == null || ValueLogic?.Value.Type == ValueType.None)
             {
                 throw new NullReferenceException("ValueLogic must be initialized!");
             }
 
-            return (bool)(ValueLogic?.Compare(GetValue()));
+            return (bool) ValueLogic?.Compare(GetValue());
         }
+
     }
+
 }

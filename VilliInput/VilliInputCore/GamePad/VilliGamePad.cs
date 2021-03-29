@@ -2,8 +2,10 @@
 
 namespace VilliInput.GamePad
 {
+
     public struct VilliGamePad
     {
+
         public int PlayerIndex { get; set; }
 
         public GamePadState PreviousState { get; set; }
@@ -17,4 +19,5 @@ namespace VilliInput.GamePad
         public bool IsConnected => Capabilities.IsConnected;
 
     }
+
 }

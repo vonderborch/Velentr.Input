@@ -1,18 +1,14 @@
 ﻿using System;
 using VilliInput.Enums;
 using VilliInput.EventArguments;
-using VilliInput.Helpers;
 using VilliInput.GamePad;
+using VilliInput.Helpers;
 
 namespace VilliInput.Conditions.Internal
 {
+
     public abstract class GamePadButtonCondition : BooleanCondition
     {
-        public GamePadButton Button { get; private set; }
-
-        public int PlayerIndex { get; protected set; }
-
-        public GamePadInputMode InputMode { get; protected set; }
 
         protected GamePadButtonCondition(GamePadButton button, int playerIndex = 0, GamePadInputMode inputMode = GamePadInputMode.SingleGamePad, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = true, uint milliSecondsForConditionMet = 0) : base(InputSource.GamePad, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
         {
@@ -20,6 +16,12 @@ namespace VilliInput.Conditions.Internal
             PlayerIndex = playerIndex;
             InputMode = inputMode;
         }
+
+        public GamePadButton Button { get; }
+
+        public int PlayerIndex { get; protected set; }
+
+        public GamePadInputMode InputMode { get; protected set; }
 
         protected abstract bool InternalCurrent(int playerIndex);
 
@@ -89,17 +91,17 @@ namespace VilliInput.Conditions.Internal
 
         public override VilliEventArguments GetArguments()
         {
-            return new GamePadButtonEventArguments()
+            return new GamePadButtonEventArguments
             {
-                Button = this.Button,
+                Button = Button,
                 Condition = this,
-                InputSource = this.InputSource,
-                MilliSecondsForConditionMet = this.MilliSecondsForConditionMet,
-                ConditionStateStartTime = this.CurrentStateStart,
+                InputSource = InputSource,
+                MilliSecondsForConditionMet = MilliSecondsForConditionMet,
+                ConditionStateStartTime = CurrentStateStart,
                 ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime),
-                WindowMustBeActive = this.WindowMustBeActive,
-                PlayerIndex = this.PlayerIndex,
-                InputMode = this.InputMode,
+                WindowMustBeActive = WindowMustBeActive,
+                PlayerIndex = PlayerIndex,
+                InputMode = InputMode
             };
         }
 
@@ -128,9 +130,9 @@ namespace VilliInput.Conditions.Internal
 
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
-            return ((!WindowMustBeActive || Villi.IsWindowActive)
+            return (!WindowMustBeActive || Villi.IsWindowActive)
                    && (allowedIfConsumed || IsConsumed())
-                   && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime) >= milliSecondsForConditionMet));
+                   && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime) >= milliSecondsForConditionMet);
         }
 
         public override bool IsConsumed()
@@ -163,5 +165,7 @@ namespace VilliInput.Conditions.Internal
 
             return false;
         }
+
     }
+
 }

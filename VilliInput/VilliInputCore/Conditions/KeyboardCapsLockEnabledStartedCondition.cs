@@ -1,16 +1,13 @@
 ﻿using VilliInput.Conditions.Internal;
-using VilliInput.Enums;
-using VilliInput.EventArguments;
 using VilliInput.Keyboard;
 
 namespace VilliInput.Conditions
 {
+
     public class KeyboardCapsLockEnabledStartedCondition : KeyboardLockStateCondition
     {
 
-        public KeyboardCapsLockEnabledStartedCondition(KeyboardLock lockType, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = true, uint milliSecondsForConditionMet = 0) : base(lockType, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
-        {
-        }
+        public KeyboardCapsLockEnabledStartedCondition(KeyboardLock lockType, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = true, uint milliSecondsForConditionMet = 0) : base(lockType, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet) { }
 
         protected override bool CurrentStateValid()
         {
@@ -39,4 +36,5 @@ namespace VilliInput.Conditions
         }
 
     }
+
 }

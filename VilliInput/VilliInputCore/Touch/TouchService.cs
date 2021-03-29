@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input.Touch;
 using VilliInput.Touch.Engines;
 using XnaGestureType = Microsoft.Xna.Framework.Input.Touch.GestureType;
 
 namespace VilliInput.Touch
 {
+
     public class TouchService : InputService
     {
+
         public bool TouchPanelConnected { get; private set; }
 
         public int MaxTouchPoints { get; private set; }
@@ -17,11 +16,6 @@ namespace VilliInput.Touch
         public TouchEngine Engine { get; private set; }
 
         public TouchEngines EnabledTouchEngine { get; private set; }
-
-        public TouchService()
-        {
-
-        }
 
         public override void Setup()
         {
@@ -68,5 +62,7 @@ namespace VilliInput.Touch
         {
             return Engine.FetchValidGestures(type, boundaries, useRelativeCoordinates, parentBoundaries, allowedIfConsumed, milliSecondsForConditionMet);
         }
+
     }
+
 }
