@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
+using VilliInput.Touch;
+using XnaGestureType = Microsoft.Xna.Framework.Input.Touch.GestureType;
 
 namespace VilliInput
 {
@@ -20,6 +22,10 @@ namespace VilliInput
         public const string InvalidGamePadTriggerSensor = "Invalid sensor! Must use GamePadSensor.LeftTrigger or GamePadSensor.RightTrigger!";
 
         public const string PlayerIndexExceptionMessageButtonState = "playerIndex must be less than the maximum supported gamepads on the system";
+
+        public TouchEngines TouchEngine { get; set; } = TouchEngines.XNA_derived;
+
+        public XnaGestureType EnabledTouchGestures { get; set; } = XnaGestureType.Tap | XnaGestureType.DoubleTap | XnaGestureType.FreeDrag | XnaGestureType.DragComplete | XnaGestureType.Pinch | XnaGestureType.PinchComplete;
 
         public float MaxFloatDifference { get; set; } = 0.00001f;
 
