@@ -40,6 +40,10 @@ namespace VilliInput.Conditions
                 {
                     if (!Conditions[i].ConditionMet())
                     {
+                        if (ConditionMetState)
+                        {
+                            UpdateState(false);
+                        }
                         return false;
                     }
 
@@ -50,6 +54,10 @@ namespace VilliInput.Conditions
                     }
                     else
                     {
+                        if (ConditionMetState)
+                        {
+                            UpdateState(false);
+                        }
                         return false;
                     }
                 }
@@ -59,6 +67,11 @@ namespace VilliInput.Conditions
                 }
             }
 
+            if (!ConditionMetState)
+            {
+                UpdateState(true);
+            }
+            ConditionMetCleanup(consumable, GetArguments());
             return true;
         }
 

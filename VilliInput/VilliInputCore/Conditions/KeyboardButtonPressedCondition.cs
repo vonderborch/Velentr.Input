@@ -11,12 +11,12 @@ namespace VilliInput.Conditions
 
         protected override bool CurrentStateValid()
         {
-            return KeyboardService.IsKeyPressed(Key);
+            return Villi.System.Keyboard.IsKeyPressed(Key);
         }
 
         protected override bool PreviousStateValid()
         {
-            return KeyboardService.WasKeyPressed(Key);
+            return Villi.System.Keyboard.WasKeyPressed(Key);
         }
 
     }

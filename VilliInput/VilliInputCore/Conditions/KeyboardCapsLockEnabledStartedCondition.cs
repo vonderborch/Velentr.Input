@@ -14,9 +14,9 @@ namespace VilliInput.Conditions
             switch (LockType)
             {
                 case KeyboardLock.CapsLock:
-                    return KeyboardService.IsCapsLockEnabled();
+                    return Villi.System.Keyboard.IsCapsLockEnabled();
                 case KeyboardLock.NumLock:
-                    return KeyboardService.IsNumLockEnabled();
+                    return Villi.System.Keyboard.IsNumLockEnabled();
             }
 
             return false;
@@ -27,9 +27,9 @@ namespace VilliInput.Conditions
             switch (LockType)
             {
                 case KeyboardLock.CapsLock:
-                    return !KeyboardService.IsCapsLockEnabled();
+                    return !Villi.System.Keyboard.IsCapsLockEnabled();
                 case KeyboardLock.NumLock:
-                    return !KeyboardService.IsNumLockEnabled();
+                    return !Villi.System.Keyboard.IsNumLockEnabled();
             }
 
             return false;

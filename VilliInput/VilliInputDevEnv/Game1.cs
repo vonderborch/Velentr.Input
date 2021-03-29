@@ -1,7 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Text;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using VilliInput;
+using VilliInput.Conditions;
+using VilliInput.EventArguments;
+using VilliInput.GamePad;
+using VilliInput.Keyboard;
+using VilliInput.Mouse;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 
 namespace VilliInputDevEnv
@@ -28,17 +34,28 @@ namespace VilliInputDevEnv
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             Villi.System.Setup(this);
+            var condition = new AnyCondition(
+                new KeyboardButtonPressedCondition(Key.Escape),
+                new GamePadButtonPressedCondition(GamePadButton.Back),
+                new MouseButtonPressedCondition(MouseButton.MiddleButton)
+            );
+            //condition.Event.Event += ExitGame;
+            condition.Event += ExitGame;
+            Villi.System.AddInputConditionToTracking(condition);
         }
 
         protected override void Update(GameTime gameTime)
         {
             Villi.System.Update(gameTime);
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
 
             // TODO: Add your update logic here
 
             base.Update(gameTime);
+        }
+
+        public void ExitGame(object sender, VilliEventArguments args)
+        {
+            Exit();
         }
 
         protected override void Draw(GameTime gameTime)

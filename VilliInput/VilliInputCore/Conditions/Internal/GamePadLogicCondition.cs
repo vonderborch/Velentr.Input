@@ -88,9 +88,11 @@ namespace VilliInput.Conditions.Internal
 
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
-            return (!WindowMustBeActive || Villi.IsWindowActive)
-                   && (allowedIfConsumed || IsConsumed())
-                   && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime) >= milliSecondsForConditionMet);
+            return (
+                ((WindowMustBeActive && Villi.IsWindowActive) || !WindowMustBeActive)
+                && (allowedIfConsumed || !IsConsumed())
+                && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime) >= milliSecondsForConditionMet)
+            );
         }
 
         public override void Consume()

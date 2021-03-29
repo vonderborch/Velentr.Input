@@ -26,7 +26,7 @@ namespace VilliInput.Conditions
                 Condition = this,
                 InputSource = InputSource,
                 MouseCoordinates = MouseService.CurrentCursorPosition,
-                RelativeMouseCoordinates = Helper.ScalePointToChild(MouseService.CurrentCursorPosition, ParentBoundaries ?? Villi.Window.ClientBounds, Boundaries ?? Villi.Window.ClientBounds),
+                RelativeMouseCoordinates = Helper.ScalePointToChild(MouseService.CurrentCursorPosition, ParentBoundaries, Boundaries),
                 MilliSecondsForConditionMet = MilliSecondsForConditionMet,
                 UseRelativeCoordinates = UseRelativeCoordinates,
                 ConditionStateStartTime = CurrentStateStart,

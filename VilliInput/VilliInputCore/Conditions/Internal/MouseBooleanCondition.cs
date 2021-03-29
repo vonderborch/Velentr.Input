@@ -12,18 +12,20 @@ namespace VilliInput.Conditions.Internal
 
         private readonly Rectangle? _parentBoundaries;
 
+        private readonly Rectangle? _boundaries;
+
         protected MouseBooleanCondition(Rectangle? boundaries = null, bool useRelativeCoordinates = false, Rectangle? parentBoundaries = null, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = true, uint milliSecondsForConditionMet = 0) : base(InputSource.Mouse, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
         {
-            Boundaries = boundaries;
+            _boundaries = boundaries;
             UseRelativeCoordinates = useRelativeCoordinates;
             _parentBoundaries = parentBoundaries;
         }
 
-        public Rectangle? Boundaries { get; }
+        public Rectangle Boundaries => _boundaries ?? Villi.Window.ClientBounds;
 
         public bool UseRelativeCoordinates { get; }
 
-        public Rectangle? ParentBoundaries => _parentBoundaries ?? Villi.Window.ClientBounds;
+        public Rectangle ParentBoundaries => _parentBoundaries ?? Villi.Window.ClientBounds;
 
         protected override Value InternalGetValue()
         {
@@ -32,10 +34,12 @@ namespace VilliInput.Conditions.Internal
 
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
-            return (!WindowMustBeActive || Villi.IsWindowActive && MouseService.IsMouseInWindow)
-                   && (allowedIfConsumed || IsConsumed())
-                   && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime) >= milliSecondsForConditionMet)
-                   && (Boundaries == null || MouseService.CursorInBounds((Rectangle) Boundaries, UseRelativeCoordinates, ParentBoundaries));
+            return (
+                ((WindowMustBeActive && Villi.IsWindowActive) || !WindowMustBeActive)
+                && (allowedIfConsumed || !IsConsumed())
+                && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime) >= milliSecondsForConditionMet)
+                && (_boundaries == null || MouseService.CursorInBounds(Boundaries, UseRelativeCoordinates, ParentBoundaries))
+            );
         }
 
     }

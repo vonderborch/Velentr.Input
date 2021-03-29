@@ -3,7 +3,6 @@ using VilliInput.Enums;
 using VilliInput.EventArguments;
 using VilliInput.Helpers;
 using VilliInput.Keyboard;
-using VilliInput.Mouse;
 
 namespace VilliInput.Conditions.Internal
 {
@@ -25,7 +24,7 @@ namespace VilliInput.Conditions.Internal
                 Key = Key,
                 Condition = this,
                 InputSource = InputSource,
-                NumberOfKeysPressed = KeyboardService.CurrentKeysPressed(),
+                NumberOfKeysPressed = Villi.System.Keyboard.CurrentKeysPressed(),
                 MilliSecondsForConditionMet = MilliSecondsForConditionMet,
                 ConditionStateStartTime = CurrentStateStart,
                 ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime),
@@ -40,9 +39,11 @@ namespace VilliInput.Conditions.Internal
 
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
-            return (!WindowMustBeActive || Villi.IsWindowActive && MouseService.IsMouseInWindow)
-                   && (allowedIfConsumed || IsConsumed())
-                   && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime) >= milliSecondsForConditionMet);
+            return (
+                ((WindowMustBeActive && Villi.IsWindowActive) || !WindowMustBeActive)
+                && (allowedIfConsumed || !IsConsumed())
+                && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime) >= milliSecondsForConditionMet)
+            );
         }
 
         public override void Consume()

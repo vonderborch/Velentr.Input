@@ -24,7 +24,7 @@ namespace VilliInput.Conditions
 
         protected override Value InternalGetValue()
         {
-            return new Value(ValueType.Int, valueInt: KeyboardService.CurrentKeysPressed());
+            return new Value(ValueType.Int, valueInt: Villi.System.Keyboard.CurrentKeysPressed());
         }
 
         public override void Consume()
@@ -43,8 +43,8 @@ namespace VilliInput.Conditions
             {
                 Condition = this,
                 InputSource = InputSource,
-                NumberOfKeysPressed = KeyboardService.CurrentKeysPressed(),
-                NumberOfKeysPressedDelta = KeyboardService.KeysPressedCountDelta(),
+                NumberOfKeysPressed = Villi.System.Keyboard.CurrentKeysPressed(),
+                NumberOfKeysPressedDelta = Villi.System.Keyboard.KeysPressedCountDelta(),
                 MilliSecondsForConditionMet = MilliSecondsForConditionMet,
                 ConditionStateStartTime = CurrentStateStart,
                 ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Villi.CurrentTime),

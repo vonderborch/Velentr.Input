@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using VilliInput.EventArguments;
 
@@ -30,11 +29,10 @@ namespace VilliInput
 
         public void Clear()
         {
-            IList list = Delegates;
+            var list = Delegates;
             for (var i = 0; i < list.Count; i++)
             {
-                var eh = (EventHandler<VilliEventArguments>) list[i];
-                InternalEvent -= eh;
+                InternalEvent -= list[i];
             }
 
             Delegates.Clear();

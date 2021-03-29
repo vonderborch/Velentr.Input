@@ -33,6 +33,11 @@ namespace VilliInput.Conditions
                     if (Conditions[i].ConditionMet())
                     {
                         _arguments = Conditions[i].GetArguments();
+                        if (!ConditionMetState)
+                        {
+                            UpdateState(true);
+                        }
+                        ConditionMetCleanup(consumable, GetArguments());
                         return true;
                     }
                 }
@@ -42,6 +47,10 @@ namespace VilliInput.Conditions
                 }
             }
 
+            if (ConditionMetState)
+            {
+                UpdateState(false);
+            }
             return false;
         }
 
