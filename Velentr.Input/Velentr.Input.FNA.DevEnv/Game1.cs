@@ -37,7 +37,6 @@ namespace Velentr.Input.FNA.DevEnv
                 new GamePadButtonPressedCondition(GamePadButton.Back),
                 new MouseButtonPressedCondition(MouseButton.MiddleButton)
             );
-            //condition.Event.Event += ExitGame;
             condition.Event += ExitGame;
             VelentrInput.System.AddInputConditionToTracking(condition);
         }

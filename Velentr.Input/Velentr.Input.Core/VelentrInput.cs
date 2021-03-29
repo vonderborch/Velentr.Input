@@ -122,7 +122,7 @@ namespace Velentr.Input
             // update all tracked input conditions
             foreach (var item in TrackedConditions)
             {
-                item.Item2.ConditionMet();
+                item.Item2.IsConditionMet();
             }
         }
 

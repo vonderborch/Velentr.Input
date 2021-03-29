@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VilliInputDevEnv
+namespace Velentr.Input.Monogame.DevEnv
 {
     public static class Program
     {

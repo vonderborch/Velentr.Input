@@ -38,7 +38,7 @@ namespace Velentr.Input.Conditions
             {
                 try
                 {
-                    if (!Conditions[i].ConditionMet())
+                    if (!Conditions[i].IsConditionMet())
                     {
                         if (ConditionMetState)
                         {

@@ -37,12 +37,12 @@ namespace Velentr.Input.Conditions
 
         public uint MilliSecondsForConditionMet { get; }
 
-        public bool ConditionMet()
+        public bool IsConditionMet()
         {
             return InternalConditionMet(Consumable, AllowedIfConsumed);
         }
 
-        public bool ConditionMet(bool consumable, bool allowedIfConsumed)
+        public bool IsConditionMet(bool consumable, bool allowedIfConsumed)
         {
             return InternalConditionMet(consumable, allowedIfConsumed);
         }

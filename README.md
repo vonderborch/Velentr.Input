@@ -6,22 +6,44 @@ There are nuget packages available for Monogame and FNA.
 - Monogame: [Velentr.Input.Monogame](https://www.nuget.org/packages/Velentr.Input.Monogame/)
 - FNA: [Velentr.Input.FNA](https://www.nuget.org/packages/Velentr.Input.FNA/)
 
-# Usage
-Approach 1: Draw Text Directly
+# Basic Usage
+Approach 1: Create an input condition and poll for if the condition is met directly.
 ```
-var fontSize = 48;
-// VelentrFont.Initialize(GraphicsDevice); // Optional, if not called you'll need to add the GraphicsDevice to the first Bragi.Core.GetFont call that is made to set the GraphicsDevice.
-var font = VelentrFont.GetFont("pathToFontFile", fontSize, GraphicsDevice);
-_spriteBatch.DrawString(font, "Hello World!", new Vector2(50, 50), Color.White);
+// This goes in the class
+InputCondition condition;
+
+// This part goes in Setup()
+VelentrInput.System.Setup(this);
+condition = new AnyCondition(
+    new KeyboardButtonPressedCondition(Key.Escape),
+    new GamePadButtonPressedCondition(GamePadButton.Back),
+    new MouseButtonPressedCondition(MouseButton.MiddleButton)
+);
+
+// This part goes in Update()
+VelentrInput.System.Update(gameTime);
+if (condition.ConditionMet()) {
+    // Take action!
+}
 ```
 
-Approach 2: Cache Text (is a bit quicker since we don't need to rebuild the text glyph list on subsequent calls)
+Approach 2: Event-driven
 ```
-var fontSize = 48;
-// VelentrFont.Initialize(GraphicsDevice); // Optional, if not called you'll need to add the GraphicsDevice to the first Bragi.Core.GetFont call that is made to set the GraphicsDevice.
-var font = VelentrFont.GetFont("pathToFontFile", fontSize, GraphicsDevice);
-var text = font.MakeText("Hello World!");
-_spriteBatch.DrawString(text, new Vector2(50, 50), Color.White);
+// This goes in the class
+InputCondition condition;
+
+// This part goes in Setup()
+VelentrInput.System.Setup(this);
+var condition = new AnyCondition(
+    new KeyboardButtonPressedCondition(Key.Escape),
+    new GamePadButtonPressedCondition(GamePadButton.Back),
+    new MouseButtonPressedCondition(MouseButton.MiddleButton)
+);
+condition.Event += methodToCallWhenConditionIsMet;
+VelentrInput.System.AddInputConditionToTracking(condition);
+
+// This part goes in Update()
+VelentrInput.System.Update(gameTime);
 
 ```
 
@@ -30,24 +52,18 @@ Code:
 ```
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using Velentr.Input.Conditions;
+using Velentr.Input.EventArguments;
+using Velentr.Input.GamePad;
+using Velentr.Input.Keyboard;
+using Velentr.Input.Mouse;
 
-namespace Velentr.Font.MonogameDevEnv
+namespace Velentr.Input.Monogame.DevEnv
 {
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private string testString = "Hello\nWorld! 123 () *&^$%#";
-        private string testString2 = "I am a test string!";
-        private string fontFile1 = "Content\\PlayfairDisplayRegular-ywLOY.ttf";
-        private string fontFile2 = "Content\\Trueno-wml2.otf";
-        private Text text1;
-        private Text text2;
-
-
-        Font font1;
-        Font font2;
 
         public Game1()
         {
@@ -64,36 +80,36 @@ namespace Velentr.Font.MonogameDevEnv
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            VelentrFont.Core.Initialize(GraphicsDevice);
 
-            font1 = VelentrFont.Core.GetFont(fontFile1, 80);
-            text1 = font1.MakeText(testString);
-
-            font2 = VelentrFont.Core.GetFont(fontFile2, 34);
-            text2 = font2.MakeText(testString2);
+            VelentrInput.System.Setup(this);
+            var condition = new AnyCondition(
+                new KeyboardButtonPressedCondition(Key.Escape),
+                new GamePadButtonPressedCondition(GamePadButton.Back),
+                new MouseButtonPressedCondition(MouseButton.MiddleButton)
+            );
+            condition.Event += ExitGame;
+            VelentrInput.System.AddInputConditionToTracking(condition);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            VelentrInput.System.Update(gameTime);
+
+            // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
 
+        public void ExitGame(object sender, ConditionEventArguments args)
+        {
+            Exit();
+        }
+
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.White);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
-
-            _spriteBatch.DrawString(font1, testString, new Vector2(0, -15), Color.Blue);
-            _spriteBatch.DrawString(font1, testString, new Vector2(150, -15), Color.Pink, 0.1f, Vector2.Zero, new Vector2(.5f, .5f), SpriteEffects.None, 1f);
-            _spriteBatch.DrawString(text2, new Vector2(50, 150), Color.Red);
-            _spriteBatch.DrawString(text1, new Vector2(150, 300), Color.Black, 0.1f, Vector2.Zero, new Vector2(.5f, .5f), SpriteEffects.None, 1f);
-            _spriteBatch.DrawString(text1, new Vector2(150, 300), Color.Black, 0.1f, new Vector2(50, 50), new Vector2(.5f, .5f), SpriteEffects.FlipVertically, 1f);
-
-            _spriteBatch.End();
+            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }
@@ -102,9 +118,6 @@ namespace Velentr.Font.MonogameDevEnv
 
 ```
 
-Screenshot:
-![Screenshot](https://github.com/vonderborch/Velentr.Font/blob/main/Example.PNG?raw=true)
-
 
 # Future Plans
-See list of issues under the Milestones: https://github.com/vonderborch/Velentr.Font/milestones
+See list of issues under the Milestones: https://github.com/vonderborch/Velentr.Input/milestones

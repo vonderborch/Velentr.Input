@@ -1,16 +1,12 @@
-﻿using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Velentr.Input;
 using Velentr.Input.Conditions;
 using Velentr.Input.EventArguments;
 using Velentr.Input.GamePad;
 using Velentr.Input.Keyboard;
 using Velentr.Input.Mouse;
-using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 
-namespace VilliInputDevEnv
+namespace Velentr.Input.Monogame.DevEnv
 {
     public class Game1 : Game
     {
@@ -39,7 +35,6 @@ namespace VilliInputDevEnv
                 new GamePadButtonPressedCondition(GamePadButton.Back),
                 new MouseButtonPressedCondition(MouseButton.MiddleButton)
             );
-            //condition.Event.Event += ExitGame;
             condition.Event += ExitGame;
             VelentrInput.System.AddInputConditionToTracking(condition);
         }
