@@ -1,0 +1,132 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Velentr.Input</RootNamespace>
+    <AssemblyName>Velentr.Input.FNA</AssemblyName>
+    <Platforms>AnyCPU;x64</Platforms>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Authors>Christian Webber</Authors>
+    <Company>Christian Webber</Company>
+    <RepositoryUrl>https://github.com/vonderborch/Velentr.Input</RepositoryUrl>
+    <PackageTags>FNA, Input, Keyboard, Mouse, GamePad, Touch, Voice</PackageTags>
+    <Description>A simple and easy-to-use input library for XNA/Monogame/FNA.</Description>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;FNA</DefineConstants>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <DefineConstants>TRACE;FNA</DefineConstants>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\Velentr.Input.Core\Conditions\AllCondition.cs" Link="Conditions\AllCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\AnyCondition.cs" Link="Conditions\AnyCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\GamePadButtonPressedCondition.cs" Link="Conditions\GamePadButtonPressedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\GamePadButtonPressStartedCondition.cs" Link="Conditions\GamePadButtonPressStartedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\GamePadButtonReleasedCondition.cs" Link="Conditions\GamePadButtonReleasedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\GamePadButtonReleaseStartedCondition.cs" Link="Conditions\GamePadButtonReleaseStartedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\GamePadButtonSensorDeltaCondition.cs" Link="Conditions\GamePadButtonSensorDeltaCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\GamePadButtonSensorMovedCondition.cs" Link="Conditions\GamePadButtonSensorMovedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\GamePadButtonSensorPositionCondition.cs" Link="Conditions\GamePadButtonSensorPositionCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\GamePadButtonSensorStationaryCondition.cs" Link="Conditions\GamePadButtonSensorStationaryCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\InputCondition.cs" Link="Conditions\InputCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\Internal\BooleanCondition.cs" Link="Conditions\Internal\BooleanCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\Internal\GamePadButtonCondition.cs" Link="Conditions\Internal\GamePadButtonCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\Internal\GamePadLogicCondition.cs" Link="Conditions\Internal\GamePadLogicCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\Internal\GamePadSensorBooleanCondition.cs" Link="Conditions\Internal\GamePadSensorBooleanCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\Internal\KeyboardButtonCondition.cs" Link="Conditions\Internal\KeyboardButtonCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\Internal\KeyboardLockStateCondition.cs" Link="Conditions\Internal\KeyboardLockStateCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\Internal\LogicCondition.cs" Link="Conditions\Internal\LogicCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\Internal\MouseBooleanCondition.cs" Link="Conditions\Internal\MouseBooleanCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardButtonPressedCondition.cs" Link="Conditions\KeyboardButtonPressedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardButtonPressStartedCondition.cs" Link="Conditions\KeyboardButtonPressStartedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardButtonReleasedCondition.cs" Link="Conditions\KeyboardButtonReleasedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardButtonReleaseStartedCondition.cs" Link="Conditions\KeyboardButtonReleaseStartedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardCapsLockDisabledCondition.cs" Link="Conditions\KeyboardCapsLockDisabledCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardCapsLockDisabledStartedCondition.cs" Link="Conditions\KeyboardCapsLockDisabledStartedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardCapsLockEnabledCondition.cs" Link="Conditions\KeyboardCapsLockEnabledCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardCapsLockEnabledStartedCondition.cs" Link="Conditions\KeyboardCapsLockEnabledStartedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardCurrentKeysPressedCountCondition.cs" Link="Conditions\KeyboardCurrentKeysPressedCountCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardKeysPressedDeltaCondition.cs" Link="Conditions\KeyboardKeysPressedDeltaCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\MouseButtonPressedCondition.cs" Link="Conditions\MouseButtonPressedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\MouseButtonPressStartedCondition.cs" Link="Conditions\MouseButtonPressStartedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\MouseButtonReleasedCondition.cs" Link="Conditions\MouseButtonReleasedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\MouseButtonReleaseStartedCondition.cs" Link="Conditions\MouseButtonReleaseStartedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\MouseSensorCurrentPositionCondition.cs" Link="Conditions\MouseSensorCurrentPositionCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\MouseSensorDeltaCondition.cs" Link="Conditions\MouseSensorDeltaCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\MouseSensorMovedCondition.cs" Link="Conditions\MouseSensorMovedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\MouseSensorPreviousPositionCondition.cs" Link="Conditions\MouseSensorPreviousPositionCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\MouseSensorStationaryCondition.cs" Link="Conditions\MouseSensorStationaryCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\TouchGestureCondition.cs" Link="Conditions\TouchGestureCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Constants.cs" Link="Constants.cs" />
+    <Compile Include="..\Velentr.Input.Core\Enums\Comparison.cs" Link="Enums\Comparison.cs" />
+    <Compile Include="..\Velentr.Input.Core\Enums\InputSource.cs" Link="Enums\InputSource.cs" />
+    <Compile Include="..\Velentr.Input.Core\Enums\InputState.cs" Link="Enums\InputState.cs" />
+    <Compile Include="..\Velentr.Input.Core\Enums\ValueType.cs" Link="Enums\ValueType.cs" />
+    <Compile Include="..\Velentr.Input.Core\EventArguments\AllConditionEventArguments.cs" Link="EventArguments\AllConditionEventArguments.cs" />
+    <Compile Include="..\Velentr.Input.Core\EventArguments\AnyConditionalEventArguments.cs" Link="EventArguments\AnyConditionalEventArguments.cs" />
+    <Compile Include="..\Velentr.Input.Core\EventArguments\ConditionEventArguments.cs" Link="EventArguments\ConditionEventArguments.cs" />
+    <Compile Include="..\Velentr.Input.Core\EventArguments\GamePadButtonEventArguments.cs" Link="EventArguments\GamePadButtonEventArguments.cs" />
+    <Compile Include="..\Velentr.Input.Core\EventArguments\GamePadStickSensorEventArguments.cs" Link="EventArguments\GamePadStickSensorEventArguments.cs" />
+    <Compile Include="..\Velentr.Input.Core\EventArguments\GamePadTriggerSensorEventArguments.cs" Link="EventArguments\GamePadTriggerSensorEventArguments.cs" />
+    <Compile Include="..\Velentr.Input.Core\EventArguments\KeyboardButtonEventArguments.cs" Link="EventArguments\KeyboardButtonEventArguments.cs" />
+    <Compile Include="..\Velentr.Input.Core\EventArguments\KeyboardKeysPressedCountEventArguments.cs" Link="EventArguments\KeyboardKeysPressedCountEventArguments.cs" />
+    <Compile Include="..\Velentr.Input.Core\EventArguments\KeyboardLockStateEventArguments.cs" Link="EventArguments\KeyboardLockStateEventArguments.cs" />
+    <Compile Include="..\Velentr.Input.Core\EventArguments\MouseButtonEventArguments.cs" Link="EventArguments\MouseButtonEventArguments.cs" />
+    <Compile Include="..\Velentr.Input.Core\EventArguments\MouseSensorMovementEventArguments.cs" Link="EventArguments\MouseSensorMovementEventArguments.cs" />
+    <Compile Include="..\Velentr.Input.Core\EventArguments\TouchEventArguments.cs" Link="EventArguments\TouchEventArguments.cs" />
+    <Compile Include="..\Velentr.Input.Core\GamePad\GamePadButton.cs" Link="GamePad\GamePadButton.cs" />
+    <Compile Include="..\Velentr.Input.Core\GamePad\GamePadInputMode.cs" Link="GamePad\GamePadInputMode.cs" />
+    <Compile Include="..\Velentr.Input.Core\GamePad\GamePadSensor.cs" Link="GamePad\GamePadSensor.cs" />
+    <Compile Include="..\Velentr.Input.Core\GamePad\GamePadSensorValueMode.cs" Link="GamePad\GamePadSensorValueMode.cs" />
+    <Compile Include="..\Velentr.Input.Core\GamePad\GamePadService.cs" Link="GamePad\GamePadService.cs" />
+    <Compile Include="..\Velentr.Input.Core\GamePad\VilliGamePad.cs" Link="GamePad\VilliGamePad.cs" />
+    <Compile Include="..\Velentr.Input.Core\Helpers\Cache.cs" Link="Helpers\Cache.cs" />
+    <Compile Include="..\Velentr.Input.Core\Helpers\Helper.cs" Link="Helpers\Helper.cs" />
+    <Compile Include="..\Velentr.Input.Core\InputConditionEvent.cs" Link="InputConditionEvent.cs" />
+    <Compile Include="..\Velentr.Input.Core\InputService.cs" Link="InputService.cs" />
+    <Compile Include="..\Velentr.Input.Core\Keyboard\Key.cs" Link="Keyboard\Key.cs" />
+    <Compile Include="..\Velentr.Input.Core\Keyboard\KeyboardLock.cs" Link="Keyboard\KeyboardLock.cs" />
+    <Compile Include="..\Velentr.Input.Core\Keyboard\KeyboardService.cs" Link="Keyboard\KeyboardService.cs" />
+    <Compile Include="..\Velentr.Input.Core\Mouse\MouseButton.cs" Link="Mouse\MouseButton.cs" />
+    <Compile Include="..\Velentr.Input.Core\Mouse\MouseSensor.cs" Link="Mouse\MouseSensor.cs" />
+    <Compile Include="..\Velentr.Input.Core\Mouse\MouseService.cs" Link="Mouse\MouseService.cs" />
+    <Compile Include="..\Velentr.Input.Core\Touch\Engines\TouchEngine.cs" Link="Touch\Engines\TouchEngine.cs" />
+    <Compile Include="..\Velentr.Input.Core\Touch\Engines\Win7Engine.cs" Link="Touch\Engines\Win7Engine.cs" />
+    <Compile Include="..\Velentr.Input.Core\Touch\Engines\XnaDerivedEngine.cs" Link="Touch\Engines\XnaDerivedEngine.cs" />
+    <Compile Include="..\Velentr.Input.Core\Touch\Gesture.cs" Link="Touch\Gesture.cs" />
+    <Compile Include="..\Velentr.Input.Core\Touch\GestureType.cs" Link="Touch\GestureType.cs" />
+    <Compile Include="..\Velentr.Input.Core\Touch\TouchEngines.cs" Link="Touch\TouchEngines.cs" />
+    <Compile Include="..\Velentr.Input.Core\Touch\TouchGestureMapping.cs" Link="Touch\TouchGestureMapping.cs" />
+    <Compile Include="..\Velentr.Input.Core\Touch\TouchService.cs" Link="Touch\TouchService.cs" />
+    <Compile Include="..\Velentr.Input.Core\Value.cs" Link="Value.cs" />
+    <Compile Include="..\Velentr.Input.Core\ValueLogic.cs" Link="ValueLogic.cs" />
+    <Compile Include="..\Velentr.Input.Core\VelentrInput.cs" Link="VelentrInput.cs" />
+    <Compile Include="..\Velentr.Input.Core\Voice\VoiceService.cs" Link="Voice\VoiceService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Conditions\Internal\" />
+    <Folder Include="Enums\" />
+    <Folder Include="EventArguments\" />
+    <Folder Include="GamePad\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Keyboard\" />
+    <Folder Include="Mouse\" />
+    <Folder Include="Touch\Engines\" />
+    <Folder Include="Voice\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="fnalibs" Version="21.3.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\FNA\FNA.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,56 +1,4 @@
-# VilliInput
-A simple and easy-to-use input library for XNA/Monogame/FNA.
-
-# Installation
-There are nuget packages available for Monogame and FNA.
-- Monogame: [Velentr.Input.Monogame](https://www.nuget.org/packages/Velentr.Input.Monogame/)
-- FNA: [Velentr.Input.FNA](https://www.nuget.org/packages/Velentr.Input.FNA/)
-
-# Basic Usage
-Approach 1: Create an input condition and poll for if the condition is met directly.
-```
-// This goes in the class
-InputCondition condition;
-
-// This part goes in Setup()
-VelentrInput.System.Setup(this);
-condition = new AnyCondition(
-    new KeyboardButtonPressedCondition(Key.Escape),
-    new GamePadButtonPressedCondition(GamePadButton.Back),
-    new MouseButtonPressedCondition(MouseButton.MiddleButton)
-);
-
-// This part goes in Update()
-VelentrInput.System.Update(gameTime);
-if (condition.ConditionMet()) {
-    // Take action!
-}
-```
-
-Approach 2: Event-driven
-```
-// This goes in the class
-InputCondition condition;
-
-// This part goes in Setup()
-VelentrInput.System.Setup(this);
-var condition = new AnyCondition(
-    new KeyboardButtonPressedCondition(Key.Escape),
-    new GamePadButtonPressedCondition(GamePadButton.Back),
-    new MouseButtonPressedCondition(MouseButton.MiddleButton)
-);
-condition.Event += methodToCallWhenConditionIsMet;
-VelentrInput.System.AddInputConditionToTracking(condition);
-
-// This part goes in Update()
-VelentrInput.System.Update(gameTime);
-
-```
-
-# Example
-Code:
-```
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Velentr.Input.Conditions;
 using Velentr.Input.EventArguments;
@@ -115,9 +63,3 @@ namespace Velentr.Input.Monogame.DevEnv
         }
     }
 }
-
-```
-
-
-# Future Plans
-See list of issues under the Milestones: https://github.com/vonderborch/Velentr.Input/milestones
