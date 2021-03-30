@@ -9,6 +9,7 @@
     <RepositoryUrl>https://github.com/vonderborch/Velentr.Input</RepositoryUrl>
     <PackageTags>Monogame, Input, Keyboard, Mouse, GamePad, Touch, Voice</PackageTags>
     <Description>A simple and easy-to-use input library for XNA/Monogame/FNA.</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;MONOGAME</DefineConstants>
