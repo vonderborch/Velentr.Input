@@ -1,4 +1,4 @@
-# VilliInput
+# Velentr.Input
 A simple and easy-to-use input library for XNA/Monogame/FNA.
 
 # Installation
