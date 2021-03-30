@@ -40,18 +40,20 @@ namespace Velentr.Input.Helpers
             version = 0;
         }
 
-        public int? AddItem(K key, V value, int index = int.MaxValue, bool forceAdd = false)
+        public (bool, int, K) AddItem(K key, V value, int index = int.MaxValue, bool forceAdd = false)
         {
             if (Values.ContainsKey(key))
             {
                 if (!forceAdd)
                 {
-                    return null;
+                    return (false, -1, key);
                 }
 
                 Values[key] = value;
                 version++;
-                return GetIndexForKey(key);
+
+                index = GetIndexForKey(key);
+                return (index == -1, index, key);
             }
 
             if (index < 0)
@@ -64,13 +66,14 @@ namespace Velentr.Input.Helpers
                 Order.Add(key);
                 Values.Add(key, value);
                 version++;
-                return Order.Count - 1;
+
+                return (true, Order.Count - 1, key);
             }
 
             Order.Insert(index, key);
             Values.Add(key, value);
             version++;
-            return index;
+            return (true, index, key);
         }
 
         public (K, V, int) GetItem(int index)

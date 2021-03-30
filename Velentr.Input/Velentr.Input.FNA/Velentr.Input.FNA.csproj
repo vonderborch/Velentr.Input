@@ -5,6 +5,12 @@
     <AssemblyName>Velentr.Input.FNA</AssemblyName>
     <Platforms>AnyCPU;x64</Platforms>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Authors>Christian Webber</Authors>
+    <Company>Christian Webber</Company>
+    <RepositoryUrl>https://github.com/vonderborch/Velentr.Input</RepositoryUrl>
+    <PackageTags>FNA, Input, Keyboard, Mouse, GamePad, Touch, Voice</PackageTags>
+    <Description>A simple and easy-to-use input library for XNA/Monogame/FNA.</Description>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;FNA</DefineConstants>
@@ -116,5 +122,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FNA\FNA.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 </Project>
