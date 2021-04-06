@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Velentr.Input;
 using Velentr.Input.Conditions;
 using Velentr.Input.EventArguments;
 using Velentr.Input.GamePad;
@@ -14,6 +12,8 @@ namespace Velentr.Input.FNA.DevEnv
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        private InputManager manager;
 
         public Game1()
         {
@@ -31,19 +31,21 @@ namespace Velentr.Input.FNA.DevEnv
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            VelentrInput.System.Setup(this);
+            manager = new InputManager(this);
+            manager.Setup();
             var condition = new AnyCondition(
-                new KeyboardButtonPressedCondition(Key.Escape),
-                new GamePadButtonPressedCondition(GamePadButton.Back),
-                new MouseButtonPressedCondition(MouseButton.MiddleButton)
+                manager,
+                new KeyboardButtonPressedCondition(manager, Key.Escape),
+                new GamePadButtonPressedCondition(manager, GamePadButton.Back),
+                new MouseButtonPressedCondition(manager, MouseButton.MiddleButton)
             );
             condition.Event += ExitGame;
-            VelentrInput.System.AddInputConditionToTracking(condition);
+            manager.AddInputConditionToTracking(condition);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            VelentrInput.System.Update(gameTime);
+            manager.Update(gameTime);
             base.Update(gameTime);
         }
 

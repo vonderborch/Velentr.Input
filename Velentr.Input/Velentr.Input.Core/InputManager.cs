@@ -30,9 +30,10 @@ namespace Velentr.Input
         /// <summary>
         /// Initializes a new instance of the <see cref="InputManager"/> class.
         /// </summary>
-        public InputManager()
+        public InputManager(Game game)
         {
             _inputServices = new Dictionary<string, InputService>();
+            Game = game;
         }
 
         /// <summary>
@@ -175,15 +176,13 @@ namespace Velentr.Input
         /// <summary>
         /// Setups the Input system with the requested input services.
         /// </summary>
-        /// <param name="game">The game.</param>
         /// <param name="enableMouseService">if set to <c>true</c> [enable mouse service].</param>
         /// <param name="enableKeyboardService">if set to <c>true</c> [enable keyboard service].</param>
         /// <param name="enableGamePadService">if set to <c>true</c> [enable game pad service].</param>
         /// <param name="enableTouchService">if set to <c>true</c> [enable touch service].</param>
         /// <param name="enableVoiceService">if set to <c>true</c> [enable touch service].</param>
-        public void Setup(Game game, bool enableMouseService = true, bool enableKeyboardService = true, bool enableGamePadService = true, bool enableTouchService = true, bool enableVoiceService = true)
+        public void Setup(bool enableMouseService = true, bool enableKeyboardService = true, bool enableGamePadService = true, bool enableTouchService = true, bool enableVoiceService = true)
         {
-            Game = game;
             _inputServices = new Dictionary<string, InputService>();
             SetupInputSources(enableMouseService, enableKeyboardService, enableGamePadService, enableTouchService, enableVoiceService);
         }

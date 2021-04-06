@@ -39,12 +39,12 @@
     <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardButtonPressStartedCondition.cs" Link="Conditions\KeyboardButtonPressStartedCondition.cs" />
     <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardButtonReleasedCondition.cs" Link="Conditions\KeyboardButtonReleasedCondition.cs" />
     <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardButtonReleaseStartedCondition.cs" Link="Conditions\KeyboardButtonReleaseStartedCondition.cs" />
-    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardCapsLockDisabledCondition.cs" Link="Conditions\KeyboardCapsLockDisabledCondition.cs" />
-    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardCapsLockDisabledStartedCondition.cs" Link="Conditions\KeyboardCapsLockDisabledStartedCondition.cs" />
-    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardCapsLockEnabledCondition.cs" Link="Conditions\KeyboardCapsLockEnabledCondition.cs" />
-    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardCapsLockEnabledStartedCondition.cs" Link="Conditions\KeyboardCapsLockEnabledStartedCondition.cs" />
     <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardCurrentKeysPressedCountCondition.cs" Link="Conditions\KeyboardCurrentKeysPressedCountCondition.cs" />
     <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardKeysPressedDeltaCondition.cs" Link="Conditions\KeyboardKeysPressedDeltaCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardLockDisabledCondition.cs" Link="Conditions\KeyboardLockDisabledCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardLockDisabledStartedCondition.cs" Link="Conditions\KeyboardLockDisabledStartedCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardLockEnabledCondition.cs" Link="Conditions\KeyboardLockEnabledCondition.cs" />
+    <Compile Include="..\Velentr.Input.Core\Conditions\KeyboardLockEnabledStartedCondition.cs" Link="Conditions\KeyboardLockEnabledStartedCondition.cs" />
     <Compile Include="..\Velentr.Input.Core\Conditions\MouseButtonPressedCondition.cs" Link="Conditions\MouseButtonPressedCondition.cs" />
     <Compile Include="..\Velentr.Input.Core\Conditions\MouseButtonPressStartedCondition.cs" Link="Conditions\MouseButtonPressStartedCondition.cs" />
     <Compile Include="..\Velentr.Input.Core\Conditions\MouseButtonReleasedCondition.cs" Link="Conditions\MouseButtonReleasedCondition.cs" />
@@ -78,7 +78,6 @@
     <Compile Include="..\Velentr.Input.Core\GamePad\GamePadSensorValueMode.cs" Link="GamePad\GamePadSensorValueMode.cs" />
     <Compile Include="..\Velentr.Input.Core\GamePad\GamePadService.cs" Link="GamePad\GamePadService.cs" />
     <Compile Include="..\Velentr.Input.Core\GamePad\VilliGamePad.cs" Link="GamePad\VilliGamePad.cs" />
-    <Compile Include="..\Velentr.Input.Core\Helpers\Cache.cs" Link="Helpers\Cache.cs" />
     <Compile Include="..\Velentr.Input.Core\Helpers\Helper.cs" Link="Helpers\Helper.cs" />
     <Compile Include="..\Velentr.Input.Core\InputConditionEvent.cs" Link="InputConditionEvent.cs" />
     <Compile Include="..\Velentr.Input.Core\InputManager.cs" Link="InputManager.cs" />
