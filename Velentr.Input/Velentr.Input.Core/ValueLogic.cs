@@ -114,9 +114,9 @@ namespace Velentr.Input
                 case Comparison.GreaterThenOrEqual:
                     return value >= valueToCompare;
                 case Comparison.Equal:
-                    return Helper.ApproximatelyEqual(value, valueToCompare, VelentrInput.System.Settings.MaxFloatDifference);
+                    return Helper.ApproximatelyEqual(value, valueToCompare, Constants.Settings.MaxFloatDifference);
                 case Comparison.NotEquals:
-                    return !Helper.ApproximatelyEqual(value, valueToCompare, VelentrInput.System.Settings.MaxFloatDifference);
+                    return !Helper.ApproximatelyEqual(value, valueToCompare, Constants.Settings.MaxFloatDifference);
                 case Comparison.LessThanX:
                 case Comparison.LessThanY:
                 case Comparison.LessThan:
@@ -143,9 +143,9 @@ namespace Velentr.Input
                 case Comparison.GreaterThenOrEqual:
                     return value >= valueToCompare;
                 case Comparison.Equal:
-                    return Helper.ApproximatelyEqual(value, valueToCompare, VelentrInput.System.Settings.MaxDoubleDifference);
+                    return Helper.ApproximatelyEqual(value, valueToCompare, Constants.Settings.MaxDoubleDifference);
                 case Comparison.NotEquals:
-                    return !Helper.ApproximatelyEqual(value, valueToCompare, VelentrInput.System.Settings.MaxDoubleDifference);
+                    return !Helper.ApproximatelyEqual(value, valueToCompare, Constants.Settings.MaxDoubleDifference);
                 case Comparison.LessThanX:
                 case Comparison.LessThanY:
                 case Comparison.LessThan:
@@ -213,9 +213,9 @@ namespace Velentr.Input
                 case Comparison.GreaterThenOrEqual:
                     return value.X >= valueToCompare.X || value.Y >= valueToCompare.Y;
                 case Comparison.Equal:
-                    return Helper.ApproximatelyEqual(value, valueToCompare, VelentrInput.System.Settings.MaxFloatDifference);
+                    return Helper.ApproximatelyEqual(value, valueToCompare, Constants.Settings.MaxFloatDifference);
                 case Comparison.NotEquals:
-                    return !Helper.ApproximatelyEqual(value, valueToCompare, VelentrInput.System.Settings.MaxFloatDifference);
+                    return !Helper.ApproximatelyEqual(value, valueToCompare, Constants.Settings.MaxFloatDifference);
                 case Comparison.LessThanX:
                     return value.X < valueToCompare.X;
                 case Comparison.LessThanY:

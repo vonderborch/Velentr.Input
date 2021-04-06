@@ -17,12 +17,14 @@ namespace Velentr.Input.Conditions
         /// <summary>
         /// Initializes a new instance of the <see cref="InputCondition"/> class.
         /// </summary>
+        /// <param name="manager">The input manager the condition is associated with.</param>
         /// <param name="source">The source.</param>
         /// <param name="windowMustBeActive">if set to <c>true</c> [window must be active].</param>
         /// <param name="consumable">if set to <c>true</c> [consumable].</param>
         /// <param name="allowedIfConsumed">if set to <c>true</c> [allowed if consumed].</param>
         /// <param name="milliSecondsForConditionMet">The milli seconds for condition met.</param>
-        protected InputCondition(InputSource source, bool windowMustBeActive, bool consumable, bool allowedIfConsumed, uint milliSecondsForConditionMet)
+        /// <param name="milliSecondsForTimeOut">The milli seconds for timeout.</param>
+        protected InputCondition(InputManager manager, InputSource source, bool windowMustBeActive, bool consumable, bool allowedIfConsumed, uint milliSecondsForConditionMet, uint milliSecondsForTimeOut)
         {
             InputSource = source;
             WindowMustBeActive = windowMustBeActive;
@@ -31,7 +33,17 @@ namespace Velentr.Input.Conditions
             AllowedIfConsumed = allowedIfConsumed;
 
             MilliSecondsForConditionMet = milliSecondsForConditionMet;
+            MilliSecondsForTimeOut = milliSecondsForTimeOut;
+            Manager = manager;
         }
+
+        /// <summary>
+        /// Gets the input manager.
+        /// </summary>
+        /// <value>
+        /// The input manager.
+        /// </value>
+        public InputManager Manager { get; protected set; }
 
         /// <summary>
         /// Gets the input source.
@@ -95,7 +107,23 @@ namespace Velentr.Input.Conditions
         /// <value>
         /// The milli seconds for condition met.
         /// </value>
-        public uint MilliSecondsForConditionMet { get; }
+        public uint MilliSecondsForConditionMet { get; protected set; }
+
+        /// <summary>
+        /// Gets the last time the condition was met and fired.
+        /// </summary>
+        /// <value>
+        /// The last fire time.
+        /// </value>
+        public GameTime LastFireTime { get; protected set; }
+
+        /// <summary>
+        /// Gets the milliseconds when inputs are valid between the condition being met.
+        /// </summary>
+        /// <value>
+        /// The milli seconds for time out.
+        /// </value>
+        public uint MilliSecondsForTimeOut { get; protected set; }
 
         /// <summary>
         /// Determines whether the input condition is met.
@@ -180,7 +208,12 @@ namespace Velentr.Input.Conditions
         protected void UpdateState(bool newState)
         {
             ConditionMetState = newState;
-            CurrentStateStart = VelentrInput.CurrentTime;
+            CurrentStateStart = Manager.CurrentTime;
+
+            if (newState)
+            {
+                LastFireTime = Manager.CurrentTime;
+            }
         }
 
         /// <summary>
@@ -195,6 +228,7 @@ namespace Velentr.Input.Conditions
                 Consume();
             }
 
+            LastFireTime = Manager.CurrentTime;
             if (Event.Delegates.Count > 0)
             {
                 Event.TriggerEvent(this, arguments);

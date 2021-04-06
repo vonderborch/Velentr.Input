@@ -82,6 +82,16 @@ namespace Velentr.Input
         /// </value>
         public double MaxDoubleDifference { get; set; } = 0.0000001d;
 
+        public static string GamePadService = "GAMEPAD_SERVICE";
+
+        public static string KeyboardService = "KEYBOARD_SERVICE";
+
+        public static string MouseService = "MOUSE_SERVICE";
+
+        public static string TouchService = "TOUCH_SERVICE";
+
+        public static string VoiceService = "VOICE_SERVICE";
+
     }
 
 }

@@ -6,7 +6,7 @@ namespace Velentr.Input.Touch.Engines
     public class Win7Engine : TouchEngine
     {
 
-        public Win7Engine() : base(TouchEngines.Win7) { }
+        public Win7Engine(InputManager manager) : base(TouchEngines.Win7, manager) { }
 
         public override void Setup()
         {

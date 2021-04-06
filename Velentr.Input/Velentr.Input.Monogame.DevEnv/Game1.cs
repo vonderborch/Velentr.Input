@@ -13,6 +13,8 @@ namespace Velentr.Input.Monogame.DevEnv
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        private InputManager manager;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -29,22 +31,21 @@ namespace Velentr.Input.Monogame.DevEnv
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            VelentrInput.System.Setup(this);
+            manager = new InputManager(this);
+            manager.Setup();
             var condition = new AnyCondition(
-                new KeyboardButtonPressedCondition(Key.Escape),
-                new GamePadButtonPressedCondition(GamePadButton.Back),
-                new MouseButtonPressedCondition(MouseButton.MiddleButton)
+                manager,
+                new KeyboardButtonPressedCondition(manager, Key.Escape),
+                new GamePadButtonPressedCondition(manager, GamePadButton.Back),
+                new MouseButtonPressedCondition(manager, MouseButton.MiddleButton)
             );
             condition.Event += ExitGame;
-            VelentrInput.System.AddInputConditionToTracking(condition);
+            manager.AddInputConditionToTracking(condition);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            VelentrInput.System.Update(gameTime);
-
-            // TODO: Add your update logic here
-
+            manager.Update(gameTime);
             base.Update(gameTime);
         }
 

@@ -10,7 +10,7 @@ namespace Velentr.Input.Conditions.Internal
     public abstract class KeyboardButtonCondition : BooleanCondition
     {
 
-        protected KeyboardButtonCondition(Key key, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = true, uint milliSecondsForConditionMet = 0) : base(InputSource.Keyboard, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
+        protected KeyboardButtonCondition(InputManager manager, Key key, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = false, uint milliSecondsForConditionMet = 0, uint milliSecondsForTimeOut = 0) : base(manager, InputSource.Keyboard, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet, milliSecondsForTimeOut)
         {
             Key = key;
         }
@@ -24,10 +24,10 @@ namespace Velentr.Input.Conditions.Internal
                 Key = Key,
                 Condition = this,
                 InputSource = InputSource,
-                NumberOfKeysPressed = VelentrInput.System.Keyboard.CurrentKeysPressed(),
+                NumberOfKeysPressed = Manager.Keyboard.CurrentKeysPressed(),
                 MilliSecondsForConditionMet = MilliSecondsForConditionMet,
                 ConditionStateStartTime = CurrentStateStart,
-                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, VelentrInput.CurrentTime),
+                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime),
                 WindowMustBeActive = WindowMustBeActive
             };
         }
@@ -40,20 +40,21 @@ namespace Velentr.Input.Conditions.Internal
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
             return (
-                ((WindowMustBeActive && VelentrInput.IsWindowActive) || !WindowMustBeActive)
+                ((WindowMustBeActive && Manager.IsWindowActive) || !WindowMustBeActive)
                 && (allowedIfConsumed || !IsConsumed())
-                && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, VelentrInput.CurrentTime) >= milliSecondsForConditionMet)
+                && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime) >= milliSecondsForConditionMet)
+                && (MilliSecondsForTimeOut == 0 || Helper.ElapsedMilliSeconds(LastFireTime, Manager.CurrentTime) >= MilliSecondsForTimeOut)
             );
         }
 
         public override void Consume()
         {
-            VelentrInput.System.Keyboard.ConsumeKey(Key);
+            Manager.Keyboard.ConsumeKey(Key);
         }
 
         public override bool IsConsumed()
         {
-            return VelentrInput.System.Keyboard.IsKeyConsumed(Key);
+            return Manager.Keyboard.IsKeyConsumed(Key);
         }
 
     }

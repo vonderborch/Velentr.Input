@@ -12,13 +12,13 @@ namespace Velentr.Input.Mouse
     public class MouseService : InputService
     {
 
-        private static readonly List<MouseButton> buttons = new List<MouseButton>(Enum.GetValues(typeof(MouseButton)).Cast<MouseButton>().ToList());
+        private readonly List<MouseButton> buttons = new List<MouseButton>(Enum.GetValues(typeof(MouseButton)).Cast<MouseButton>().ToList());
 
-        internal static Dictionary<MouseButton, ulong> ButtonLastConsumed = new Dictionary<MouseButton, ulong>(Enum.GetNames(typeof(MouseButton)).Length);
+        internal Dictionary<MouseButton, ulong> ButtonLastConsumed = new Dictionary<MouseButton, ulong>(Enum.GetNames(typeof(MouseButton)).Length);
 
-        internal static Dictionary<MouseSensor, ulong> SensorLastConsumed = new Dictionary<MouseSensor, ulong>(Enum.GetNames(typeof(MouseSensor)).Length);
+        internal Dictionary<MouseSensor, ulong> SensorLastConsumed = new Dictionary<MouseSensor, ulong>(Enum.GetNames(typeof(MouseSensor)).Length);
 
-        internal static Dictionary<MouseButton, Func<MouseState, ButtonState>> ButtonMapping = new Dictionary<MouseButton, Func<MouseState, ButtonState>>(Enum.GetNames(typeof(MouseButton)).Length)
+        internal Dictionary<MouseButton, Func<MouseState, ButtonState>> ButtonMapping = new Dictionary<MouseButton, Func<MouseState, ButtonState>>(Enum.GetNames(typeof(MouseButton)).Length)
         {
             {MouseButton.LeftButton, state => state.LeftButton},
             {MouseButton.MiddleButton, state => state.MiddleButton},
@@ -27,62 +27,62 @@ namespace Velentr.Input.Mouse
             {MouseButton.XButton2, state => state.XButton2}
         };
 
-        public MouseService()
+        public MouseService(InputManager inputManager) : base(inputManager)
         {
             Source = InputSource.Mouse;
         }
 
-        public static MouseState PreviousState { get; private set; }
+        public MouseState PreviousState { get; private set; }
 
-        public static MouseState CurrentState { get; private set; }
+        public MouseState CurrentState { get; private set; }
 
         public bool ResetMouseCoordsToCenterOfScreen { get; set; } = false;
 
 #if MONOGAME
-        public static int CurrentHorizontalScrollWheelValue => CurrentState.HorizontalScrollWheelValue;
+        public int CurrentHorizontalScrollWheelValue => CurrentState.HorizontalScrollWheelValue;
 
-        public static int PreviousHorizontalScrollWheelValue => PreviousState.HorizontalScrollWheelValue;
+        public int PreviousHorizontalScrollWheelValue => PreviousState.HorizontalScrollWheelValue;
 #else
-        public static int CurrentHorizontalScrollWheelValue => CurrentState.ScrollWheelValue;
+        public int CurrentHorizontalScrollWheelValue => CurrentState.ScrollWheelValue;
 
-        public static int PreviousHorizontalScrollWheelValue => PreviousState.ScrollWheelValue;
+        public int PreviousHorizontalScrollWheelValue => PreviousState.ScrollWheelValue;
 #endif
 
-        public static int CurrentVerticalScrollWheelValue => CurrentState.ScrollWheelValue;
+        public int CurrentVerticalScrollWheelValue => CurrentState.ScrollWheelValue;
 
-        public static int PreviousVerticalScrollWheelValue => PreviousState.ScrollWheelValue;
+        public int PreviousVerticalScrollWheelValue => PreviousState.ScrollWheelValue;
 
-        public static int HorizontalScrollDelta => CurrentHorizontalScrollWheelValue - PreviousHorizontalScrollWheelValue;
+        public int HorizontalScrollDelta => CurrentHorizontalScrollWheelValue - PreviousHorizontalScrollWheelValue;
 
-        public static int VerticalScrollDelta => CurrentVerticalScrollWheelValue - PreviousVerticalScrollWheelValue;
+        public int VerticalScrollDelta => CurrentVerticalScrollWheelValue - PreviousVerticalScrollWheelValue;
 
-        public static Point ScrollDelta => new Point(HorizontalScrollDelta, VerticalScrollDelta);
+        public Point ScrollDelta => new Point(HorizontalScrollDelta, VerticalScrollDelta);
 
-        public static Point CurrentScrollPositions => new Point(CurrentHorizontalScrollWheelValue, CurrentVerticalScrollWheelValue);
+        public Point CurrentScrollPositions => new Point(CurrentHorizontalScrollWheelValue, CurrentVerticalScrollWheelValue);
 
-        public static Point PreviousScrollPositions => new Point(PreviousHorizontalScrollWheelValue, PreviousVerticalScrollWheelValue);
+        public Point PreviousScrollPositions => new Point(PreviousHorizontalScrollWheelValue, PreviousVerticalScrollWheelValue);
 
 #if MONOGAME
-        public static Point CurrentCursorPosition => CurrentState.Position;
+        public Point CurrentCursorPosition => CurrentState.Position;
 
-        public static Point PreviousCursorPosition => PreviousState.Position;
+        public Point PreviousCursorPosition => PreviousState.Position;
 #else
-        public static Point CurrentCursorPosition => new Point(CurrentState.X, CurrentState.Y);
+        public Point CurrentCursorPosition => new Point(CurrentState.X, CurrentState.Y);
 
-        public static Point PreviousCursorPosition => new Point(PreviousState.X, PreviousState.Y);
+        public Point PreviousCursorPosition => new Point(PreviousState.X, PreviousState.Y);
 #endif
 
-        public static Point CursorPositionDelta => CurrentCursorPosition - PreviousCursorPosition;
+        public Point CursorPositionDelta => CurrentCursorPosition - PreviousCursorPosition;
 
-        public static bool ScrolledVertically => VerticalScrollDelta != 0;
+        public bool ScrolledVertically => VerticalScrollDelta != 0;
 
-        public static bool ScrolledHorizontally => HorizontalScrollDelta != 0;
+        public bool ScrolledHorizontally => HorizontalScrollDelta != 0;
 
-        public static bool Scrolled => ScrolledVertically || ScrolledHorizontally;
+        public bool Scrolled => ScrolledVertically || ScrolledHorizontally;
 
-        public static bool CursorMoved => CursorPositionDelta != Point.Zero;
+        public bool CursorMoved => CursorPositionDelta != Point.Zero;
 
-        public static bool IsMouseInWindow => VelentrInput.IsWindowActive && Helper.CoordinateInRectangle(CurrentCursorPosition, VelentrInput.Window.ClientBounds);
+        public bool IsMouseInWindow => Manager.IsWindowActive && Helper.CoordinateInRectangle(CurrentCursorPosition, Manager.Window.ClientBounds);
 
         public override void Setup()
         {
@@ -97,25 +97,25 @@ namespace Velentr.Input.Mouse
 
             if (ResetMouseCoordsToCenterOfScreen)
             {
-                Microsoft.Xna.Framework.Input.Mouse.SetPosition(VelentrInput.CenterCoordinates.X, VelentrInput.CenterCoordinates.Y);
+                Microsoft.Xna.Framework.Input.Mouse.SetPosition(Manager.CenterCoordinates.X, Manager.CenterCoordinates.Y);
             }
         }
 
         public void ConsumeButton(MouseButton button)
         {
-            ButtonLastConsumed[button] = VelentrInput.CurrentFrame;
+            ButtonLastConsumed[button] = Manager.CurrentFrame;
         }
 
         public void ConsumeSensor(MouseSensor sensor)
         {
-            SensorLastConsumed[sensor] = VelentrInput.CurrentFrame;
+            SensorLastConsumed[sensor] = Manager.CurrentFrame;
         }
 
         public bool IsButtonConsumed(MouseButton button)
         {
             if (ButtonLastConsumed.TryGetValue(button, out var frame))
             {
-                return frame == VelentrInput.CurrentFrame;
+                return frame == Manager.CurrentFrame;
             }
 
             return false;
@@ -125,37 +125,37 @@ namespace Velentr.Input.Mouse
         {
             if (SensorLastConsumed.TryGetValue(sensor, out var frame))
             {
-                return frame == VelentrInput.CurrentFrame;
+                return frame == Manager.CurrentFrame;
             }
 
             return false;
         }
 
-        public static bool IsPressed(MouseButton button)
+        public bool IsPressed(MouseButton button)
         {
             return ButtonMapping[button](CurrentState) == ButtonState.Pressed;
         }
 
-        public static bool WasPressed(MouseButton button)
+        public bool WasPressed(MouseButton button)
         {
             return ButtonMapping[button](PreviousState) == ButtonState.Pressed;
         }
 
-        public static bool IsReleased(MouseButton button)
+        public bool IsReleased(MouseButton button)
         {
             return ButtonMapping[button](CurrentState) == ButtonState.Released;
         }
 
-        public static bool WasReleased(MouseButton button)
+        public bool WasReleased(MouseButton button)
         {
             return ButtonMapping[button](PreviousState) == ButtonState.Released;
         }
 
-        public static bool CursorInBounds(Rectangle boundaries, bool scaleCoordinatesToArea = false, Rectangle? parentBoundaries = null)
+        public bool CursorInBounds(Rectangle boundaries, bool scaleCoordinatesToArea = false, Rectangle? parentBoundaries = null)
         {
             return Helper.CoordinateInRectangle(
                 scaleCoordinatesToArea
-                    ? Helper.ScalePointToChild(CurrentCursorPosition, parentBoundaries ?? VelentrInput.Window.ClientBounds, boundaries)
+                    ? Helper.ScalePointToChild(CurrentCursorPosition, parentBoundaries ?? Manager.Window.ClientBounds, boundaries)
                     : CurrentCursorPosition,
                 boundaries
             );

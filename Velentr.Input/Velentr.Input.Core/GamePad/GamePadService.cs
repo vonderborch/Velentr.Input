@@ -10,7 +10,7 @@ namespace Velentr.Input.GamePad
     public class GamePadService : InputService
     {
 
-        internal static Dictionary<GamePadButton, Func<GamePadState, ButtonState>> ButtonMapping = new Dictionary<GamePadButton, Func<GamePadState, ButtonState>>(Enum.GetNames(typeof(GamePadButton)).Length)
+        internal Dictionary<GamePadButton, Func<GamePadState, ButtonState>> ButtonMapping = new Dictionary<GamePadButton, Func<GamePadState, ButtonState>>(Enum.GetNames(typeof(GamePadButton)).Length)
         {
             {GamePadButton.A, state => state.Buttons.A},
             {GamePadButton.B, state => state.Buttons.B},
@@ -29,9 +29,9 @@ namespace Velentr.Input.GamePad
             {GamePadButton.DPadUp, state => state.DPad.Up}
         };
 
-        public static VilliGamePad[] GamePads;
+        public VilliGamePad[] GamePads;
 
-        public static List<int> ConnectedGamePadIndexes;
+        public List<int> ConnectedGamePadIndexes;
 
         public Dictionary<(int, GamePadButton), ulong> ButtonLastConsumed = new Dictionary<(int, GamePadButton), ulong>();
 
@@ -39,19 +39,19 @@ namespace Velentr.Input.GamePad
 
         public Dictionary<(int, GamePadSensor), ulong> SensorConsumed = new Dictionary<(int, GamePadSensor), ulong>();
 
-        public GamePadService()
+        public GamePadService(InputManager manager) : base(manager)
         {
             Source = InputSource.GamePad;
         }
 
 #if MONOGAME
-        public static int MaximumGamePads => Microsoft.Xna.Framework.Input.GamePad.MaximumGamePadCount;
+        public int MaximumGamePads => Microsoft.Xna.Framework.Input.GamePad.MaximumGamePadCount;
 
-        public static int HighestGamePadIndex => Microsoft.Xna.Framework.Input.GamePad.MaximumGamePadCount - 1;
+        public int HighestGamePadIndex => Microsoft.Xna.Framework.Input.GamePad.MaximumGamePadCount - 1;
 #else
-        public static int MaximumGamePads => 4;
+        public int MaximumGamePads => 4;
 
-        public static int HighestGamePadIndex => 3;
+        public int HighestGamePadIndex => 3;
 #endif
 
         public override void Setup()
@@ -68,7 +68,7 @@ namespace Velentr.Input.GamePad
                     PreviousState = GamePadState.Default,
                     CurrentState = GamePadState.Default,
                     Capabilities = Microsoft.Xna.Framework.Input.GamePad.GetCapabilities(i),
-                    DeadZone = VelentrInput.System.Settings.DefaultGamePadDeadZone
+                    DeadZone = Constants.Settings.DefaultGamePadDeadZone
                 };
 #else
                 GamePads[i] = new VilliGamePad
@@ -77,7 +77,7 @@ namespace Velentr.Input.GamePad
                     PreviousState = Microsoft.Xna.Framework.Input.GamePad.GetState(IntIndexToPlayerIndex(i)),
                     CurrentState = Microsoft.Xna.Framework.Input.GamePad.GetState(IntIndexToPlayerIndex(i)),
                     Capabilities = Microsoft.Xna.Framework.Input.GamePad.GetCapabilities(IntIndexToPlayerIndex(i)),
-                    DeadZone = VelentrInput.System.Settings.DefaultGamePadDeadZone
+                    DeadZone = Constants.Settings.DefaultGamePadDeadZone
                 };
 #endif
 
@@ -103,19 +103,19 @@ namespace Velentr.Input.GamePad
 #endif
             }
 
-            LastConnectionCheckTime = VelentrInput.CurrentTime;
+            LastConnectionCheckTime = Manager.CurrentTime;
         }
 
         public override void Update()
         {
             // check if we need to check for if any controllers have been connected to the system
-            if (VelentrInput.System.Settings.SecondsBetweenGamePadConnectionCheck > 0)
+            if (Constants.Settings.SecondsBetweenGamePadConnectionCheck > 0)
             {
                 var elapsedSecondsBetweenChecks = LastConnectionCheckTime == null
-                    ? VelentrInput.System.Settings.SecondsBetweenGamePadConnectionCheck
-                    : (VelentrInput.CurrentTime.TotalGameTime - LastConnectionCheckTime.TotalGameTime).TotalSeconds;
+                    ? Constants.Settings.SecondsBetweenGamePadConnectionCheck
+                    : (Manager.CurrentTime.TotalGameTime - LastConnectionCheckTime.TotalGameTime).TotalSeconds;
 
-                if (elapsedSecondsBetweenChecks >= VelentrInput.System.Settings.SecondsBetweenGamePadConnectionCheck)
+                if (elapsedSecondsBetweenChecks >= Constants.Settings.SecondsBetweenGamePadConnectionCheck)
                 {
                     ConnectedGamePadIndexes.Clear();
                     for (var i = 0; i < GamePads.Length; i++)
@@ -183,7 +183,7 @@ namespace Velentr.Input.GamePad
             }
         }
 
-        public static void ValidatePlayerIndex(int playerIndex)
+        public void ValidatePlayerIndex(int playerIndex)
         {
             if (playerIndex < 0 || playerIndex > HighestGamePadIndex)
             {
@@ -204,14 +204,14 @@ namespace Velentr.Input.GamePad
         {
             ValidatePlayerIndex(playerIndex);
 
-            ButtonLastConsumed[(playerIndex, button)] = VelentrInput.CurrentFrame;
+            ButtonLastConsumed[(playerIndex, button)] = Manager.CurrentFrame;
         }
 
         public void ConsumeSensor(GamePadSensor sensor, int playerIndex = 0)
         {
             ValidatePlayerIndex(playerIndex);
 
-            SensorConsumed[(playerIndex, sensor)] = VelentrInput.CurrentFrame;
+            SensorConsumed[(playerIndex, sensor)] = Manager.CurrentFrame;
         }
 
         public bool IsButtonConsumed(GamePadButton button, int playerIndex = 0)
@@ -225,7 +225,7 @@ namespace Velentr.Input.GamePad
 
             if (ButtonLastConsumed.TryGetValue((playerIndex, button), out var frame))
             {
-                return frame == VelentrInput.CurrentFrame;
+                return frame == Manager.CurrentFrame;
             }
 
             return false;
@@ -242,7 +242,7 @@ namespace Velentr.Input.GamePad
 
             if (SensorConsumed.TryGetValue((playerIndex, sensor), out var frame))
             {
-                return frame == VelentrInput.CurrentFrame;
+                return frame == Manager.CurrentFrame;
             }
 
             return false;
@@ -262,98 +262,98 @@ namespace Velentr.Input.GamePad
         }
 
 
-        public static bool IsButtonPressed(GamePadButton button, int playerIndex)
+        public bool IsButtonPressed(GamePadButton button, int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
             return ButtonMapping[button](GamePads[playerIndex].CurrentState) == ButtonState.Pressed;
         }
 
-        public static bool WasButtonPressed(GamePadButton button, int playerIndex)
+        public bool WasButtonPressed(GamePadButton button, int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
             return ButtonMapping[button](GamePads[playerIndex].PreviousState) == ButtonState.Pressed;
         }
 
-        public static bool IsButtonReleased(GamePadButton button, int playerIndex)
+        public bool IsButtonReleased(GamePadButton button, int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
             return ButtonMapping[button](GamePads[playerIndex].CurrentState) == ButtonState.Released;
         }
 
-        public static bool WasButtonReleased(GamePadButton button, int playerIndex)
+        public bool WasButtonReleased(GamePadButton button, int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
             return ButtonMapping[button](GamePads[playerIndex].PreviousState) == ButtonState.Released;
         }
 
-        private static bool InternalIsButtonHelper(GamePadButton button, int playerIndex, ButtonState state)
+        private bool InternalIsButtonHelper(GamePadButton button, int playerIndex, ButtonState state)
         {
             ValidatePlayerIndex(playerIndex);
 
             return ButtonMapping[button](GamePads[playerIndex].CurrentState) == state;
         }
 
-        public static Vector2 CurrentLeftStick(int playerIndex)
+        public Vector2 CurrentLeftStick(int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
             return GamePads[playerIndex].CurrentState.ThumbSticks.Left;
         }
 
-        public static Vector2 PreviousLeftStick(int playerIndex)
+        public Vector2 PreviousLeftStick(int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
             return GamePads[playerIndex].PreviousState.ThumbSticks.Left;
         }
 
-        public static Vector2 CurrentRightStick(int playerIndex)
+        public Vector2 CurrentRightStick(int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
             return GamePads[playerIndex].CurrentState.ThumbSticks.Right;
         }
 
-        public static Vector2 PreviousRightStick(int playerIndex)
+        public Vector2 PreviousRightStick(int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
             return GamePads[playerIndex].PreviousState.ThumbSticks.Right;
         }
 
-        public static float CurrentLeftTrigger(int playerIndex)
+        public float CurrentLeftTrigger(int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
             return GamePads[playerIndex].CurrentState.Triggers.Left;
         }
 
-        public static float PreviousLeftTrigger(int playerIndex)
+        public float PreviousLeftTrigger(int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
             return GamePads[playerIndex].PreviousState.Triggers.Left;
         }
 
-        public static float CurrentRightTrigger(int playerIndex)
+        public float CurrentRightTrigger(int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
             return GamePads[playerIndex].CurrentState.Triggers.Right;
         }
 
-        public static float PreviousRightTrigger(int playerIndex)
+        public float PreviousRightTrigger(int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
             return GamePads[playerIndex].PreviousState.Triggers.Right;
         }
 
-        public static bool SensorMoved(GamePadSensor sensor, int playerIndex)
+        public bool SensorMoved(GamePadSensor sensor, int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
@@ -372,35 +372,35 @@ namespace Velentr.Input.GamePad
             return false;
         }
 
-        public static Vector2 LeftStickDelta(int playerIndex)
+        public Vector2 LeftStickDelta(int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
             return GamePads[playerIndex].CurrentState.ThumbSticks.Left - GamePads[playerIndex].PreviousState.ThumbSticks.Left;
         }
 
-        public static Vector2 RightStickDelta(int playerIndex)
+        public Vector2 RightStickDelta(int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
             return GamePads[playerIndex].CurrentState.ThumbSticks.Right - GamePads[playerIndex].PreviousState.ThumbSticks.Right;
         }
 
-        public static float LeftTriggerDelta(int playerIndex)
+        public float LeftTriggerDelta(int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
             return GamePads[playerIndex].CurrentState.Triggers.Left - GamePads[playerIndex].PreviousState.Triggers.Left;
         }
 
-        public static float RightTriggerDelta(int playerIndex)
+        public float RightTriggerDelta(int playerIndex)
         {
             ValidatePlayerIndex(playerIndex);
 
             return GamePads[playerIndex].CurrentState.Triggers.Right - GamePads[playerIndex].PreviousState.Triggers.Right;
         }
 
-        public static Vector2 GetStickDelta(GamePadSensor sensor, int playerIndex, GamePadInputMode inputMode, GamePadSensorValueMode valueConditionMode)
+        public Vector2 GetStickDelta(GamePadSensor sensor, int playerIndex, GamePadInputMode inputMode, GamePadSensorValueMode valueConditionMode)
         {
             ValidatePlayerIndex(playerIndex);
 
@@ -524,7 +524,7 @@ namespace Velentr.Input.GamePad
             return Vector2.Zero;
         }
 
-        public static float GetTriggerDelta(GamePadSensor sensor, int playerIndex, GamePadInputMode inputMode, GamePadSensorValueMode valueConditionMode)
+        public float GetTriggerDelta(GamePadSensor sensor, int playerIndex, GamePadInputMode inputMode, GamePadSensorValueMode valueConditionMode)
         {
             ValidatePlayerIndex(playerIndex);
 
@@ -624,7 +624,7 @@ namespace Velentr.Input.GamePad
             return float.MinValue;
         }
 
-        public static Vector2 GetStickPosition(GamePadSensor sensor, int playerIndex, GamePadInputMode inputMode, GamePadSensorValueMode valueConditionMode)
+        public Vector2 GetStickPosition(GamePadSensor sensor, int playerIndex, GamePadInputMode inputMode, GamePadSensorValueMode valueConditionMode)
         {
             ValidatePlayerIndex(playerIndex);
 
@@ -748,7 +748,7 @@ namespace Velentr.Input.GamePad
             return Vector2.Zero;
         }
 
-        public static float GetTriggerPosition(GamePadSensor sensor, int playerIndex, GamePadInputMode inputMode, GamePadSensorValueMode valueConditionMode)
+        public float GetTriggerPosition(GamePadSensor sensor, int playerIndex, GamePadInputMode inputMode, GamePadSensorValueMode valueConditionMode)
         {
             ValidatePlayerIndex(playerIndex);
 

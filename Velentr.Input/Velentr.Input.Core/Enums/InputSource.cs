@@ -16,7 +16,9 @@
 
         AllConditional,
 
-        AnyConditional
+        AnyConditional,
+
+        Custom,
 
     }
 

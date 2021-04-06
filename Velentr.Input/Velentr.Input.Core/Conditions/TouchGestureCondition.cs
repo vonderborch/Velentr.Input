@@ -33,6 +33,7 @@ namespace Velentr.Input.Conditions
         /// <summary>
         /// Initializes a new instance of the <see cref="TouchGestureCondition"/> class.
         /// </summary>
+        /// <param name="manager">The input manager the condition is associated with.</param>
         /// <param name="type">The type.</param>
         /// <param name="boundaries">The boundaries.</param>
         /// <param name="useRelativeCoordinates">if set to <c>true</c> [use relative coordinates].</param>
@@ -41,7 +42,8 @@ namespace Velentr.Input.Conditions
         /// <param name="consumable">if set to <c>true</c> [consumable].</param>
         /// <param name="allowedIfConsumed">if set to <c>true</c> [allowed if consumed].</param>
         /// <param name="milliSecondsForConditionMet">The milli seconds for condition met.</param>
-        protected TouchGestureCondition(GestureType type, Rectangle? boundaries = null, bool useRelativeCoordinates = false, Rectangle? parentBoundaries = null, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = false, uint milliSecondsForConditionMet = 0) : base(InputSource.Touch, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
+        /// <param name="milliSecondsForTimeOut">The milli seconds for timeout.</param>
+        protected TouchGestureCondition(InputManager manager, GestureType type, Rectangle? boundaries = null, bool useRelativeCoordinates = false, Rectangle? parentBoundaries = null, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = false, uint milliSecondsForConditionMet = 0, uint milliSecondsForTimeOut = 0) : base(manager, InputSource.Touch, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet, milliSecondsForTimeOut)
         {
             GestureType = type;
             UseRelativeCoordinates = useRelativeCoordinates;
@@ -63,7 +65,7 @@ namespace Velentr.Input.Conditions
         /// <value>
         /// The boundaries.
         /// </value>
-        public Rectangle Boundaries => _boundaries ?? VelentrInput.Window.ClientBounds;
+        public Rectangle Boundaries => _boundaries ?? Manager.Window.ClientBounds;
 
         /// <summary>
         /// Gets a value indicating whether [use relative coordinates].
@@ -79,7 +81,7 @@ namespace Velentr.Input.Conditions
         /// <value>
         /// The parent boundaries.
         /// </value>
-        public Rectangle ParentBoundaries => _parentBoundaries ?? VelentrInput.Window.ClientBounds;
+        public Rectangle ParentBoundaries => _parentBoundaries ?? Manager.Window.ClientBounds;
 
         /// <summary>
         /// Internal method to determine if the conditions are met or not.
@@ -89,7 +91,7 @@ namespace Velentr.Input.Conditions
         /// <returns></returns>
         public override bool InternalConditionMet(bool consumable, bool allowedIfConsumed)
         {
-            _gestures = VelentrInput.System.Touch.FetchValidGestures(GestureType, Boundaries, UseRelativeCoordinates, ParentBoundaries, allowedIfConsumed, MilliSecondsForConditionMet);
+            _gestures = Manager.Touch.FetchValidGestures(GestureType, Boundaries, UseRelativeCoordinates, ParentBoundaries, allowedIfConsumed, MilliSecondsForConditionMet);
 
             if (_gestures.Count > 0)
             {
@@ -125,7 +127,7 @@ namespace Velentr.Input.Conditions
             var ids = new List<int>(_gestures.Count);
             ids.AddRange(_gestures.Select(t => t.Id));
 
-            VelentrInput.System.Touch.ConsumeGesture(ids);
+            Manager.Touch.ConsumeGesture(ids);
         }
 
         /// <summary>
@@ -155,7 +157,7 @@ namespace Velentr.Input.Conditions
                 MilliSecondsForConditionMet = MilliSecondsForConditionMet,
                 UseRelativeCoordinates = UseRelativeCoordinates,
                 ConditionStateStartTime = CurrentStateStart,
-                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, VelentrInput.CurrentTime),
+                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime),
                 WindowMustBeActive = WindowMustBeActive,
                 Gestures = new List<Gesture>(_gestures)
             };
@@ -169,7 +171,10 @@ namespace Velentr.Input.Conditions
         /// <returns></returns>
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
-            return !WindowMustBeActive || VelentrInput.IsWindowActive;
+            return (
+                (!WindowMustBeActive || Manager.IsWindowActive)
+                && (MilliSecondsForTimeOut == 0 || Helper.ElapsedMilliSeconds(LastFireTime, Manager.CurrentTime) >= MilliSecondsForTimeOut)
+            );
         }
 
     }

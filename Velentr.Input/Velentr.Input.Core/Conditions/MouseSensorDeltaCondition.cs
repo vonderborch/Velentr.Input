@@ -23,6 +23,7 @@ namespace Velentr.Input.Conditions
         /// <summary>
         /// Initializes a new instance of the <see cref="MouseSensorDeltaCondition"/> class.
         /// </summary>
+        /// <param name="manager">The input manager the condition is associated with.</param>
         /// <param name="sensor">The sensor.</param>
         /// <param name="logicValue">The logic value.</param>
         /// <param name="boundaries">The boundaries.</param>
@@ -32,6 +33,7 @@ namespace Velentr.Input.Conditions
         /// <param name="consumable">if set to <c>true</c> [consumable].</param>
         /// <param name="allowedIfConsumed">if set to <c>true</c> [allowed if consumed].</param>
         /// <param name="milliSecondsForConditionMet">The milli seconds for condition met.</param>
+        /// <param name="milliSecondsForTimeOut">The milli seconds for timeout.</param>
         /// <exception cref="System.Exception">
         /// logicValue contains an invalid type for MouseSensor.HorizontalScrollWheel, you must use a ValueType.Int!
         /// or
@@ -41,7 +43,7 @@ namespace Velentr.Input.Conditions
         /// or
         /// logicValue contains an invalid type for MouseSensor.VerticalScrollWheel, you must use a ValueType.Int!
         /// </exception>
-        public MouseSensorDeltaCondition(MouseSensor sensor, ValueLogic logicValue, Rectangle? boundaries = null, bool useRelativeCoordinates = false, Rectangle? parentBoundaries = null, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = false, uint milliSecondsForConditionMet = 0) : base(InputSource.Mouse, logicValue, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
+        public MouseSensorDeltaCondition(InputManager manager, MouseSensor sensor, ValueLogic logicValue, Rectangle? boundaries = null, bool useRelativeCoordinates = false, Rectangle? parentBoundaries = null, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = false, uint milliSecondsForConditionMet = 0, uint milliSecondsForTimeOut = 0) : base(manager, InputSource.Mouse, logicValue, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet, milliSecondsForTimeOut)
         {
             Sensor = sensor;
 
@@ -95,20 +97,20 @@ namespace Velentr.Input.Conditions
 
         public bool UseRelativeCoordinates { get; }
 
-        public Rectangle? ParentBoundaries => _parentBoundaries ?? VelentrInput.Window.ClientBounds;
+        public Rectangle? ParentBoundaries => _parentBoundaries ?? Manager.Window.ClientBounds;
 
         protected override Value InternalGetValue()
         {
             switch (Sensor)
             {
                 case MouseSensor.HorizontalScrollWheel:
-                    return new Value(ValueType.Int, valueInt: MouseService.HorizontalScrollDelta);
+                    return new Value(ValueType.Int, valueInt: Manager.Mouse.HorizontalScrollDelta);
                 case MouseSensor.Pointer:
-                    return new Value(ValueType.Int, valuePoint: MouseService.CursorPositionDelta);
+                    return new Value(ValueType.Int, valuePoint: Manager.Mouse.CursorPositionDelta);
                 case MouseSensor.ScrollWheels:
-                    return new Value(ValueType.Int, valuePoint: MouseService.ScrollDelta);
+                    return new Value(ValueType.Int, valuePoint: Manager.Mouse.ScrollDelta);
                 case MouseSensor.VerticalScrollWheel:
-                    return new Value(ValueType.Int, valueInt: MouseService.VerticalScrollDelta);
+                    return new Value(ValueType.Int, valueInt: Manager.Mouse.VerticalScrollDelta);
             }
 
             return new Value(ValueType.None);
@@ -119,7 +121,7 @@ namespace Velentr.Input.Conditions
         /// </summary>
         public override void Consume()
         {
-            VelentrInput.System.Mouse.ConsumeSensor(Sensor);
+            Manager.Mouse.ConsumeSensor(Sensor);
         }
 
         /// <summary>
@@ -130,7 +132,7 @@ namespace Velentr.Input.Conditions
         /// </returns>
         public override bool IsConsumed()
         {
-            return VelentrInput.System.Mouse.IsSensorConsumed(Sensor);
+            return Manager.Mouse.IsSensorConsumed(Sensor);
         }
 
         /// <summary>
@@ -145,12 +147,12 @@ namespace Velentr.Input.Conditions
                 Sensor = Sensor,
                 Condition = this,
                 InputSource = InputSource,
-                MouseCoordinates = MouseService.CurrentCursorPosition,
-                RelativeMouseCoordinates = Helper.ScalePointToChild(MouseService.CurrentCursorPosition, ParentBoundaries ?? VelentrInput.Window.ClientBounds, Boundaries ?? VelentrInput.Window.ClientBounds),
+                MouseCoordinates = Manager.Mouse.CurrentCursorPosition,
+                RelativeMouseCoordinates = Helper.ScalePointToChild(Manager.Mouse.CurrentCursorPosition, ParentBoundaries ?? Manager.Window.ClientBounds, Boundaries ?? Manager.Window.ClientBounds),
                 MilliSecondsForConditionMet = MilliSecondsForConditionMet,
                 UseRelativeCoordinates = UseRelativeCoordinates,
                 ConditionStateStartTime = CurrentStateStart,
-                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, VelentrInput.CurrentTime),
+                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime),
                 WindowMustBeActive = WindowMustBeActive,
                 CurrentValue = InternalGetValue()
             };
@@ -164,10 +166,11 @@ namespace Velentr.Input.Conditions
         /// <returns></returns>
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
-            return (!WindowMustBeActive || VelentrInput.IsWindowActive && MouseService.IsMouseInWindow)
+            return (!WindowMustBeActive || Manager.IsWindowActive && Manager.Mouse.IsMouseInWindow)
                    && (allowedIfConsumed || IsConsumed())
-                   && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, VelentrInput.CurrentTime) >= milliSecondsForConditionMet)
-                   && (Boundaries == null || MouseService.CursorInBounds((Rectangle) Boundaries, UseRelativeCoordinates, ParentBoundaries));
+                   && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime) >= milliSecondsForConditionMet)
+                   && (MilliSecondsForTimeOut == 0 || Helper.ElapsedMilliSeconds(LastFireTime, Manager.CurrentTime) >= MilliSecondsForTimeOut)
+                   && (Boundaries == null || Manager.Mouse.CursorInBounds((Rectangle) Boundaries, UseRelativeCoordinates, ParentBoundaries));
         }
 
     }

@@ -8,7 +8,7 @@ namespace Velentr.Input.Conditions.Internal
     public abstract class LogicCondition : InputCondition
     {
 
-        protected LogicCondition(InputSource source, ValueLogic logicValue, bool windowMustBeActive, bool consumable, bool allowedIfConsumed, uint milliSecondsForConditionMet) : base(source, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
+        protected LogicCondition(InputManager manager, InputSource source, ValueLogic logicValue, bool windowMustBeActive, bool consumable, bool allowedIfConsumed, uint milliSecondsForConditionMet, uint milliSecondsForTimeOut) : base(manager, source, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet, milliSecondsForTimeOut)
         {
             ValueLogic = logicValue;
         }

@@ -10,7 +10,7 @@ namespace Velentr.Input.Keyboard
     public class KeyboardService : InputService
     {
 
-        internal static Dictionary<Key, Keys> KeyMapping = new Dictionary<Key, Keys>(Enum.GetNames(typeof(Key)).Length);
+        internal Dictionary<Key, Keys> KeyMapping = new Dictionary<Key, Keys>(Enum.GetNames(typeof(Key)).Length);
 
         public ulong CurrentKeysPressedLastConsumed = ulong.MinValue;
 
@@ -20,7 +20,7 @@ namespace Velentr.Input.Keyboard
 
         public ulong KeysPressedDeltaLastConsumed = ulong.MinValue;
 
-        public KeyboardService()
+        public KeyboardService(InputManager inputManager) : base(inputManager)
         {
             Source = InputSource.Keyboard;
         }
@@ -76,14 +76,14 @@ namespace Velentr.Input.Keyboard
 
         public void ConsumeKey(Key key)
         {
-            KeyLastConsumed[key] = VelentrInput.CurrentFrame;
+            KeyLastConsumed[key] = Manager.CurrentFrame;
         }
 
         public bool IsKeyConsumed(Key key)
         {
             if (KeyLastConsumed.TryGetValue(key, out var frame))
             {
-                return frame == VelentrInput.CurrentFrame;
+                return frame == Manager.CurrentFrame;
             }
 
             return false;
@@ -91,14 +91,14 @@ namespace Velentr.Input.Keyboard
 
         public void ConsumeLock(KeyboardLock lockType)
         {
-            KeyboardLockLastConsumed[lockType] = VelentrInput.CurrentFrame;
+            KeyboardLockLastConsumed[lockType] = Manager.CurrentFrame;
         }
 
         public bool IsLockConsumed(KeyboardLock lockType)
         {
             if (KeyboardLockLastConsumed.TryGetValue(lockType, out var frame))
             {
-                return frame == VelentrInput.CurrentFrame;
+                return frame == Manager.CurrentFrame;
             }
 
             return false;
@@ -106,22 +106,22 @@ namespace Velentr.Input.Keyboard
 
         public void ConsumeCurrentKeysPressedCount()
         {
-            CurrentKeysPressedLastConsumed = VelentrInput.CurrentFrame;
+            CurrentKeysPressedLastConsumed = Manager.CurrentFrame;
         }
 
         public bool IsCurrentKeysPressedCountConsumed()
         {
-            return CurrentKeysPressedLastConsumed == VelentrInput.CurrentFrame;
+            return CurrentKeysPressedLastConsumed == Manager.CurrentFrame;
         }
 
         public void ConsumeKeysPressedDeltaCount()
         {
-            KeysPressedDeltaLastConsumed = VelentrInput.CurrentFrame;
+            KeysPressedDeltaLastConsumed = Manager.CurrentFrame;
         }
 
         public bool IsKeysPressedDeltaConsumed()
         {
-            return KeysPressedDeltaLastConsumed == VelentrInput.CurrentFrame;
+            return KeysPressedDeltaLastConsumed == Manager.CurrentFrame;
         }
 
         public bool IsKeyPressed(Key key)

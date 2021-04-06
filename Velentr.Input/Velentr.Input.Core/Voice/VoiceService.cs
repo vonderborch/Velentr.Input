@@ -16,6 +16,8 @@ namespace Velentr.Input.Voice
             throw new NotImplementedException();
         }
 
+        public VoiceService(InputManager inputManager) : base(inputManager) { }
+
     }
 
 }

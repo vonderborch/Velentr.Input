@@ -12,12 +12,14 @@ namespace Velentr.Input.Conditions
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyboardButtonPressedCondition"/> class.
         /// </summary>
+        /// <param name="manager">The input manager the condition is associated with.</param>
         /// <param name="key">The key.</param>
         /// <param name="windowMustBeActive">if set to <c>true</c> [window must be active].</param>
         /// <param name="consumable">if set to <c>true</c> [consumable].</param>
         /// <param name="allowedIfConsumed">if set to <c>true</c> [allowed if consumed].</param>
         /// <param name="milliSecondsForConditionMet">The milli seconds for condition met.</param>
-        public KeyboardButtonPressedCondition(Key key, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = true, uint milliSecondsForConditionMet = 0) : base(key, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet) { }
+        /// <param name="milliSecondsForTimeOut">The milli seconds for timeout.</param>
+        public KeyboardButtonPressedCondition(InputManager manager, Key key, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = false, uint milliSecondsForConditionMet = 0, uint milliSecondsForTimeOut = 0) : base(manager, key, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet, milliSecondsForTimeOut) { }
 
         /// <summary>
         /// Currents the state valid.
@@ -25,7 +27,7 @@ namespace Velentr.Input.Conditions
         /// <returns></returns>
         protected override bool CurrentStateValid()
         {
-            return VelentrInput.System.Keyboard.IsKeyPressed(Key);
+            return Manager.Keyboard.IsKeyPressed(Key);
         }
 
         /// <summary>
@@ -34,7 +36,7 @@ namespace Velentr.Input.Conditions
         /// <returns></returns>
         protected override bool PreviousStateValid()
         {
-            return VelentrInput.System.Keyboard.WasKeyPressed(Key);
+            return Manager.Keyboard.WasKeyPressed(Key);
         }
 
     }
