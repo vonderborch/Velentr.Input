@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Velentr.Input.Enums;
 using Velentr.Input.Touch.Engines;
 
 namespace Velentr.Input.Touch
@@ -15,6 +16,11 @@ namespace Velentr.Input.Touch
         public TouchEngine Engine { get; private set; }
 
         public TouchEngines EnabledTouchEngine { get; private set; }
+
+        public TouchService(InputManager manager) : base(manager)
+        {
+            Source = InputSource.Touch;
+        }
 
         public override void Setup()
         {

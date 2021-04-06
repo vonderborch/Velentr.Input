@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Microsoft.Xna.Framework;
 using Velentr.Input.Conditions;
 using Velentr.Input.GamePad;
 using Velentr.Input.Helpers;
@@ -9,10 +12,7 @@ using Velentr.Input.Voice;
 
 namespace Velentr.Input
 {
-    /// <summary>
-    /// The core of the input system
-    /// </summary>
-    public sealed class VelentrInput
+    public class InputManager
     {
         /// <summary>
         /// The window
@@ -29,17 +29,13 @@ namespace Velentr.Input
         /// </summary>
         public Cache<string, InputCondition> TrackedConditions = new Cache<string, InputCondition>();
 
-        static VelentrInput() { }
-
-        private VelentrInput() { }
-
         /// <summary>
-        /// Gets the system.
+        /// Initializes a new instance of the <see cref="InputManager"/> class.
         /// </summary>
-        /// <value>
-        /// The system.
-        /// </value>
-        public static VelentrInput System { get; } = new VelentrInput();
+        public InputManager()
+        {
+            _inputServices = new Dictionary<string, InputService>();
+        }
 
         /// <summary>
         /// Gets the game.
@@ -103,7 +99,7 @@ namespace Velentr.Input
         /// <value>
         /// The mouse.
         /// </value>
-        public MouseService Mouse { get; private set; }
+        public MouseService Mouse => (MouseService)_inputServices[Constants.MouseService];
 
         /// <summary>
         /// Gets the keyboard service.
@@ -111,7 +107,7 @@ namespace Velentr.Input
         /// <value>
         /// The keyboard.
         /// </value>
-        public KeyboardService Keyboard { get; private set; }
+        public KeyboardService Keyboard => (KeyboardService)_inputServices[Constants.KeyboardService];
 
         /// <summary>
         /// Gets the game pad service.
@@ -119,7 +115,7 @@ namespace Velentr.Input
         /// <value>
         /// The game pad.
         /// </value>
-        public GamePadService GamePad { get; private set; }
+        public GamePadService GamePad => (GamePadService)_inputServices[Constants.GamePadService];
 
         /// <summary>
         /// Gets the touch service.
@@ -127,7 +123,7 @@ namespace Velentr.Input
         /// <value>
         /// The touch.
         /// </value>
-        public TouchService Touch { get; private set; }
+        public TouchService Touch => (TouchService)_inputServices[Constants.TouchService];
 
         /// <summary>
         /// Gets the voice service.
@@ -135,7 +131,12 @@ namespace Velentr.Input
         /// <value>
         /// The voice.
         /// </value>
-        public VoiceService Voice { get; private set; }
+        public VoiceService Voice => (VoiceService)_inputServices[Constants.VoiceService];
+
+        /// <summary>
+        /// The input services
+        /// </summary>
+        private Dictionary<string, InputService> _inputServices;
 
         /// <summary>
         /// Gets the center coordinates.
@@ -181,9 +182,11 @@ namespace Velentr.Input
         /// <param name="enableKeyboardService">if set to <c>true</c> [enable keyboard service].</param>
         /// <param name="enableGamePadService">if set to <c>true</c> [enable game pad service].</param>
         /// <param name="enableTouchService">if set to <c>true</c> [enable touch service].</param>
+        /// <param name="enableVoiceService">if set to <c>true</c> [enable touch service].</param>
         public void Setup(Game game, bool enableMouseService = true, bool enableKeyboardService = true, bool enableGamePadService = true, bool enableTouchService = true, bool enableVoiceService = true)
         {
             Game = game;
+            _inputServices = new Dictionary<string, InputService>();
             SetupInputSources(enableMouseService, enableKeyboardService, enableGamePadService, enableTouchService, enableVoiceService);
         }
 
@@ -199,31 +202,31 @@ namespace Velentr.Input
         {
             if (enableMouseService)
             {
-                Mouse = new MouseService();
+                _inputServices.Add(Constants.MouseService, new MouseService());
                 Mouse.Setup();
             }
 
             if (enableKeyboardService)
             {
-                Keyboard = new KeyboardService();
+                _inputServices.Add(Constants.KeyboardService, new KeyboardService());
                 Keyboard.Setup();
             }
 
             if (enableGamePadService)
             {
-                GamePad = new GamePadService();
+                _inputServices.Add(Constants.GamePadService, new GamePadService());
                 GamePad.Setup();
             }
 
             if (enableTouchService)
             {
-                Touch = new TouchService();
+                _inputServices.Add(Constants.TouchService, new TouchService());
                 Touch.Setup();
             }
 
             if (enableVoiceService)
             {
-                //Voice = new VoiceService();
+                //_inputServices.Add(Constants.VoiceService, new VoiceService());
                 //Voice.Setup();
             }
         }
@@ -239,11 +242,10 @@ namespace Velentr.Input
             CurrentFrame++;
 
             // update input services if they exist and we want to update them
-            Mouse?.Update();
-            Keyboard?.Update();
-            GamePad?.Update();
-            Touch?.Update();
-            //Voice?.Update();
+            foreach (var service in _inputServices)
+            {
+                service.Value.Update();
+            }
 
             // update all tracked input conditions
             foreach (var item in TrackedConditions)
@@ -298,7 +300,5 @@ namespace Velentr.Input
         {
             return TrackedConditions.RemoveItem(layerDepth);
         }
-
     }
-
 }

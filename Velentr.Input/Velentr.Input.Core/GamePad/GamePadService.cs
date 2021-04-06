@@ -39,7 +39,7 @@ namespace Velentr.Input.GamePad
 
         public Dictionary<(int, GamePadSensor), ulong> SensorConsumed = new Dictionary<(int, GamePadSensor), ulong>();
 
-        public GamePadService()
+        public GamePadService(InputManager manager) : base(manager)
         {
             Source = InputSource.GamePad;
         }
@@ -77,7 +77,7 @@ namespace Velentr.Input.GamePad
                     PreviousState = Microsoft.Xna.Framework.Input.GamePad.GetState(IntIndexToPlayerIndex(i)),
                     CurrentState = Microsoft.Xna.Framework.Input.GamePad.GetState(IntIndexToPlayerIndex(i)),
                     Capabilities = Microsoft.Xna.Framework.Input.GamePad.GetCapabilities(IntIndexToPlayerIndex(i)),
-                    DeadZone = VelentrInput.System.Settings.DefaultGamePadDeadZone
+                    DeadZone = Constants.Settings.DefaultGamePadDeadZone
                 };
 #endif
 

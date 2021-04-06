@@ -10,6 +10,7 @@
     <PackageTags>Monogame, Input, Keyboard, Mouse, GamePad, Touch, Voice</PackageTags>
     <Description>A simple and easy-to-use input library for XNA/Monogame/FNA.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.1.0</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;MONOGAME</DefineConstants>
@@ -80,6 +81,7 @@
     <Compile Include="..\Velentr.Input.Core\Helpers\Cache.cs" Link="Helpers\Cache.cs" />
     <Compile Include="..\Velentr.Input.Core\Helpers\Helper.cs" Link="Helpers\Helper.cs" />
     <Compile Include="..\Velentr.Input.Core\InputConditionEvent.cs" Link="InputConditionEvent.cs" />
+    <Compile Include="..\Velentr.Input.Core\InputManager.cs" Link="InputManager.cs" />
     <Compile Include="..\Velentr.Input.Core\InputService.cs" Link="InputService.cs" />
     <Compile Include="..\Velentr.Input.Core\Keyboard\Key.cs" Link="Keyboard\Key.cs" />
     <Compile Include="..\Velentr.Input.Core\Keyboard\KeyboardLock.cs" Link="Keyboard\KeyboardLock.cs" />
@@ -97,13 +99,13 @@
     <Compile Include="..\Velentr.Input.Core\Touch\TouchService.cs" Link="Touch\TouchService.cs" />
     <Compile Include="..\Velentr.Input.Core\Value.cs" Link="Value.cs" />
     <Compile Include="..\Velentr.Input.Core\ValueLogic.cs" Link="ValueLogic.cs" />
-    <Compile Include="..\Velentr.Input.Core\VelentrInput.cs" Link="VelentrInput.cs" />
     <Compile Include="..\Velentr.Input.Core\Voice\VoiceService.cs" Link="Voice\VoiceService.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Velentr.Collections" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Conditions\Internal\" />

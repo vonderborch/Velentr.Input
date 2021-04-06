@@ -20,7 +20,7 @@ namespace Velentr.Input.Keyboard
 
         public ulong KeysPressedDeltaLastConsumed = ulong.MinValue;
 
-        public KeyboardService()
+        public KeyboardService(InputManager inputManager) : base(inputManager)
         {
             Source = InputSource.Keyboard;
         }

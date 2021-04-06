@@ -27,7 +27,7 @@ namespace Velentr.Input.Mouse
             {MouseButton.XButton2, state => state.XButton2}
         };
 
-        public MouseService()
+        public MouseService(InputManager inputManager) : base(inputManager)
         {
             Source = InputSource.Mouse;
         }
