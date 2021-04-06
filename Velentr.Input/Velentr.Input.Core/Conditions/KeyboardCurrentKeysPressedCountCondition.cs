@@ -91,7 +91,8 @@ namespace Velentr.Input.Conditions
         {
             return (!WindowMustBeActive || Manager.IsWindowActive && Manager.Mouse.IsMouseInWindow)
                    && (allowedIfConsumed || IsConsumed())
-                   && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime) >= milliSecondsForConditionMet);
+                   && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime) >= milliSecondsForConditionMet)
+                   && (MilliSecondsForTimeOut == 0 || Helper.ElapsedMilliSeconds(LastFireTime, Manager.CurrentTime) >= MilliSecondsForTimeOut);
         }
 
     }

@@ -171,7 +171,10 @@ namespace Velentr.Input.Conditions
         /// <returns></returns>
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
-            return !WindowMustBeActive || Manager.IsWindowActive;
+            return (
+                (!WindowMustBeActive || Manager.IsWindowActive)
+                && (MilliSecondsForTimeOut == 0 || Helper.ElapsedMilliSeconds(LastFireTime, Manager.CurrentTime) >= MilliSecondsForTimeOut)
+            );
         }
 
     }

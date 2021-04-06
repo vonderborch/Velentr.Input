@@ -43,6 +43,7 @@ namespace Velentr.Input.Conditions.Internal
                 ((WindowMustBeActive && Manager.IsWindowActive) || !WindowMustBeActive)
                 && (allowedIfConsumed || !IsConsumed())
                 && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime) >= milliSecondsForConditionMet)
+                && (MilliSecondsForTimeOut == 0 || Helper.ElapsedMilliSeconds(LastFireTime, Manager.CurrentTime) >= MilliSecondsForTimeOut)
             );
         }
 

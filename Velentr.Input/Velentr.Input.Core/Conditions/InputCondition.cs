@@ -228,6 +228,7 @@ namespace Velentr.Input.Conditions
                 Consume();
             }
 
+            LastFireTime = Manager.CurrentTime;
             if (Event.Delegates.Count > 0)
             {
                 Event.TriggerEvent(this, arguments);
