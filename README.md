@@ -11,17 +11,19 @@ Approach 1: Create an input condition and poll for if the condition is met direc
 ```
 // This goes in the class
 InputCondition condition;
+InputManager manager = new InputManager(this);
 
 // This part goes in Setup()
-VelentrInput.System.Setup(this);
+manager.Setup();
 condition = new AnyCondition(
-    new KeyboardButtonPressedCondition(Key.Escape),
-    new GamePadButtonPressedCondition(GamePadButton.Back),
-    new MouseButtonPressedCondition(MouseButton.MiddleButton)
+    manager,
+    new KeyboardButtonPressedCondition(manager, Key.Escape),
+    new GamePadButtonPressedCondition(manager, GamePadButton.Back),
+    new MouseButtonPressedCondition(manager, MouseButton.MiddleButton)
 );
 
 // This part goes in Update()
-VelentrInput.System.Update(gameTime);
+manager.Update(gameTime);
 if (condition.ConditionMet()) {
     // Take action!
 }
@@ -30,20 +32,21 @@ if (condition.ConditionMet()) {
 Approach 2: Event-driven
 ```
 // This goes in the class
-InputCondition condition;
+InputManager manager = new InputManager(this);
 
 // This part goes in Setup()
-VelentrInput.System.Setup(this);
+manager.Setup();
 var condition = new AnyCondition(
-    new KeyboardButtonPressedCondition(Key.Escape),
-    new GamePadButtonPressedCondition(GamePadButton.Back),
-    new MouseButtonPressedCondition(MouseButton.MiddleButton)
+    manager,
+    new KeyboardButtonPressedCondition(manager, Key.Escape),
+    new GamePadButtonPressedCondition(manager, GamePadButton.Back),
+    new MouseButtonPressedCondition(manager, MouseButton.MiddleButton)
 );
-condition.Event += methodToCallWhenConditionIsMet;
-VelentrInput.System.AddInputConditionToTracking(condition);
+condition.Event += ExitGame;
+manager.AddInputConditionToTracking(condition);
 
 // This part goes in Update()
-VelentrInput.System.Update(gameTime);
+manager.Update(gameTime);
 
 ```
 
@@ -65,6 +68,8 @@ namespace Velentr.Input.Monogame.DevEnv
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        private InputManager manager;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -81,22 +86,21 @@ namespace Velentr.Input.Monogame.DevEnv
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            VelentrInput.System.Setup(this);
+            manager = new InputManager(this);
+            manager.Setup();
             var condition = new AnyCondition(
-                new KeyboardButtonPressedCondition(Key.Escape),
-                new GamePadButtonPressedCondition(GamePadButton.Back),
-                new MouseButtonPressedCondition(MouseButton.MiddleButton)
+                manager,
+                new KeyboardButtonPressedCondition(manager, Key.Escape),
+                new GamePadButtonPressedCondition(manager, GamePadButton.Back),
+                new MouseButtonPressedCondition(manager, MouseButton.MiddleButton)
             );
             condition.Event += ExitGame;
-            VelentrInput.System.AddInputConditionToTracking(condition);
+            manager.AddInputConditionToTracking(condition);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            VelentrInput.System.Update(gameTime);
-
-            // TODO: Add your update logic here
-
+            manager.Update(gameTime);
             base.Update(gameTime);
         }
 
