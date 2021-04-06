@@ -24,13 +24,13 @@ namespace Velentr.Input.Touch
 
         public override void Setup()
         {
-            switch (VelentrInput.System.Settings.TouchEngine)
+            switch (Constants.Settings.TouchEngine)
             {
                 case TouchEngines.Win7:
-                    Engine = new Win7Engine();
+                    Engine = new Win7Engine(Manager);
                     break;
                 case TouchEngines.XNA_derived:
-                    Engine = new XnaDerivedEngine();
+                    Engine = new XnaDerivedEngine(Manager);
                     break;
             }
 

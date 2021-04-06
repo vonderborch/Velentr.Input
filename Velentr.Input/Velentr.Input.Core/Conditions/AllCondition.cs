@@ -21,10 +21,13 @@ namespace Velentr.Input.Conditions
         /// <summary>
         /// Initializes a new instance of the <see cref="AllCondition"/> class.
         /// </summary>
+        /// <param name="manager">The input manager the condition is associated with.</param>
         /// <param name="windowMustBeActive">if set to <c>true</c> [window must be active].</param>
         /// <param name="orderMatters">if set to <c>true</c> [order matters].</param>
+        /// <param name="milliSecondsForConditionMet">The milli seconds for condition met.</param>
+        /// <param name="milliSecondsForTimeOut">The milli seconds for timeout.</param>
         /// <param name="conditions">The conditions.</param>
-        public AllCondition(bool windowMustBeActive = true, bool orderMatters = false, params InputCondition[] conditions) : base(InputSource.AnyConditional, windowMustBeActive, false, true, 0)
+        public AllCondition(InputManager manager, bool windowMustBeActive = true, bool orderMatters = false, uint milliSecondsForConditionMet = 0, uint milliSecondsForTimeOut = 0, params InputCondition[] conditions) : base(manager, InputSource.AnyConditional, windowMustBeActive, false, true, milliSecondsForConditionMet, milliSecondsForTimeOut)
         {
             Conditions = conditions;
             OrderMatters = orderMatters;
@@ -33,8 +36,9 @@ namespace Velentr.Input.Conditions
         /// <summary>
         /// Initializes a new instance of the <see cref="AllCondition"/> class.
         /// </summary>
+        /// <param name="manager">The input manager the condition is associated with.</param>
         /// <param name="conditions">The conditions.</param>
-        public AllCondition(params InputCondition[] conditions) : base(InputSource.AnyConditional, true, false, true, 0)
+        public AllCondition(InputManager manager, params InputCondition[] conditions) : base(manager, InputSource.AnyConditional, true, true, false, 0, 0)
         {
             Conditions = conditions;
             OrderMatters = false;
@@ -165,7 +169,7 @@ namespace Velentr.Input.Conditions
                 Condition = this,
                 InputSource = InputSource,
                 ConditionStateStartTime = CurrentStateStart,
-                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, VelentrInput.CurrentTime),
+                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime),
                 WindowMustBeActive = WindowMustBeActive,
                 ConditionEventArguments = args
             };

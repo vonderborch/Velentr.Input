@@ -12,13 +12,16 @@ namespace Velentr.Input.Touch.Engines
 
         protected Dictionary<GestureType, List<Gesture>> Gestures;
 
-        protected TouchEngine(TouchEngines engine)
+        protected TouchEngine(TouchEngines engine, InputManager manager)
         {
             Engine = engine;
+            Manager = manager;
             GestureLastConsumed = new Dictionary<int, ulong>();
         }
 
         public TouchEngines Engine { get; }
+
+        public InputManager Manager { get; }
 
         public bool TouchPanelConnected { get; protected set; }
 
@@ -30,14 +33,14 @@ namespace Velentr.Input.Touch.Engines
 
         public void ConsumeGesture(int id)
         {
-            GestureLastConsumed[id] = VelentrInput.CurrentFrame;
+            GestureLastConsumed[id] = Manager.CurrentFrame;
         }
 
         public bool IsGestureConsumed(int id)
         {
             if (GestureLastConsumed.TryGetValue(id, out var frame))
             {
-                return frame == VelentrInput.CurrentFrame;
+                return frame == Manager.CurrentFrame;
             }
 
             return false;

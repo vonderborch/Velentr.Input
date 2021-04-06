@@ -16,6 +16,7 @@ namespace Velentr.Input.Conditions
         /// <summary>
         /// Initializes a new instance of the <see cref="MouseSensorMovedCondition"/> class.
         /// </summary>
+        /// <param name="manager">The input manager the condition is associated with.</param>
         /// <param name="sensor">The sensor.</param>
         /// <param name="boundaries">The boundaries.</param>
         /// <param name="useRelativeCoordinates">if set to <c>true</c> [use relative coordinates].</param>
@@ -24,7 +25,8 @@ namespace Velentr.Input.Conditions
         /// <param name="consumable">if set to <c>true</c> [consumable].</param>
         /// <param name="allowedIfConsumed">if set to <c>true</c> [allowed if consumed].</param>
         /// <param name="milliSecondsForConditionMet">The milli seconds for condition met.</param>
-        public MouseSensorMovedCondition(MouseSensor sensor, Rectangle? boundaries = null, bool useRelativeCoordinates = false, Rectangle? parentBoundaries = null, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = true, uint milliSecondsForConditionMet = 0) : base(boundaries, useRelativeCoordinates, parentBoundaries, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
+        /// <param name="milliSecondsForTimeOut">The milli seconds for timeout.</param>
+        public MouseSensorMovedCondition(InputManager manager, MouseSensor sensor, Rectangle? boundaries = null, bool useRelativeCoordinates = false, Rectangle? parentBoundaries = null, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = false, uint milliSecondsForConditionMet = 0, uint milliSecondsForTimeOut = 0) : base(manager, boundaries, useRelativeCoordinates, parentBoundaries, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet, milliSecondsForTimeOut)
         {
             Sensor = sensor;
         }
@@ -49,12 +51,12 @@ namespace Velentr.Input.Conditions
                 Sensor = Sensor,
                 Condition = this,
                 InputSource = InputSource,
-                MouseCoordinates = MouseService.CurrentCursorPosition,
-                RelativeMouseCoordinates = Helper.ScalePointToChild(MouseService.CurrentCursorPosition, ParentBoundaries, Boundaries),
+                MouseCoordinates = Manager.Mouse.CurrentCursorPosition,
+                RelativeMouseCoordinates = Helper.ScalePointToChild(Manager.Mouse.CurrentCursorPosition, ParentBoundaries, Boundaries),
                 MilliSecondsForConditionMet = MilliSecondsForConditionMet,
                 UseRelativeCoordinates = UseRelativeCoordinates,
                 ConditionStateStartTime = CurrentStateStart,
-                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, VelentrInput.CurrentTime),
+                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime),
                 WindowMustBeActive = WindowMustBeActive,
                 CurrentValue = InternalGetValue()
             };
@@ -65,7 +67,7 @@ namespace Velentr.Input.Conditions
         /// </summary>
         public override void Consume()
         {
-            VelentrInput.System.Mouse.ConsumeSensor(Sensor);
+            Manager.Mouse.ConsumeSensor(Sensor);
         }
 
         /// <summary>
@@ -77,13 +79,13 @@ namespace Velentr.Input.Conditions
             switch (Sensor)
             {
                 case MouseSensor.HorizontalScrollWheel:
-                    return MouseService.ScrolledHorizontally;
+                    return Manager.Mouse.ScrolledHorizontally;
                 case MouseSensor.Pointer:
-                    return MouseService.CursorMoved;
+                    return Manager.Mouse.CursorMoved;
                 case MouseSensor.ScrollWheels:
-                    return MouseService.Scrolled;
+                    return Manager.Mouse.Scrolled;
                 case MouseSensor.VerticalScrollWheel:
-                    return MouseService.ScrolledVertically;
+                    return Manager.Mouse.ScrolledVertically;
             }
 
             return false;
@@ -98,13 +100,13 @@ namespace Velentr.Input.Conditions
             switch (Sensor)
             {
                 case MouseSensor.HorizontalScrollWheel:
-                    return new Value(ValueType.Int, valueInt: MouseService.HorizontalScrollDelta);
+                    return new Value(ValueType.Int, valueInt: Manager.Mouse.HorizontalScrollDelta);
                 case MouseSensor.Pointer:
-                    return new Value(ValueType.Int, valuePoint: MouseService.CursorPositionDelta);
+                    return new Value(ValueType.Int, valuePoint: Manager.Mouse.CursorPositionDelta);
                 case MouseSensor.ScrollWheels:
-                    return new Value(ValueType.Int, valuePoint: MouseService.ScrollDelta);
+                    return new Value(ValueType.Int, valuePoint: Manager.Mouse.ScrollDelta);
                 case MouseSensor.VerticalScrollWheel:
-                    return new Value(ValueType.Int, valueInt: MouseService.VerticalScrollDelta);
+                    return new Value(ValueType.Int, valueInt: Manager.Mouse.VerticalScrollDelta);
             }
 
             return new Value(ValueType.None);
@@ -118,7 +120,7 @@ namespace Velentr.Input.Conditions
         /// </returns>
         public override bool IsConsumed()
         {
-            return VelentrInput.System.Mouse.IsSensorConsumed(Sensor);
+            return Manager.Mouse.IsSensorConsumed(Sensor);
         }
 
         /// <summary>
@@ -130,13 +132,13 @@ namespace Velentr.Input.Conditions
             switch (Sensor)
             {
                 case MouseSensor.HorizontalScrollWheel:
-                    return MouseService.ScrolledHorizontally;
+                    return Manager.Mouse.ScrolledHorizontally;
                 case MouseSensor.Pointer:
-                    return MouseService.CursorMoved;
+                    return Manager.Mouse.CursorMoved;
                 case MouseSensor.ScrollWheels:
-                    return MouseService.Scrolled;
+                    return Manager.Mouse.Scrolled;
                 case MouseSensor.VerticalScrollWheel:
-                    return MouseService.ScrolledVertically;
+                    return Manager.Mouse.ScrolledVertically;
             }
 
             return false;

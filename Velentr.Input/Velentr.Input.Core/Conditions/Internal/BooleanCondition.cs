@@ -6,7 +6,7 @@ namespace Velentr.Input.Conditions.Internal
     public abstract class BooleanCondition : InputCondition
     {
 
-        protected BooleanCondition(InputSource source, bool windowMustBeActive, bool consumable, bool allowedIfConsumed, uint milliSecondsForConditionMet) : base(source, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet) { }
+        protected BooleanCondition(InputManager manager, InputSource source, bool windowMustBeActive, bool consumable, bool allowedIfConsumed, uint milliSecondsForConditionMet, uint milliSecondsForTimeOut) : base(manager, source, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet, milliSecondsForTimeOut) { }
 
         public override bool InternalConditionMet(bool consumable, bool allowedIfConsumed)
         {

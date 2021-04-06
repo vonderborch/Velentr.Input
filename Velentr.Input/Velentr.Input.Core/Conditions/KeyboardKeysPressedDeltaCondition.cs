@@ -17,13 +17,15 @@ namespace Velentr.Input.Conditions
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyboardKeysPressedDeltaCondition"/> class.
         /// </summary>
+        /// <param name="manager">The input manager the condition is associated with.</param>
         /// <param name="logicValue">The logic value.</param>
         /// <param name="windowMustBeActive">if set to <c>true</c> [window must be active].</param>
         /// <param name="consumable">if set to <c>true</c> [consumable].</param>
         /// <param name="allowedIfConsumed">if set to <c>true</c> [allowed if consumed].</param>
         /// <param name="milliSecondsForConditionMet">The milli seconds for condition met.</param>
+        /// <param name="milliSecondsForTimeOut">The milli seconds for timeout.</param>
         /// <exception cref="System.Exception">logicValue contains an invalid type for KeysPressedDelta, you must use a ValueType.Int!</exception>
-        public KeyboardKeysPressedDeltaCondition(ValueLogic logicValue, bool windowMustBeActive, bool consumable, bool allowedIfConsumed, uint milliSecondsForConditionMet) : base(InputSource.Keyboard, logicValue, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
+        public KeyboardKeysPressedDeltaCondition(InputManager manager, ValueLogic logicValue, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = false, uint milliSecondsForConditionMet = 0, uint milliSecondsForTimeOut = 0) : base(manager, InputSource.Keyboard, logicValue, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet, milliSecondsForTimeOut)
         {
             logicValue.Value.Validate();
             if (logicValue.Value.Type != ValueType.Int)
@@ -38,7 +40,7 @@ namespace Velentr.Input.Conditions
         /// <returns></returns>
         protected override Value InternalGetValue()
         {
-            return new Value(ValueType.Int, valueInt: VelentrInput.System.Keyboard.KeysPressedCountDelta());
+            return new Value(ValueType.Int, valueInt: Manager.Keyboard.KeysPressedCountDelta());
         }
 
         /// <summary>
@@ -46,7 +48,7 @@ namespace Velentr.Input.Conditions
         /// </summary>
         public override void Consume()
         {
-            VelentrInput.System.Keyboard.ConsumeKeysPressedDeltaCount();
+            Manager.Keyboard.ConsumeKeysPressedDeltaCount();
         }
 
         /// <summary>
@@ -57,7 +59,7 @@ namespace Velentr.Input.Conditions
         /// </returns>
         public override bool IsConsumed()
         {
-            return VelentrInput.System.Keyboard.IsKeysPressedDeltaConsumed();
+            return Manager.Keyboard.IsKeysPressedDeltaConsumed();
         }
 
         /// <summary>
@@ -70,11 +72,11 @@ namespace Velentr.Input.Conditions
             {
                 Condition = this,
                 InputSource = InputSource,
-                NumberOfKeysPressed = VelentrInput.System.Keyboard.CurrentKeysPressed(),
-                NumberOfKeysPressedDelta = VelentrInput.System.Keyboard.KeysPressedCountDelta(),
+                NumberOfKeysPressed = Manager.Keyboard.CurrentKeysPressed(),
+                NumberOfKeysPressedDelta = Manager.Keyboard.KeysPressedCountDelta(),
                 MilliSecondsForConditionMet = MilliSecondsForConditionMet,
                 ConditionStateStartTime = CurrentStateStart,
-                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, VelentrInput.CurrentTime),
+                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime),
                 WindowMustBeActive = WindowMustBeActive
             };
         }
@@ -87,9 +89,9 @@ namespace Velentr.Input.Conditions
         /// <returns></returns>
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
-            return (!WindowMustBeActive || VelentrInput.IsWindowActive && MouseService.IsMouseInWindow)
+            return (!WindowMustBeActive || Manager.IsWindowActive && Manager.Mouse.IsMouseInWindow)
                    && (allowedIfConsumed || IsConsumed())
-                   && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, VelentrInput.CurrentTime) >= milliSecondsForConditionMet);
+                   && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime) >= milliSecondsForConditionMet);
         }
 
     }

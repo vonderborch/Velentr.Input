@@ -10,7 +10,7 @@ namespace Velentr.Input.Conditions.Internal
     public abstract class KeyboardLockStateCondition : BooleanCondition
     {
 
-        protected KeyboardLockStateCondition(KeyboardLock lockType, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = true, uint milliSecondsForConditionMet = 0) : base(InputSource.Keyboard, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
+        protected KeyboardLockStateCondition(InputManager manager, KeyboardLock lockType, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = false, uint milliSecondsForConditionMet = 0, uint milliSecondsForTimeOut = 0) : base(manager, InputSource.Keyboard, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet, milliSecondsForTimeOut)
         {
             LockType = lockType;
         }
@@ -24,10 +24,10 @@ namespace Velentr.Input.Conditions.Internal
                 LockType = LockType,
                 Condition = this,
                 InputSource = InputSource,
-                NumberOfKeysPressed = VelentrInput.System.Keyboard.CurrentKeysPressed(),
+                NumberOfKeysPressed = Manager.Keyboard.CurrentKeysPressed(),
                 MilliSecondsForConditionMet = MilliSecondsForConditionMet,
                 ConditionStateStartTime = CurrentStateStart,
-                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, VelentrInput.CurrentTime),
+                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime),
                 WindowMustBeActive = WindowMustBeActive
             };
         }
@@ -40,20 +40,20 @@ namespace Velentr.Input.Conditions.Internal
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
             return (
-                ((WindowMustBeActive && VelentrInput.IsWindowActive) || !WindowMustBeActive)
+                ((WindowMustBeActive && Manager.IsWindowActive) || !WindowMustBeActive)
                 && (allowedIfConsumed || !IsConsumed())
-                && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, VelentrInput.CurrentTime) >= milliSecondsForConditionMet)
+                && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime) >= milliSecondsForConditionMet)
             );
         }
 
         public override void Consume()
         {
-            VelentrInput.System.Keyboard.ConsumeLock(LockType);
+            Manager.Keyboard.ConsumeLock(LockType);
         }
 
         public override bool IsConsumed()
         {
-            return VelentrInput.System.Keyboard.IsLockConsumed(LockType);
+            return Manager.Keyboard.IsLockConsumed(LockType);
         }
 
     }

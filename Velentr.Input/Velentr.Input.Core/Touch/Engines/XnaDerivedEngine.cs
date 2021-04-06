@@ -8,7 +8,7 @@ namespace Velentr.Input.Touch.Engines
     public class XnaDerivedEngine : TouchEngine
     {
 
-        public XnaDerivedEngine() : base(TouchEngines.XNA_derived) { }
+        public XnaDerivedEngine(InputManager manager) : base(TouchEngines.XNA_derived, manager) { }
 
         public TouchPanelCapabilities Capabilities { get; private set; }
 
@@ -24,7 +24,7 @@ namespace Velentr.Input.Touch.Engines
                 MaxTouchPoints = Capabilities.MaximumTouchCount;
 
                 CurrentState = new TouchCollection();
-                TouchPanel.EnabledGestures = VelentrInput.System.Settings.EnabledTouchGestures;
+                TouchPanel.EnabledGestures = Constants.Settings.EnabledTouchGestures;
             }
         }
 

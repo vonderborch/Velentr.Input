@@ -15,6 +15,7 @@ namespace Velentr.Input.Conditions
         /// <summary>
         /// Initializes a new instance of the <see cref="MouseButtonPressedCondition"/> class.
         /// </summary>
+        /// <param name="manager">The input manager the condition is associated with.</param>
         /// <param name="button">The button.</param>
         /// <param name="boundaries">The boundaries.</param>
         /// <param name="useRelativeCoordinates">if set to <c>true</c> [use relative coordinates].</param>
@@ -23,7 +24,8 @@ namespace Velentr.Input.Conditions
         /// <param name="consumable">if set to <c>true</c> [consumable].</param>
         /// <param name="allowedIfConsumed">if set to <c>true</c> [allowed if consumed].</param>
         /// <param name="milliSecondsForConditionMet">The milli seconds for condition met.</param>
-        public MouseButtonPressedCondition(MouseButton button, Rectangle? boundaries = null, bool useRelativeCoordinates = false, Rectangle? parentBoundaries = null, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = true, uint milliSecondsForConditionMet = 0) : base(boundaries, useRelativeCoordinates, parentBoundaries, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
+        /// <param name="milliSecondsForTimeOut">The milli seconds for timeout.</param>
+        public MouseButtonPressedCondition(InputManager manager, MouseButton button, Rectangle? boundaries = null, bool useRelativeCoordinates = false, Rectangle? parentBoundaries = null, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = false, uint milliSecondsForConditionMet = 0, uint milliSecondsForTimeOut = 0) : base(manager, boundaries, useRelativeCoordinates, parentBoundaries, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet, milliSecondsForTimeOut)
         {
             Button = button;
         }
@@ -48,12 +50,12 @@ namespace Velentr.Input.Conditions
                 Button = Button,
                 Condition = this,
                 InputSource = InputSource,
-                MouseCoordinates = MouseService.CurrentCursorPosition,
-                RelativeMouseCoordinates = Helper.ScalePointToChild(MouseService.CurrentCursorPosition, ParentBoundaries, Boundaries),
+                MouseCoordinates = Manager.Mouse.CurrentCursorPosition,
+                RelativeMouseCoordinates = Helper.ScalePointToChild(Manager.Mouse.CurrentCursorPosition, ParentBoundaries, Boundaries),
                 MilliSecondsForConditionMet = MilliSecondsForConditionMet,
                 UseRelativeCoordinates = UseRelativeCoordinates,
                 ConditionStateStartTime = CurrentStateStart,
-                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, VelentrInput.CurrentTime),
+                ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime),
                 WindowMustBeActive = WindowMustBeActive
             };
         }
@@ -63,7 +65,7 @@ namespace Velentr.Input.Conditions
         /// </summary>
         public override void Consume()
         {
-            VelentrInput.System.Mouse.ConsumeButton(Button);
+            Manager.Mouse.ConsumeButton(Button);
         }
 
         /// <summary>
@@ -72,7 +74,7 @@ namespace Velentr.Input.Conditions
         /// <returns></returns>
         protected override bool CurrentStateValid()
         {
-            return MouseService.IsPressed(Button);
+            return Manager.Mouse.IsPressed(Button);
         }
 
         /// <summary>
@@ -83,7 +85,7 @@ namespace Velentr.Input.Conditions
         /// </returns>
         public override bool IsConsumed()
         {
-            return VelentrInput.System.Mouse.IsButtonConsumed(Button);
+            return Manager.Mouse.IsButtonConsumed(Button);
         }
 
         /// <summary>
@@ -92,7 +94,7 @@ namespace Velentr.Input.Conditions
         /// <returns></returns>
         protected override bool PreviousStateValid()
         {
-            return MouseService.WasPressed(Button);
+            return Manager.Mouse.WasPressed(Button);
         }
 
     }

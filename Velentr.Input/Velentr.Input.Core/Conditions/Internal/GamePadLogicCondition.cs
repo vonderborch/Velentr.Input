@@ -11,7 +11,7 @@ namespace Velentr.Input.Conditions.Internal
     public abstract class GamePadLogicCondition : LogicCondition
     {
 
-        protected GamePadLogicCondition(GamePadSensor sensor, int playerIndex, GamePadInputMode inputMode, GamePadSensorValueMode sensorValueMode, ValueLogic logicValue, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = false, uint milliSecondsForConditionMet = 0) : base(InputSource.GamePad, logicValue, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
+        protected GamePadLogicCondition(InputManager manager, GamePadSensor sensor, int playerIndex, GamePadInputMode inputMode, GamePadSensorValueMode sensorValueMode, ValueLogic logicValue, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = false, uint milliSecondsForConditionMet = 0, uint milliSecondsForTimeOut = 0) : base(manager, InputSource.GamePad, logicValue, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet, milliSecondsForTimeOut)
         {
             Sensor = sensor;
             PlayerIndex = playerIndex;
@@ -59,10 +59,10 @@ namespace Velentr.Input.Conditions.Internal
                         InputSource = InputSource,
                         MilliSecondsForConditionMet = MilliSecondsForConditionMet,
                         ConditionStateStartTime = CurrentStateStart,
-                        ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, VelentrInput.CurrentTime),
+                        ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime),
                         WindowMustBeActive = WindowMustBeActive,
-                        Delta = GamePadService.GetStickDelta(Sensor, PlayerIndex, InputMode, SensorValueMode),
-                        CurrentPosition = GamePadService.GetStickPosition(Sensor, PlayerIndex, InputMode, SensorValueMode)
+                        Delta = Manager.GamePad.GetStickDelta(Sensor, PlayerIndex, InputMode, SensorValueMode),
+                        CurrentPosition = Manager.GamePad.GetStickPosition(Sensor, PlayerIndex, InputMode, SensorValueMode)
                     };
                 case GamePadSensor.LeftTrigger:
                 case GamePadSensor.RightTrigger:
@@ -76,10 +76,10 @@ namespace Velentr.Input.Conditions.Internal
                         InputSource = InputSource,
                         MilliSecondsForConditionMet = MilliSecondsForConditionMet,
                         ConditionStateStartTime = CurrentStateStart,
-                        ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, VelentrInput.CurrentTime),
+                        ConditionStateTimeMilliSeconds = Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime),
                         WindowMustBeActive = WindowMustBeActive,
-                        Delta = GamePadService.GetTriggerDelta(Sensor, PlayerIndex, InputMode, SensorValueMode),
-                        CurrentPosition = GamePadService.GetTriggerPosition(Sensor, PlayerIndex, InputMode, SensorValueMode)
+                        Delta = Manager.GamePad.GetTriggerDelta(Sensor, PlayerIndex, InputMode, SensorValueMode),
+                        CurrentPosition = Manager.GamePad.GetTriggerPosition(Sensor, PlayerIndex, InputMode, SensorValueMode)
                     };
             }
 
@@ -89,9 +89,9 @@ namespace Velentr.Input.Conditions.Internal
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
             return (
-                ((WindowMustBeActive && VelentrInput.IsWindowActive) || !WindowMustBeActive)
+                ((WindowMustBeActive && Manager.IsWindowActive) || !WindowMustBeActive)
                 && (allowedIfConsumed || !IsConsumed())
-                && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, VelentrInput.CurrentTime) >= milliSecondsForConditionMet)
+                && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime) >= milliSecondsForConditionMet)
             );
         }
 
@@ -100,13 +100,13 @@ namespace Velentr.Input.Conditions.Internal
             switch (InputMode)
             {
                 case GamePadInputMode.SingleGamePad:
-                    VelentrInput.System.GamePad.ConsumeSensor(Sensor, PlayerIndex);
+                    Manager.GamePad.ConsumeSensor(Sensor, PlayerIndex);
                     break;
                 case GamePadInputMode.AnyGamePad:
                 case GamePadInputMode.AllGamePads:
-                    for (var i = 0; i < GamePadService.ConnectedGamePadIndexes.Count; i++)
+                    for (var i = 0; i < Manager.GamePad.ConnectedGamePadIndexes.Count; i++)
                     {
-                        VelentrInput.System.GamePad.ConsumeSensor(Sensor, GamePadService.ConnectedGamePadIndexes[i]);
+                        Manager.GamePad.ConsumeSensor(Sensor, Manager.GamePad.ConnectedGamePadIndexes[i]);
                     }
 
                     break;
@@ -118,11 +118,11 @@ namespace Velentr.Input.Conditions.Internal
             switch (InputMode)
             {
                 case GamePadInputMode.SingleGamePad:
-                    return VelentrInput.System.GamePad.IsSensorConsumed(Sensor, PlayerIndex);
+                    return Manager.GamePad.IsSensorConsumed(Sensor, PlayerIndex);
                 case GamePadInputMode.AnyGamePad:
-                    for (var i = 0; i < GamePadService.ConnectedGamePadIndexes.Count; i++)
+                    for (var i = 0; i < Manager.GamePad.ConnectedGamePadIndexes.Count; i++)
                     {
-                        if (VelentrInput.System.GamePad.IsSensorConsumed(Sensor, GamePadService.ConnectedGamePadIndexes[i]))
+                        if (Manager.GamePad.IsSensorConsumed(Sensor, Manager.GamePad.ConnectedGamePadIndexes[i]))
                         {
                             return true;
                         }
@@ -130,9 +130,9 @@ namespace Velentr.Input.Conditions.Internal
 
                     return false;
                 case GamePadInputMode.AllGamePads:
-                    for (var i = 0; i < GamePadService.ConnectedGamePadIndexes.Count; i++)
+                    for (var i = 0; i < Manager.GamePad.ConnectedGamePadIndexes.Count; i++)
                     {
-                        if (!VelentrInput.System.GamePad.IsSensorConsumed(Sensor, GamePadService.ConnectedGamePadIndexes[i]))
+                        if (!Manager.GamePad.IsSensorConsumed(Sensor, Manager.GamePad.ConnectedGamePadIndexes[i]))
                         {
                             return false;
                         }

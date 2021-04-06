@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Velentr.Collections.Collections;
 using Velentr.Input.Conditions;
 using Velentr.Input.GamePad;
-using Velentr.Input.Helpers;
 using Velentr.Input.Keyboard;
 using Velentr.Input.Mouse;
 using Velentr.Input.Touch;
@@ -27,7 +25,7 @@ namespace Velentr.Input
         /// <summary>
         /// The tracked conditions
         /// </summary>
-        public Cache<string, InputCondition> TrackedConditions = new Cache<string, InputCondition>();
+        public Bank<string, InputCondition> TrackedConditions = new Bank<string, InputCondition>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InputManager"/> class.
@@ -43,7 +41,7 @@ namespace Velentr.Input
         /// <value>
         /// The game.
         /// </value>
-        public static Game Game { get; private set; }
+        public Game Game { get; private set; }
 
         /// <summary>
         /// Gets the current time.
@@ -51,7 +49,7 @@ namespace Velentr.Input
         /// <value>
         /// The current time.
         /// </value>
-        public static GameTime CurrentTime { get; private set; }
+        public GameTime CurrentTime { get; private set; }
 
         /// <summary>
         /// Gets the window.
@@ -59,7 +57,7 @@ namespace Velentr.Input
         /// <value>
         /// The window.
         /// </value>
-        public static GameWindow Window => Game.Window;
+        public GameWindow Window => Game.Window;
 
         /// <summary>
         /// Gets a value indicating whether this instance is window active.
@@ -67,7 +65,7 @@ namespace Velentr.Input
         /// <value>
         ///   <c>true</c> if this instance is window active; otherwise, <c>false</c>.
         /// </value>
-        public static bool IsWindowActive => Game.IsActive;
+        public bool IsWindowActive => Game.IsActive;
 
         /// <summary>
         /// Gets the width of the window.
@@ -75,7 +73,7 @@ namespace Velentr.Input
         /// <value>
         /// The width of the window.
         /// </value>
-        public static int WindowWidth => Window.ClientBounds.Width;
+        public int WindowWidth => Window.ClientBounds.Width;
 
         /// <summary>
         /// Gets the height of the window.
@@ -83,7 +81,7 @@ namespace Velentr.Input
         /// <value>
         /// The height of the window.
         /// </value>
-        public static int WindowHeight => Window.ClientBounds.Height;
+        public int WindowHeight => Window.ClientBounds.Height;
 
         /// <summary>
         /// Gets the index of the condition.
@@ -144,7 +142,7 @@ namespace Velentr.Input
         /// <value>
         /// The center coordinates.
         /// </value>
-        public static Point CenterCoordinates
+        public Point CenterCoordinates
         {
             get
             {
@@ -164,7 +162,7 @@ namespace Velentr.Input
         /// <value>
         /// The current frame.
         /// </value>
-        public static ulong CurrentFrame { get; private set; }
+        public ulong CurrentFrame { get; private set; }
 
         /// <summary>
         /// Gets the settings.
@@ -202,31 +200,31 @@ namespace Velentr.Input
         {
             if (enableMouseService)
             {
-                _inputServices.Add(Constants.MouseService, new MouseService());
+                _inputServices.Add(Constants.MouseService, new MouseService(this));
                 Mouse.Setup();
             }
 
             if (enableKeyboardService)
             {
-                _inputServices.Add(Constants.KeyboardService, new KeyboardService());
+                _inputServices.Add(Constants.KeyboardService, new KeyboardService(this));
                 Keyboard.Setup();
             }
 
             if (enableGamePadService)
             {
-                _inputServices.Add(Constants.GamePadService, new GamePadService());
+                _inputServices.Add(Constants.GamePadService, new GamePadService(this));
                 GamePad.Setup();
             }
 
             if (enableTouchService)
             {
-                _inputServices.Add(Constants.TouchService, new TouchService());
+                _inputServices.Add(Constants.TouchService, new TouchService(this));
                 Touch.Setup();
             }
 
             if (enableVoiceService)
             {
-                //_inputServices.Add(Constants.VoiceService, new VoiceService());
+                //_inputServices.Add(Constants.VoiceService, new VoiceService(this));
                 //Voice.Setup();
             }
         }
@@ -250,7 +248,7 @@ namespace Velentr.Input
             // update all tracked input conditions
             foreach (var item in TrackedConditions)
             {
-                item.Item2.IsConditionMet();
+                item.Value.IsConditionMet();
             }
         }
 
@@ -269,14 +267,14 @@ namespace Velentr.Input
                 name = $"Condition_{ConditionIndex++}";
             }
 
-            return TrackedConditions.AddItem(name, condition, layerDepth, forceAdd);
+            return TrackedConditions.AddItemAndGetMetadata(name, condition, layerDepth, forceAdd);
         }
 
         /// <summary>
         /// The total number of input conditions tracked.
         /// </summary>
         /// <returns>The total number of input conditions tracked.</returns>
-        public int TotalInputConditionsTracked()
+        public long TotalInputConditionsTracked()
         {
             return TrackedConditions.Count;
         }
@@ -288,7 +286,7 @@ namespace Velentr.Input
         /// <returns></returns>
         public (string, InputCondition, int) RemoveInputConditionFromTracking(string name)
         {
-            return TrackedConditions.RemoveItem(name);
+            return TrackedConditions.PopItem(name);
         }
 
         /// <summary>
@@ -298,7 +296,7 @@ namespace Velentr.Input
         /// <returns></returns>
         public (string, InputCondition, int) RemoveInputConditionFromTracking(int layerDepth)
         {
-            return TrackedConditions.RemoveItem(layerDepth);
+            return TrackedConditions.PopItem(layerDepth);
         }
     }
 }

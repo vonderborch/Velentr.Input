@@ -14,18 +14,18 @@ namespace Velentr.Input.Conditions.Internal
 
         private readonly Rectangle? _boundaries;
 
-        protected MouseBooleanCondition(Rectangle? boundaries = null, bool useRelativeCoordinates = false, Rectangle? parentBoundaries = null, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = true, uint milliSecondsForConditionMet = 0) : base(InputSource.Mouse, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet)
+        protected MouseBooleanCondition(InputManager manager, Rectangle? boundaries = null, bool useRelativeCoordinates = false, Rectangle? parentBoundaries = null, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = false, uint milliSecondsForConditionMet = 0, uint milliSecondsForTimeOut = 0) : base(manager, InputSource.Mouse, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet, milliSecondsForTimeOut)
         {
             _boundaries = boundaries;
             UseRelativeCoordinates = useRelativeCoordinates;
             _parentBoundaries = parentBoundaries;
         }
 
-        public Rectangle Boundaries => _boundaries ?? VelentrInput.Window.ClientBounds;
+        public Rectangle Boundaries => _boundaries ?? Manager.Window.ClientBounds;
 
         public bool UseRelativeCoordinates { get; }
 
-        public Rectangle ParentBoundaries => _parentBoundaries ?? VelentrInput.Window.ClientBounds;
+        public Rectangle ParentBoundaries => _parentBoundaries ?? Manager.Window.ClientBounds;
 
         protected override Value InternalGetValue()
         {
@@ -35,10 +35,10 @@ namespace Velentr.Input.Conditions.Internal
         protected override bool ActionValid(bool allowedIfConsumed, uint milliSecondsForConditionMet)
         {
             return (
-                ((WindowMustBeActive && VelentrInput.IsWindowActive) || !WindowMustBeActive)
+                ((WindowMustBeActive && Manager.IsWindowActive) || !WindowMustBeActive)
                 && (allowedIfConsumed || !IsConsumed())
-                && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, VelentrInput.CurrentTime) >= milliSecondsForConditionMet)
-                && (_boundaries == null || MouseService.CursorInBounds(Boundaries, UseRelativeCoordinates, ParentBoundaries))
+                && (milliSecondsForConditionMet == 0 || Helper.ElapsedMilliSeconds(CurrentStateStart, Manager.CurrentTime) >= milliSecondsForConditionMet)
+                && (_boundaries == null || Manager.Mouse.CursorInBounds(Boundaries, UseRelativeCoordinates, ParentBoundaries))
             );
         }
 
