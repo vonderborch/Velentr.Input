@@ -175,82 +175,101 @@ namespace Velentr.Input
         public Constants Settings => Constants.Settings;
 
         /// <summary>
-        /// Setups the Input system with the requested input services.
+        /// Setups the Input system with the default services and engines, as requested
         /// </summary>
         /// <param name="enableMouseService">if set to <c>true</c> [enable mouse service].</param>
         /// <param name="enableKeyboardService">if set to <c>true</c> [enable keyboard service].</param>
         /// <param name="enableGamePadService">if set to <c>true</c> [enable game pad service].</param>
         /// <param name="enableTouchService">if set to <c>true</c> [enable touch service].</param>
-        /// <param name="enableVoiceService">if set to <c>true</c> [enable touch service].</param>
-        public void Setup(bool enableMouseService = true, bool enableKeyboardService = true, bool enableGamePadService = true, bool enableTouchService = true, bool enableVoiceService = true)
+        public void Setup(bool enableMouseService = true, bool enableKeyboardService = true, bool enableGamePadService = true, bool enableTouchService = true)
         {
             _inputServices = new Dictionary<string, InputService>();
-            SetupInputSources(enableMouseService, enableKeyboardService, enableGamePadService, enableTouchService, enableVoiceService);
+            ResetInputSourcesWithDefaults(enableMouseService, enableKeyboardService, enableGamePadService, enableTouchService);
         }
 
-        public void AddInputSource(string name, InputService service, bool forceOverride = false)
+        public void AddInputService(string name, InputService service, Type inputEngine = null, bool createEngine = true, Type serviceBaseType = null, Type engineBaseType = null)
         {
-            if (_inputServices.ContainsKey(name))
+            if (serviceBaseType != null)
             {
-                if (!forceOverride)
+                if (!service.GetType().IsSubclassOf(serviceBaseType))
                 {
-                    throw new Exception($"A service with the name {name} already exists!");
+                    throw new Exception($"Invalid service! Services with the name [{name}] must inherit from [{serviceBaseType.ToString()}]!");
                 }
-
-
             }
+            if (engineBaseType != null)
+            {
+                if (!inputEngine.IsSubclassOf(engineBaseType))
+                {
+                    throw new Exception($"Invalid engine! Engines for the service with the name [{name}] must inherit from [{engineBaseType}]!");
+                }
+            }
+
+            if (createEngine && inputEngine == null)
+            {
+                throw new Exception("Requested to create an engine and none is supplied!");
+            }
+
+            var engine = (InputEngine)Activator.CreateInstance(inputEngine);
+            service.Setup(engine);
 
             _inputServices[name] = service;
         }
 
-        public void AddInputSource(string name, InputService service, Type inputEngine)
+        public void SetGamePadService(TouchService service, Type inputEngine = null, bool createEngine = true)
         {
-
+            AddInputService(Constants.GamePadService, service, inputEngine, createEngine, typeof(TouchService), typeof(TouchEngine));
         }
 
-        public void AddInputEngine(string name, InputEngine engine)
+        public void SetKeyboardService(TouchService service, Type inputEngine = null, bool createEngine = true)
         {
+            AddInputService(Constants.KeyboardService, service, inputEngine, createEngine, typeof(TouchService), typeof(TouchEngine));
+        }
 
+        public void SetMouseService(TouchService service, Type inputEngine = null, bool createEngine = true)
+        {
+            AddInputService(Constants.MouseService, service, inputEngine, createEngine, typeof(TouchService), typeof(TouchEngine));
+        }
+
+        public void SetTouchService(TouchService service, Type inputEngine = null, bool createEngine = true)
+        {
+            AddInputService(Constants.TouchService, service, inputEngine ?? typeof(XnaEngine), createEngine, typeof(TouchService), typeof(TouchEngine));
+        }
+
+        public void SetVoiceService(TouchService service, Type inputEngine = null, bool createEngine = true)
+        {
+            AddInputService(Constants.TouchService, service, inputEngine, createEngine, typeof(TouchService), typeof(TouchEngine));
         }
 
         /// <summary>
-        /// Setups the input services.
+        /// Setups the Input system with the default services and engines, as requested
         /// </summary>
-        /// <param name="enableMouseService">if set to <c>true</c> [enable mouse service].</param>
-        /// <param name="enableKeyboardService">if set to <c>true</c> [enable keyboard service].</param>
-        /// <param name="enableGamePadService">if set to <c>true</c> [enable game pad service].</param>
-        /// <param name="enableTouchService">if set to <c>true</c> [enable touch service].</param>
-        /// <param name="enableVoiceService">if set to <c>true</c> [enable voice service].</param>
-        public void SetupInputSources(bool enableMouseService = true, bool enableKeyboardService = true, bool enableGamePadService = true, bool enableTouchService = true, bool enableVoiceService = true)
+        /// <param name="defaultMouseService">if set to <c>true</c> [enable mouse service].</param>
+        /// <param name="defaultKeyboardService">if set to <c>true</c> [enable keyboard service].</param>
+        /// <param name="defaultGamePadService">if set to <c>true</c> [enable game pad service].</param>
+        /// <param name="defaultTouchService">if set to <c>true</c> [enable touch service].</param>
+        public void ResetInputSourcesWithDefaults(bool defaultMouseService = true, bool defaultKeyboardService = true, bool defaultGamePadService = true, bool defaultTouchService = true)
         {
-            if (enableMouseService)
+            if (defaultMouseService)
             {
                 _inputServices.Add(Constants.MouseService, new MouseService(this));
                 Mouse.Setup();
             }
 
-            if (enableKeyboardService)
+            if (defaultKeyboardService)
             {
                 _inputServices.Add(Constants.KeyboardService, new KeyboardService(this));
                 Keyboard.Setup();
             }
 
-            if (enableGamePadService)
+            if (defaultGamePadService)
             {
                 _inputServices.Add(Constants.GamePadService, new GamePadService(this));
                 GamePad.Setup();
             }
 
-            if (enableTouchService)
+            if (defaultTouchService)
             {
-                _inputServices.Add(Constants.TouchService, new DefaultTouchService(this));
-                Touch.Setup();
-            }
-
-            if (enableVoiceService)
-            {
-                _inputServices.Add(Constants.VoiceService, new VoiceService(this));
-                Voice.Setup();
+                SetTouchService(new DefaultTouchService(this), typeof(XnaEngine), true);
             }
         }
 

@@ -14,7 +14,7 @@ namespace Velentr.Input.Touch
 
         public TouchCollection CurrentState { get; private set; }
 
-        public override void Setup()
+        protected override void SetupInternal()
         {
             Capabilities = TouchPanel.GetCapabilities();
             Gestures = new Dictionary<GestureType, List<Gesture>>(Enum.GetNames(typeof(GestureType)).Length);

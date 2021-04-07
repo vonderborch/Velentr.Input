@@ -24,10 +24,6 @@ namespace Velentr.Input.Touch
 
         public int MaxTouchPoints { get; protected set; }
 
-        public abstract void Setup();
-
-        public abstract void Update();
-
         public void ConsumeGesture(int id)
         {
             GestureLastConsumed[id] = Manager.CurrentFrame;
