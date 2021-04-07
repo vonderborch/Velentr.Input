@@ -8,8 +8,8 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/vonderborch/Velentr.Input</RepositoryUrl>
     <PackageTags>Monogame, Input, Keyboard, Mouse, GamePad, Touch, Voice, Velentr.Input, Speech Recognition</PackageTags>
-    <Description>Extends Velentr.Input.Monogame by adding support for speech recognition enabled through the System.Speech library.</Description>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description></Description>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Version>1.2.0</Version>
     <PackageProjectUrl>https://github.com/vonderborch/Velentr.Input</PackageProjectUrl>
   </PropertyGroup>

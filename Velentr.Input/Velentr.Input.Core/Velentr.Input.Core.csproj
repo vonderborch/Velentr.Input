@@ -12,9 +12,4 @@
     <PackageReference Include="System.Speech" Version="5.0.0" />
     <PackageReference Include="Velentr.Collections" Version="1.0.1" />
   </ItemGroup>
-  <ItemGroup>
-    <None Update="Windows7.Multitouch.dll">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 </Project>

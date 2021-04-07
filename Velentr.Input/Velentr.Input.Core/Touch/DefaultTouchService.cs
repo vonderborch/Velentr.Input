@@ -5,23 +5,22 @@ using Velentr.Input.Enums;
 namespace Velentr.Input.Touch
 {
 
-    public class TouchService : InputService
+    public class DefaultTouchService : TouchService
     {
 
-        public bool TouchPanelConnected { get; protected set; }
+        public bool TouchPanelConnected { get; private set; }
 
-        public int MaxTouchPoints { get; protected set; }
+        public int MaxTouchPoints { get; private set; }
 
-        public TouchEngine Engine { get; protected set; }
+        public TouchEngine Engine { get; private set; }
 
-        protected TouchService(InputManager manager) : base(manager)
+        public DefaultTouchService(InputManager manager) : base(manager)
         {
-            Source = InputSource.Touch;
         }
 
-        public override void Setup(InputEngine engine)
+        public override void Setup()
         {
-            Engine = (TouchEngine)engine;
+            Engine = new XnaEngine(Manager);
             Engine.Setup();
             TouchPanelConnected = Engine.TouchPanelConnected;
             MaxTouchPoints = Engine.MaxTouchPoints;

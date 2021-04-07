@@ -35,6 +35,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Velentr.Input.Core.DevEnv",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Velentr.Input.SystemSpeech.DevEnv", "VoiceEngines\SystemSpeech\Velentr.Input.SystemSpeech.DevEnv\Velentr.Input.SystemSpeech.DevEnv.csproj", "{C5302D79-F567-4B81-A9D2-8D7FD4C6C165}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{18A938E8-0CEC-4EFC-B10D-A992A52B9BD9}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\.gitmodules = ..\.gitmodules
+		..\CODEOWNERS = ..\CODEOWNERS
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Velentr.Collections.Collections;
 using Velentr.Input.Conditions;
@@ -122,7 +123,7 @@ namespace Velentr.Input
         /// <value>
         /// The touch.
         /// </value>
-        public TouchService Touch => (TouchService)_inputServices[Constants.TouchService];
+        public DefaultTouchService Touch => (DefaultTouchService)_inputServices[Constants.TouchService];
 
         /// <summary>
         /// Gets the voice service.
@@ -187,6 +188,31 @@ namespace Velentr.Input
             SetupInputSources(enableMouseService, enableKeyboardService, enableGamePadService, enableTouchService, enableVoiceService);
         }
 
+        public void AddInputSource(string name, InputService service, bool forceOverride = false)
+        {
+            if (_inputServices.ContainsKey(name))
+            {
+                if (!forceOverride)
+                {
+                    throw new Exception($"A service with the name {name} already exists!");
+                }
+
+
+            }
+
+            _inputServices[name] = service;
+        }
+
+        public void AddInputSource(string name, InputService service, Type inputEngine)
+        {
+
+        }
+
+        public void AddInputEngine(string name, InputEngine engine)
+        {
+
+        }
+
         /// <summary>
         /// Setups the input services.
         /// </summary>
@@ -217,7 +243,7 @@ namespace Velentr.Input
 
             if (enableTouchService)
             {
-                _inputServices.Add(Constants.TouchService, new TouchService(this));
+                _inputServices.Add(Constants.TouchService, new DefaultTouchService(this));
                 Touch.Setup();
             }
 

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input.Touch;
 
-namespace Velentr.Input.Touch.Engines
+namespace Velentr.Input.Touch
 {
 
-    public class XnaDerivedEngine : TouchEngine
+    public class XnaEngine : TouchEngine
     {
 
-        public XnaDerivedEngine(InputManager manager) : base(TouchEngines.XNA_derived, manager) { }
+        public XnaEngine(InputManager manager) : base(manager) { }
 
         public TouchPanelCapabilities Capabilities { get; private set; }
 

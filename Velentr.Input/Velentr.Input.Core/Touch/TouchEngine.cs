@@ -2,24 +2,21 @@
 using Microsoft.Xna.Framework;
 using Velentr.Input.Helpers;
 
-namespace Velentr.Input.Touch.Engines
+namespace Velentr.Input.Touch
 {
 
-    public abstract class TouchEngine
+    public abstract class TouchEngine : InputEngine
     {
 
         protected Dictionary<int, ulong> GestureLastConsumed;
 
         protected Dictionary<GestureType, List<Gesture>> Gestures;
 
-        protected TouchEngine(TouchEngines engine, InputManager manager)
+        protected TouchEngine(InputManager manager)
         {
-            Engine = engine;
             Manager = manager;
             GestureLastConsumed = new Dictionary<int, ulong>();
         }
-
-        public TouchEngines Engine { get; }
 
         public InputManager Manager { get; }
 

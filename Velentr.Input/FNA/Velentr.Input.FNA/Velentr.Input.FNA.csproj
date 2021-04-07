@@ -18,6 +18,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;FNA</DefineConstants>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>C:\Users\ricky\OneDrive\Projects\repos\Velentr\Velentr.Input\release\FNA\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DefineConstants>TRACE;FNA</DefineConstants>
@@ -90,6 +91,7 @@
     <Compile Include="..\..\Velentr.Input.Core\GamePad\VilliGamePad.cs" Link="GamePad\VilliGamePad.cs" />
     <Compile Include="..\..\Velentr.Input.Core\Helpers\Helper.cs" Link="Helpers\Helper.cs" />
     <Compile Include="..\..\Velentr.Input.Core\InputConditionEvent.cs" Link="InputConditionEvent.cs" />
+    <Compile Include="..\..\Velentr.Input.Core\InputEngine.cs" Link="InputEngine.cs" />
     <Compile Include="..\..\Velentr.Input.Core\InputManager.cs" Link="InputManager.cs" />
     <Compile Include="..\..\Velentr.Input.Core\InputService.cs" Link="InputService.cs" />
     <Compile Include="..\..\Velentr.Input.Core\Keyboard\Key.cs" Link="Keyboard\Key.cs" />
@@ -98,14 +100,12 @@
     <Compile Include="..\..\Velentr.Input.Core\Mouse\MouseButton.cs" Link="Mouse\MouseButton.cs" />
     <Compile Include="..\..\Velentr.Input.Core\Mouse\MouseSensor.cs" Link="Mouse\MouseSensor.cs" />
     <Compile Include="..\..\Velentr.Input.Core\Mouse\MouseService.cs" Link="Mouse\MouseService.cs" />
-    <Compile Include="..\..\Velentr.Input.Core\Touch\Engines\TouchEngine.cs" Link="Touch\Engines\TouchEngine.cs" />
-    <Compile Include="..\..\Velentr.Input.Core\Touch\Engines\Win7Engine.cs" Link="Touch\Engines\Win7Engine.cs" />
-    <Compile Include="..\..\Velentr.Input.Core\Touch\Engines\XnaDerivedEngine.cs" Link="Touch\Engines\XnaDerivedEngine.cs" />
     <Compile Include="..\..\Velentr.Input.Core\Touch\Gesture.cs" Link="Touch\Gesture.cs" />
     <Compile Include="..\..\Velentr.Input.Core\Touch\GestureType.cs" Link="Touch\GestureType.cs" />
-    <Compile Include="..\..\Velentr.Input.Core\Touch\TouchEngines.cs" Link="Touch\TouchEngines.cs" />
+    <Compile Include="..\..\Velentr.Input.Core\Touch\TouchEngine.cs" Link="Touch\TouchEngine.cs" />
     <Compile Include="..\..\Velentr.Input.Core\Touch\TouchGestureMapping.cs" Link="Touch\TouchGestureMapping.cs" />
     <Compile Include="..\..\Velentr.Input.Core\Touch\TouchService.cs" Link="Touch\TouchService.cs" />
+    <Compile Include="..\..\Velentr.Input.Core\Touch\XnaEngine.cs" Link="Touch\XnaEngine.cs" />
     <Compile Include="..\..\Velentr.Input.Core\Value.cs" Link="Value.cs" />
     <Compile Include="..\..\Velentr.Input.Core\ValueLogic.cs" Link="ValueLogic.cs" />
     <Compile Include="..\..\Velentr.Input.Core\Voice\RecognizedPhrase.cs" Link="Voice\RecognizedPhrase.cs" />
@@ -120,7 +120,6 @@
     <Folder Include="Helpers\" />
     <Folder Include="Keyboard\" />
     <Folder Include="Mouse\" />
-    <Folder Include="Touch\Engines\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="fnalibs" Version="21.3.5" />

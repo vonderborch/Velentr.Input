@@ -2,16 +2,8 @@
 
 namespace Velentr.Input.Voice
 {
-    public abstract class VoiceEngine
+    public abstract class VoiceEngine : InputEngine
     {
-
-
-        protected VoiceEngine(InputManager manager)
-        {
-            Manager = manager;
-        }
-
-        protected InputManager Manager { get; set; }
 
         public abstract bool Enabled { get; set; }
 
@@ -22,8 +14,6 @@ namespace Velentr.Input.Voice
         public abstract void RemovePhrase(string phrase);
 
         public abstract void RemovePhrases(List<string> phrases);
-
-        public abstract void Update();
 
     }
 }

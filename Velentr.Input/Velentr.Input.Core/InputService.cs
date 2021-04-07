@@ -15,7 +15,7 @@ namespace Velentr.Input
 
         public InputSource Source { get; protected set; }
 
-        public abstract void Setup();
+        public abstract void Setup(InputEngine engine);
 
         public abstract void Update();
 
