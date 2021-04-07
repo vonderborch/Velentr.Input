@@ -3,13 +3,14 @@ A simple and easy-to-use input library for XNA/Monogame/FNA.
 
 # Installation
 There are nuget packages available for Monogame and FNA.
-- Monogame: [Velentr.Input.Monogame](https://www.nuget.org/packages/Velentr.Input.Monogame/)
-- FNA: [Velentr.Input.FNA](https://www.nuget.org/packages/Velentr.Input.FNA/)
+- **Monogame**: [Velentr.Input.Monogame](https://www.nuget.org/packages/Velentr.Input.Monogame/)
+- **FNA**: [Velentr.Input.FNA](https://www.nuget.org/packages/Velentr.Input.FNA/)
 
+# Plugins
 Additional plugin libraries are available:
-- System.Speech Voice Recognition Support:
-  - Monogame: [Velentr.Input.Monogame](https://www.nuget.org/packages/Velentr.Input.Monogame/)
-  - FNA: [Velentr.Input.FNA](https://www.nuget.org/packages/Velentr.Input.FNA/)
+- **[System.Speech](https://www.nuget.org/packages/System.Speech/) Voice Recognition Support**:
+  - **Monogame**: [Velentr.Input.Monogame.SystemSpeech](https://www.nuget.org/packages/Velentr.Input.Monogame.SystemSpeech/)
+  - **FNA**: [Velentr.Input.FNA.SystemSpeech](https://www.nuget.org/packages/Velentr.Input.FNA.SystemSpeech/)
 
 # Basic Usage
 Approach 1: Create an input condition and poll for if the condition is met directly.
@@ -74,11 +75,43 @@ Voice | `VoiceService` | `DefaultVoiceService` | `manager.SetService(newVoiceSer
 ##### Want to change how we read in inputs?
 Create a new class that inherits from the `InputEngine` of the input type that you want to update.
 
+Built-in Input System | Abstract Implementation | Default Implementation
+--------------------- | ----------------------- | ---------------------- 
+GamePad | `GamePadEngine` | `XnaGamePadEngine`
+Keyboard | `KeyboardEngine` | `XnaKeyboardEngine`
+Mouse | `MouseEngine` | `XnaMouseEngine`
+Touch | `TouchEngine` | `XnaTouchEngine`
+Voice | `VoiceEngine` | N/A (see **Plugins** for the default implementation)
+
 ##### Want to add a new condition?
 Create a new condition by inheriting from the `InputCondition` class (or an existing class that implements `InputCondition`), then use your new condition as you would any other.
 
 # Voice Recognition Notes:
-Full support for voice commands is not built-in. To use voice commands, you must download a Voice Input library compatible with your platform (see plugins in **Installation**)
+Full support for voice commands is not built-in, although the basic systems to use it are built out. To use voice commands, you must download a Voice Input library compatible with your platform (see **Plugins** for currently supported speech recognition systems).
+
+We went with this approach because voice support is more of a specialized requirement than the other default supported input methods.
+
+Basic example of setting up/using voice commands (after the plugin has been installed):
+```
+// This goes in the class
+InputManager manager = new InputManager(this);
+
+// This part goes in Setup()
+manager.Setup();
+manager.SetVoiceService(new DefaultVoiceService(manager), typeof(SystemSpeechEngine), true);
+var condition = new AnyCondition(
+    manager,
+    new KeyboardButtonPressedCondition(manager, Key.Escape),
+    new GamePadButtonPressedCondition(manager, GamePadButton.Back),
+    new MouseButtonPressedCondition(manager, MouseButton.MiddleButton),
+    new VoiceCommandCondition(manager, "My Phrase or Word Here")
+);
+condition.Event += ExitGame;
+manager.AddInputConditionToTracking(condition);
+
+// This part goes in Update()
+manager.Update(gameTime);
+```
 
 # Example
 Code:
