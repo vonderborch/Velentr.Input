@@ -23,6 +23,11 @@ namespace Velentr.Input
         /// </summary>
         public const string InvalidGamePadTriggerSensor = "Invalid sensor! Must use GamePadSensor.LeftTrigger or GamePadSensor.RightTrigger!";
 
+        /// <summary>
+        /// The invalid game pad trigger sensor exception message
+        /// </summary>
+        public const string NoEngineConfiguredError = "No engine is configured that supports the Condition!";
+
         static Constants() { }
 
         private Constants() { }
@@ -50,22 +55,6 @@ namespace Velentr.Input
         /// The seconds between game pad connection check.
         /// </value>
         public int SecondsBetweenGamePadConnectionCheck { get; set; } = 15;
-
-        /// <summary>
-        /// Gets or sets the default touch engine
-        /// </summary>
-        /// <value>
-        /// The touch engine.
-        /// </value>
-        public TouchEngine TouchEngine { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the voice engine we'll use for voice commands.
-        /// </summary>
-        /// <value>
-        /// The voice engine.
-        /// </value>
-        public VoiceEngine VoiceEngine { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the enabled touch gestures.

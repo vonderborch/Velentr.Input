@@ -1,32 +1,22 @@
 ﻿using System.Collections.Generic;
-using Velentr.Input.Enums;
 
 namespace Velentr.Input.Keyboard
 {
 
     /// <summary>
-    /// Defines what methods must be available at a minimum to support Keyboard inputs
+    /// Defines the base methods and properties that are needed for Keyboard Input support.
     /// </summary>
-    /// <seealso cref="Velentr.Input.InputService" />
-    public abstract class KeyboardService : InputService
+    /// <seealso cref="Velentr.Input.InputEngine" />
+    public abstract class KeyboardEngine : InputEngine
     {
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeyboardService"/> class.
+        /// Initializes a new instance of the <see cref="KeyboardEngine"/> class.
         /// </summary>
-        /// <param name="inputManager">The input manager.</param>
-        protected KeyboardService(InputManager inputManager) : base(inputManager)
+        protected KeyboardEngine() : base()
         {
-            Source = InputSource.Keyboard;
-        }
 
-        /// <summary>
-        /// Gets or sets the engine.
-        /// </summary>
-        /// <value>
-        /// The engine.
-        /// </value>
-        protected KeyboardEngine Engine { get; set; }
+        }
 
         /// <summary>
         /// Gets a value indicating whether [current caps lock].
@@ -59,62 +49,6 @@ namespace Velentr.Input.Keyboard
         ///   <c>true</c> if [previous number lock]; otherwise, <c>false</c>.
         /// </value>
         public abstract bool PreviousNumLock { get; }
-
-        /// <summary>
-        /// Consumes the key.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        public abstract void ConsumeKey(Key key);
-
-        /// <summary>
-        /// Determines whether [is key consumed] [the specified key].
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <returns>
-        ///   <c>true</c> if [is key consumed] [the specified key]; otherwise, <c>false</c>.
-        /// </returns>
-        public abstract bool IsKeyConsumed(Key key);
-
-        /// <summary>
-        /// Consumes the lock.
-        /// </summary>
-        /// <param name="lockType">Type of the lock.</param>
-        public abstract void ConsumeLock(KeyboardLock lockType);
-
-        /// <summary>
-        /// Determines whether [is lock consumed] [the specified lock type].
-        /// </summary>
-        /// <param name="lockType">Type of the lock.</param>
-        /// <returns>
-        ///   <c>true</c> if [is lock consumed] [the specified lock type]; otherwise, <c>false</c>.
-        /// </returns>
-        public abstract bool IsLockConsumed(KeyboardLock lockType);
-
-        /// <summary>
-        /// Consumes the current keys pressed count.
-        /// </summary>
-        public abstract void ConsumeCurrentKeysPressedCount();
-
-        /// <summary>
-        /// Determines whether [is current keys pressed count consumed].
-        /// </summary>
-        /// <returns>
-        ///   <c>true</c> if [is current keys pressed count consumed]; otherwise, <c>false</c>.
-        /// </returns>
-        public abstract bool IsCurrentKeysPressedCountConsumed();
-
-        /// <summary>
-        /// Consumes the keys pressed delta count.
-        /// </summary>
-        public abstract void ConsumeKeysPressedDeltaCount();
-
-        /// <summary>
-        /// Determines whether [is keys pressed delta consumed].
-        /// </summary>
-        /// <returns>
-        ///   <c>true</c> if [is keys pressed delta consumed]; otherwise, <c>false</c>.
-        /// </returns>
-        public abstract bool IsKeysPressedDeltaConsumed();
 
         /// <summary>
         /// Determines whether [is key pressed] [the specified key].

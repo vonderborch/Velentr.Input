@@ -1,35 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
-using Velentr.Input.Enums;
-using Velentr.Input.Helpers;
 
 namespace Velentr.Input.Mouse
 {
 
     /// <summary>
-    /// Defines what methods must be available at a minimum to support Mouse inputs
+    /// Defines the base methods and properties that are needed for Mouse Input support.
     /// </summary>
-    /// <seealso cref="Velentr.Input.InputService" />
-    public abstract class MouseService : InputService
+    /// <seealso cref="Velentr.Input.InputEngine" />
+    public abstract class MouseEngine : InputEngine
     {
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MouseService"/> class.
-        /// </summary>
-        /// <param name="inputManager">The input manager.</param>
-        protected MouseService(InputManager inputManager) : base(inputManager)
-        {
-            Source = InputSource.Mouse;
-        }
-
-        public MouseEngine Engine { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [reset mouse coords to center of screen].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [reset mouse coords to center of screen]; otherwise, <c>false</c>.
-        /// </value>
-        public bool ResetMouseCoordsToCenterOfScreen { get; set; } = false;
 
         /// <summary>
         /// Gets the current horizontal scroll wheel value.
@@ -144,7 +123,7 @@ namespace Velentr.Input.Mouse
         public abstract bool ScrolledHorizontally { get; }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="MouseService"/> is scrolled.
+        /// Gets a value indicating whether this <see cref="MouseEngine"/> is scrolled.
         /// </summary>
         /// <value>
         ///   <c>true</c> if scrolled; otherwise, <c>false</c>.
@@ -168,34 +147,11 @@ namespace Velentr.Input.Mouse
         public abstract bool IsMouseInWindow { get; }
 
         /// <summary>
-        /// Consumes the button.
+        /// Sets the mouse coordinates.
         /// </summary>
-        /// <param name="button">The button.</param>
-        public abstract void ConsumeButton(MouseButton button);
-
-        /// <summary>
-        /// Consumes the sensor.
-        /// </summary>
-        /// <param name="sensor">The sensor.</param>
-        public abstract void ConsumeSensor(MouseSensor sensor);
-
-        /// <summary>
-        /// Determines whether [is button consumed] [the specified button].
-        /// </summary>
-        /// <param name="button">The button.</param>
-        /// <returns>
-        ///   <c>true</c> if [is button consumed] [the specified button]; otherwise, <c>false</c>.
-        /// </returns>
-        public abstract bool IsButtonConsumed(MouseButton button);
-
-        /// <summary>
-        /// Determines whether [is sensor consumed] [the specified sensor].
-        /// </summary>
-        /// <param name="sensor">The sensor.</param>
-        /// <returns>
-        ///   <c>true</c> if [is sensor consumed] [the specified sensor]; otherwise, <c>false</c>.
-        /// </returns>
-        public abstract bool IsSensorConsumed(MouseSensor sensor);
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        public abstract void SetMouseCoordinates(int x, int y);
 
         /// <summary>
         /// Determines whether the specified button is pressed.
@@ -234,22 +190,13 @@ namespace Velentr.Input.Mouse
         public abstract bool WasReleased(MouseButton button);
 
         /// <summary>
-        /// Checks if the cursor is within the specified boundaries.
+        /// Cursors the in bounds.
         /// </summary>
         /// <param name="boundaries">The boundaries.</param>
         /// <param name="scaleCoordinatesToArea">if set to <c>true</c> [scale coordinates to area].</param>
         /// <param name="parentBoundaries">The parent boundaries.</param>
         /// <returns></returns>
-        public bool CursorInBounds(Rectangle boundaries, bool scaleCoordinatesToArea = false, Rectangle? parentBoundaries = null)
-        {
-            return Helper.CoordinateInRectangle(
-                scaleCoordinatesToArea
-                    ? Helper.ScalePointToChild(CurrentCursorPosition, parentBoundaries ?? Manager.Window.ClientBounds, boundaries)
-                    : CurrentCursorPosition,
-                boundaries
-            );
-        }
+        public abstract bool CursorInBounds(Rectangle boundaries, bool scaleCoordinatesToArea = false, Rectangle? parentBoundaries = null);
 
     }
-
 }

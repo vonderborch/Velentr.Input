@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\FNA\FNA.csproj" />
-    <ProjectReference Include="..\..\VoiceEngines\SystemSpeech\Velentr.Input.FNA.SystemSpeech\Velentr.Input.FNA.SystemSpeech.csproj" />
     <ProjectReference Include="..\Velentr.Input.FNA\Velentr.Input.FNA.csproj" />
   </ItemGroup>
   <ItemGroup>

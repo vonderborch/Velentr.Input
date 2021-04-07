@@ -49,6 +49,11 @@ namespace Velentr.Input.Conditions
             UseRelativeCoordinates = useRelativeCoordinates;
             _boundaries = boundaries;
             _parentBoundaries = parentBoundaries;
+
+            if (manager.Settings.ThrowWhenCreatingConditionIfNoServiceEnabled && manager.Touch == null)
+            {
+                throw new Exception(Constants.NoEngineConfiguredError);
+            }
         }
 
         /// <summary>

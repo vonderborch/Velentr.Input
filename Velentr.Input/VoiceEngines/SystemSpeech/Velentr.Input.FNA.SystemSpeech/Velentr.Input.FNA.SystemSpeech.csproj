@@ -32,12 +32,12 @@
     <PackageReference Include="Velentr.Collections" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\FNA\Velentr.Input.FNA\Velentr.Input.FNA.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\..\..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\FNA\Velentr.Input.FNA\Velentr.Input.FNA.csproj" />
   </ItemGroup>
 </Project>

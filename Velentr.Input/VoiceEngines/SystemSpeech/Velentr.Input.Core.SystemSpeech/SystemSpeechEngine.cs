@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Speech.Recognition;
+using Velentr.Input.Voice;
 
 namespace Velentr.Input.Voice.SystemSpeech
 {
@@ -18,7 +19,13 @@ namespace Velentr.Input.Voice.SystemSpeech
 
         private Choices _choices;
 
-        public SystemSpeechEngine(InputManager manager) : base(manager)
+        public SystemSpeechEngine()
+        {
+            _phraseChanges = new Dictionary<string, bool>();
+            _currentPhrases = new ConcurrentBag<string>();
+        }
+
+        protected override void SetupInternal()
         {
             _recognizer = new SpeechRecognizer();
             _choices = new Choices();

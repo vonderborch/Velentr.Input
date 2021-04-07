@@ -27,9 +27,9 @@ namespace Velentr.Input.Conditions
         {
             Phrase = phrase;
 
-            if (manager.Voice == null || !manager.Voice.Enabled)
+            if (manager.Settings.ThrowWhenCreatingConditionIfNoServiceEnabled && (manager.Voice == null || !manager.Voice.Enabled))
             {
-                throw new Exception("No voice engine is configured!");
+                throw new Exception(Constants.NoEngineConfiguredError);
             }
             manager.Voice?.AddPhrase(phrase);
         }

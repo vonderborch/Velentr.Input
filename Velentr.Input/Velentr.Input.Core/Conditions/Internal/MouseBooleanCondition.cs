@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Velentr.Input.Enums;
 using Velentr.Input.Helpers;
-using Velentr.Input.Mouse;
 
 namespace Velentr.Input.Conditions.Internal
 {
@@ -19,6 +18,11 @@ namespace Velentr.Input.Conditions.Internal
             _boundaries = boundaries;
             UseRelativeCoordinates = useRelativeCoordinates;
             _parentBoundaries = parentBoundaries;
+
+            if (manager.Settings.ThrowWhenCreatingConditionIfNoServiceEnabled && manager.Mouse == null)
+            {
+                throw new Exception(Constants.NoEngineConfiguredError);
+            }
         }
 
         public Rectangle Boundaries => _boundaries ?? Manager.Window.ClientBounds;

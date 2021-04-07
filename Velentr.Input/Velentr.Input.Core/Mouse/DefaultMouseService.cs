@@ -1,35 +1,36 @@
-﻿using Microsoft.Xna.Framework;
-using Velentr.Input.Enums;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Velentr.Input.Helpers;
 
 namespace Velentr.Input.Mouse
 {
 
     /// <summary>
-    /// Defines what methods must be available at a minimum to support Mouse inputs
+    /// The default Mouse Service implementation for Velentr.Input
     /// </summary>
-    /// <seealso cref="Velentr.Input.InputService" />
-    public abstract class MouseService : InputService
+    /// <seealso cref="Velentr.Input.Mouse.MouseService" />
+    public class DefaultMouseService : MouseService
     {
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MouseService"/> class.
+        /// The button last consumed
         /// </summary>
-        /// <param name="inputManager">The input manager.</param>
-        protected MouseService(InputManager inputManager) : base(inputManager)
-        {
-            Source = InputSource.Mouse;
-        }
-
-        public MouseEngine Engine { get; protected set; }
+        internal Dictionary<MouseButton, ulong> ButtonLastConsumed = new Dictionary<MouseButton, ulong>(Enum.GetNames(typeof(MouseButton)).Length);
 
         /// <summary>
-        /// Gets or sets a value indicating whether [reset mouse coords to center of screen].
+        /// The sensor last consumed
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if [reset mouse coords to center of screen]; otherwise, <c>false</c>.
-        /// </value>
-        public bool ResetMouseCoordsToCenterOfScreen { get; set; } = false;
+        internal Dictionary<MouseSensor, ulong> SensorLastConsumed = new Dictionary<MouseSensor, ulong>(Enum.GetNames(typeof(MouseSensor)).Length);
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultMouseService"/> class.
+        /// </summary>
+        /// <param name="inputManager">The input manager.</param>
+        public DefaultMouseService(InputManager inputManager) : base(inputManager)
+        {
+
+        }
 
         /// <summary>
         /// Gets the current horizontal scroll wheel value.
@@ -37,7 +38,7 @@ namespace Velentr.Input.Mouse
         /// <value>
         /// The current horizontal scroll wheel value.
         /// </value>
-        public abstract int CurrentHorizontalScrollWheelValue { get; }
+        public override int CurrentHorizontalScrollWheelValue => Engine.CurrentHorizontalScrollWheelValue;
 
         /// <summary>
         /// Gets the previous horizontal scroll wheel value.
@@ -45,7 +46,7 @@ namespace Velentr.Input.Mouse
         /// <value>
         /// The previous horizontal scroll wheel value.
         /// </value>
-        public abstract int PreviousHorizontalScrollWheelValue { get; }
+        public override int PreviousHorizontalScrollWheelValue => Engine.PreviousHorizontalScrollWheelValue;
 
         /// <summary>
         /// Gets the current vertical scroll wheel value.
@@ -53,7 +54,7 @@ namespace Velentr.Input.Mouse
         /// <value>
         /// The current vertical scroll wheel value.
         /// </value>
-        public abstract int CurrentVerticalScrollWheelValue { get; }
+        public override int CurrentVerticalScrollWheelValue => Engine.CurrentVerticalScrollWheelValue;
 
         /// <summary>
         /// Gets the previous vertical scroll wheel value.
@@ -61,7 +62,7 @@ namespace Velentr.Input.Mouse
         /// <value>
         /// The previous vertical scroll wheel value.
         /// </value>
-        public abstract int PreviousVerticalScrollWheelValue { get; }
+        public override int PreviousVerticalScrollWheelValue => Engine.PreviousVerticalScrollWheelValue;
 
         /// <summary>
         /// Gets the horizontal scroll delta.
@@ -69,7 +70,7 @@ namespace Velentr.Input.Mouse
         /// <value>
         /// The horizontal scroll delta.
         /// </value>
-        public abstract int HorizontalScrollDelta { get; }
+        public override int HorizontalScrollDelta => Engine.HorizontalScrollDelta;
 
         /// <summary>
         /// Gets the vertical scroll delta.
@@ -77,7 +78,7 @@ namespace Velentr.Input.Mouse
         /// <value>
         /// The vertical scroll delta.
         /// </value>
-        public abstract int VerticalScrollDelta { get; }
+        public override int VerticalScrollDelta => Engine.VerticalScrollDelta;
 
         /// <summary>
         /// Gets the scroll delta.
@@ -85,7 +86,7 @@ namespace Velentr.Input.Mouse
         /// <value>
         /// The scroll delta.
         /// </value>
-        public abstract Point ScrollDelta { get; }
+        public override Point ScrollDelta => Engine.ScrollDelta;
 
         /// <summary>
         /// Gets the current scroll positions.
@@ -93,7 +94,7 @@ namespace Velentr.Input.Mouse
         /// <value>
         /// The current scroll positions.
         /// </value>
-        public abstract Point CurrentScrollPositions { get; }
+        public override Point CurrentScrollPositions => Engine.CurrentScrollPositions;
 
         /// <summary>
         /// Gets the previous scroll positions.
@@ -101,7 +102,7 @@ namespace Velentr.Input.Mouse
         /// <value>
         /// The previous scroll positions.
         /// </value>
-        public abstract Point PreviousScrollPositions { get; }
+        public override Point PreviousScrollPositions => Engine.PreviousScrollPositions;
 
         /// <summary>
         /// Gets the current cursor position.
@@ -109,7 +110,7 @@ namespace Velentr.Input.Mouse
         /// <value>
         /// The current cursor position.
         /// </value>
-        public abstract Point CurrentCursorPosition { get; }
+        public override Point CurrentCursorPosition => Engine.CurrentCursorPosition;
 
         /// <summary>
         /// Gets the previous cursor position.
@@ -117,7 +118,7 @@ namespace Velentr.Input.Mouse
         /// <value>
         /// The previous cursor position.
         /// </value>
-        public abstract Point PreviousCursorPosition { get; }
+        public override Point PreviousCursorPosition => Engine.PreviousCursorPosition;
 
         /// <summary>
         /// Gets the cursor position delta.
@@ -125,7 +126,7 @@ namespace Velentr.Input.Mouse
         /// <value>
         /// The cursor position delta.
         /// </value>
-        public abstract Point CursorPositionDelta { get; }
+        public override Point CursorPositionDelta => Engine.CursorPositionDelta;
 
         /// <summary>
         /// Gets a value indicating whether [scrolled vertically].
@@ -133,7 +134,7 @@ namespace Velentr.Input.Mouse
         /// <value>
         ///   <c>true</c> if [scrolled vertically]; otherwise, <c>false</c>.
         /// </value>
-        public abstract bool ScrolledVertically { get; }
+        public override bool ScrolledVertically => Engine.ScrolledVertically;
 
         /// <summary>
         /// Gets a value indicating whether [scrolled horizontally].
@@ -141,15 +142,15 @@ namespace Velentr.Input.Mouse
         /// <value>
         ///   <c>true</c> if [scrolled horizontally]; otherwise, <c>false</c>.
         /// </value>
-        public abstract bool ScrolledHorizontally { get; }
+        public override bool ScrolledHorizontally => Engine.ScrolledHorizontally;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="MouseService"/> is scrolled.
+        /// Gets a value indicating whether this <see cref="MouseService" /> is scrolled.
         /// </summary>
         /// <value>
         ///   <c>true</c> if scrolled; otherwise, <c>false</c>.
         /// </value>
-        public abstract bool Scrolled { get; }
+        public override bool Scrolled => Engine.Scrolled;
 
         /// <summary>
         /// Gets a value indicating whether [cursor moved].
@@ -157,7 +158,7 @@ namespace Velentr.Input.Mouse
         /// <value>
         ///   <c>true</c> if [cursor moved]; otherwise, <c>false</c>.
         /// </value>
-        public abstract bool CursorMoved { get; }
+        public override bool CursorMoved => Engine.CursorMoved;
 
         /// <summary>
         /// Gets a value indicating whether this instance is mouse in window.
@@ -165,19 +166,46 @@ namespace Velentr.Input.Mouse
         /// <value>
         ///   <c>true</c> if this instance is mouse in window; otherwise, <c>false</c>.
         /// </value>
-        public abstract bool IsMouseInWindow { get; }
+        public override bool IsMouseInWindow => Engine.IsMouseInWindow;
+
+        /// <summary>
+        /// Sets up the input service.
+        /// </summary>
+        /// <param name="engine">The engine to setup the input service with.</param>
+        protected override void SetupInternal(InputEngine engine)
+        {
+            Engine = (MouseEngine) engine;
+        }
+
+        /// <summary>
+        /// Updates the input service.
+        /// </summary>
+        public override void Update()
+        {
+            Engine?.Update();
+            if (ResetMouseCoordsToCenterOfScreen)
+            {
+                Engine?.SetMouseCoordinates(Manager.CenterCoordinates.X, Manager.CenterCoordinates.Y);
+            }
+        }
 
         /// <summary>
         /// Consumes the button.
         /// </summary>
         /// <param name="button">The button.</param>
-        public abstract void ConsumeButton(MouseButton button);
+        public override void ConsumeButton(MouseButton button)
+        {
+            ButtonLastConsumed[button] = Manager.CurrentFrame;
+        }
 
         /// <summary>
         /// Consumes the sensor.
         /// </summary>
         /// <param name="sensor">The sensor.</param>
-        public abstract void ConsumeSensor(MouseSensor sensor);
+        public override void ConsumeSensor(MouseSensor sensor)
+        {
+            SensorLastConsumed[sensor] = Manager.CurrentFrame;
+        }
 
         /// <summary>
         /// Determines whether [is button consumed] [the specified button].
@@ -186,7 +214,15 @@ namespace Velentr.Input.Mouse
         /// <returns>
         ///   <c>true</c> if [is button consumed] [the specified button]; otherwise, <c>false</c>.
         /// </returns>
-        public abstract bool IsButtonConsumed(MouseButton button);
+        public override bool IsButtonConsumed(MouseButton button)
+        {
+            if (ButtonLastConsumed.TryGetValue(button, out var frame))
+            {
+                return frame == Manager.CurrentFrame;
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// Determines whether [is sensor consumed] [the specified sensor].
@@ -195,7 +231,15 @@ namespace Velentr.Input.Mouse
         /// <returns>
         ///   <c>true</c> if [is sensor consumed] [the specified sensor]; otherwise, <c>false</c>.
         /// </returns>
-        public abstract bool IsSensorConsumed(MouseSensor sensor);
+        public override bool IsSensorConsumed(MouseSensor sensor)
+        {
+            if (SensorLastConsumed.TryGetValue(sensor, out var frame))
+            {
+                return frame == Manager.CurrentFrame;
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// Determines whether the specified button is pressed.
@@ -204,7 +248,10 @@ namespace Velentr.Input.Mouse
         /// <returns>
         ///   <c>true</c> if the specified button is pressed; otherwise, <c>false</c>.
         /// </returns>
-        public abstract bool IsPressed(MouseButton button);
+        public override bool IsPressed(MouseButton button)
+        {
+            return Engine.IsPressed(button);
+        }
 
         /// <summary>
         /// Determines whether the specified button was pressed.
@@ -213,7 +260,10 @@ namespace Velentr.Input.Mouse
         /// <returns>
         ///   <c>true</c> if the specified button was pressed; otherwise, <c>false</c>.
         /// </returns>
-        public abstract bool WasPressed(MouseButton button);
+        public override bool WasPressed(MouseButton button)
+        {
+            return Engine.WasPressed(button);
+        }
 
         /// <summary>
         /// Determines whether the specified button is released.
@@ -222,7 +272,10 @@ namespace Velentr.Input.Mouse
         /// <returns>
         ///   <c>true</c> if the specified button is released; otherwise, <c>false</c>.
         /// </returns>
-        public abstract bool IsReleased(MouseButton button);
+        public override bool IsReleased(MouseButton button)
+        {
+            return Engine.IsReleased(button);
+        }
 
         /// <summary>
         /// Determines whether the specified button was released.
@@ -231,23 +284,9 @@ namespace Velentr.Input.Mouse
         /// <returns>
         ///   <c>true</c> if the specified button was released; otherwise, <c>false</c>.
         /// </returns>
-        public abstract bool WasReleased(MouseButton button);
-
-        /// <summary>
-        /// Checks if the cursor is within the specified boundaries.
-        /// </summary>
-        /// <param name="boundaries">The boundaries.</param>
-        /// <param name="scaleCoordinatesToArea">if set to <c>true</c> [scale coordinates to area].</param>
-        /// <param name="parentBoundaries">The parent boundaries.</param>
-        /// <returns></returns>
-        public bool CursorInBounds(Rectangle boundaries, bool scaleCoordinatesToArea = false, Rectangle? parentBoundaries = null)
+        public override bool WasReleased(MouseButton button)
         {
-            return Helper.CoordinateInRectangle(
-                scaleCoordinatesToArea
-                    ? Helper.ScalePointToChild(CurrentCursorPosition, parentBoundaries ?? Manager.Window.ClientBounds, boundaries)
-                    : CurrentCursorPosition,
-                boundaries
-            );
+            return Engine.WasReleased(button);
         }
 
     }

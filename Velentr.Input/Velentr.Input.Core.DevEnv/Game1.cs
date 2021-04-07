@@ -5,6 +5,7 @@ using Velentr.Input.EventArguments;
 using Velentr.Input.GamePad;
 using Velentr.Input.Keyboard;
 using Velentr.Input.Mouse;
+using Velentr.Input.Voice;
 #if SYSTEM_SPEECH
 using Velentr.Input.Voice.SystemSpeech;
 #endif
@@ -36,8 +37,8 @@ namespace Velentr.Input.DevEnv
 
             manager = new InputManager(this);
 #if SYSTEM_SPEECH
-            manager.Settings.VoiceEngine = new SystemSpeechEngine(manager);
             manager.Setup();
+            manager.SetVoiceService(new DefaultVoiceService(manager), typeof(SystemSpeechEngine), true);
             var condition = new AnyCondition(
                 manager,
                 new KeyboardButtonPressedCondition(manager, Key.Escape),

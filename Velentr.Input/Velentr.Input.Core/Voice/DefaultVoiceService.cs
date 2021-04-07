@@ -5,6 +5,10 @@ using System.Linq;
 namespace Velentr.Input.Voice
 {
 
+    /// <summary>
+    /// The default Voice Engine for Velentr.Input
+    /// </summary>
+    /// <seealso cref="Velentr.Input.Voice.VoiceService" />
     public class DefaultVoiceService : VoiceService
     {
 

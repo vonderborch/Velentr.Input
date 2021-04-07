@@ -3,6 +3,10 @@
 namespace Velentr.Input.Voice
 {
 
+    /// <summary>
+    /// Defines what methods must be available at a minimum to support Voice inputs
+    /// </summary>
+    /// <seealso cref="Velentr.Input.InputService" />
     public abstract class VoiceService : InputService
     {
 

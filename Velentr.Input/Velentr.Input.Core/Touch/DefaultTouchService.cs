@@ -35,7 +35,7 @@ namespace Velentr.Input.Touch
         /// </summary>
         public override void Update()
         {
-            Engine.Update();
+            Engine?.Update();
         }
 
         /// <summary>

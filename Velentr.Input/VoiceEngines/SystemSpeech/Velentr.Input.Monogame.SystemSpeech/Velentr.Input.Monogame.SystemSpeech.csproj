@@ -28,12 +28,12 @@
     <PackageReference Include="Velentr.Collections" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Monogame\Velentr.Input.Monogame\Velentr.Input.Monogame.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\..\..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Monogame\Velentr.Input.Monogame\Velentr.Input.Monogame.csproj" />
   </ItemGroup>
 </Project>

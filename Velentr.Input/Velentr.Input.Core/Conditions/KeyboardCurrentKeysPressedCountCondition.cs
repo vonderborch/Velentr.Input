@@ -32,6 +32,11 @@ namespace Velentr.Input.Conditions
             {
                 throw new Exception("logicValue contains an invalid type for CurrentKeysPressedCount, you must use a ValueType.Int!");
             }
+
+            if (manager.Settings.ThrowWhenCreatingConditionIfNoServiceEnabled && manager.Keyboard == null)
+            {
+                throw new Exception(Constants.NoEngineConfiguredError);
+            }
         }
 
         /// <summary>

@@ -1,75 +1,76 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Velentr.Input.Helpers;
 
 namespace Velentr.Input.Touch
 {
 
+    /// <summary>
+    /// Defines the base methods and properties that are needed for Touch Input support.
+    /// </summary>
+    /// <seealso cref="Velentr.Input.InputEngine" />
     public abstract class TouchEngine : InputEngine
     {
 
+        /// <summary>
+        /// The gesture last consumed
+        /// </summary>
         protected Dictionary<int, ulong> GestureLastConsumed;
 
+        /// <summary>
+        /// The gestures
+        /// </summary>
         protected Dictionary<GestureType, List<Gesture>> Gestures;
 
-        protected TouchEngine(InputManager manager)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TouchEngine"/> class.
+        /// </summary>
+        protected TouchEngine()
         {
-            Manager = manager;
             GestureLastConsumed = new Dictionary<int, ulong>();
         }
 
-        public InputManager Manager { get; }
+        /// <summary>
+        /// Gets or sets a value indicating whether [touch panel connected].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [touch panel connected]; otherwise, <c>false</c>.
+        /// </value>
+        public bool TouchPanelConnected { get; set; }
 
-        public bool TouchPanelConnected { get; protected set; }
+        /// <summary>
+        /// Gets or sets the maximum touch points.
+        /// </summary>
+        /// <value>
+        /// The maximum touch points.
+        /// </value>
+        public int MaxTouchPoints { get; set; }
 
-        public int MaxTouchPoints { get; protected set; }
+        /// <summary>
+        /// Consumes the gesture.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        public abstract void ConsumeGesture(int id);
 
-        public void ConsumeGesture(int id)
-        {
-            GestureLastConsumed[id] = Manager.CurrentFrame;
-        }
+        /// <summary>
+        /// Determines whether [is gesture consumed] [the specified identifier].
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>
+        ///   <c>true</c> if [is gesture consumed] [the specified identifier]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsGestureConsumed(int id);
 
-        public bool IsGestureConsumed(int id)
-        {
-            if (GestureLastConsumed.TryGetValue(id, out var frame))
-            {
-                return frame == Manager.CurrentFrame;
-            }
-
-            return false;
-        }
-
-        public List<Gesture> FetchValidGestures(GestureType type, Rectangle boundaries, bool useRelativeCoordinates, Rectangle parentBoundaries, bool allowedIfConsumed, uint milliSecondsForConditionMet)
-        {
-            var validGestures = new List<Gesture>();
-            if (Gestures.TryGetValue(type, out var potentialGestures))
-            {
-                for (var i = 0; i < potentialGestures.Count; i++)
-                {
-#if MONOGAME
-                    var position = useRelativeCoordinates
-                        ? Helper.ScalePointToChild(potentialGestures[i].Position.ToPoint(), parentBoundaries, boundaries)
-                        : potentialGestures[i].Position.ToPoint();
-#else
-                    var gesturePosition = new Point((int)potentialGestures[i].Position.X, (int)potentialGestures[i].Position.Y);
-
-                    var position = useRelativeCoordinates
-                        ? Helper.ScalePointToChild(gesturePosition, parentBoundaries, boundaries)
-                        : gesturePosition;
-#endif
-
-                    if (Helper.CoordinateInRectangle(position, boundaries))
-                    {
-                        if ((allowedIfConsumed || !IsGestureConsumed(potentialGestures[i].Id)) && potentialGestures[i].TimeStamp.TotalMilliseconds >= milliSecondsForConditionMet)
-                        {
-                            validGestures.Add(potentialGestures[i]);
-                        }
-                    }
-                }
-            }
-
-            return validGestures;
-        }
+        /// <summary>
+        /// Fetches the valid gestures.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="boundaries">The boundaries.</param>
+        /// <param name="useRelativeCoordinates">if set to <c>true</c> [use relative coordinates].</param>
+        /// <param name="parentBoundaries">The parent boundaries.</param>
+        /// <param name="allowedIfConsumed">if set to <c>true</c> [allowed if consumed].</param>
+        /// <param name="milliSecondsForConditionMet">The milli seconds for condition met.</param>
+        /// <returns></returns>
+        public abstract List<Gesture> FetchValidGestures(GestureType type, Rectangle boundaries, bool useRelativeCoordinates, Rectangle parentBoundaries, bool allowedIfConsumed, uint milliSecondsForConditionMet);
 
     }
 
