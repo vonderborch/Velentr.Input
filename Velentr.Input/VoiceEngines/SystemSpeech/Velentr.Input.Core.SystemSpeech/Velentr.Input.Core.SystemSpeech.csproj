@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Velentr.Input.Voice.SystemSpeech</AssemblyName>
+    <RootNamespace>Velentr.Input</RootNamespace>
+    <Authors>Christian Webber</Authors>
+    <Company>Christian Webber</Company>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/vonderborch/Velentr.Input</RepositoryUrl>
+    <PackageTags>Monogame, Input, Keyboard, Mouse, GamePad, Touch, Voice, Velentr.Input, Speech Recognition</PackageTags>
+    <Description>Extends Velentr.Input.Monogame by adding support for speech recognition enabled through the System.Speech library.</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.2.0</Version>
+    <PackageProjectUrl>https://github.com/vonderborch/Velentr.Input</PackageProjectUrl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;MONOGAME</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="System.Speech" Version="5.0.0" />
+    <PackageReference Include="Velentr.Collections" Version="1.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Velentr.Input.Core\Velentr.Input.Core.csproj" />
+  </ItemGroup>
+</Project>

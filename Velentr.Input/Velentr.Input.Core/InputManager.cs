@@ -223,8 +223,8 @@ namespace Velentr.Input
 
             if (enableVoiceService)
             {
-                //_inputServices.Add(Constants.VoiceService, new VoiceService(this));
-                //Voice.Setup();
+                _inputServices.Add(Constants.VoiceService, new VoiceService(this));
+                Voice.Setup();
             }
         }
 

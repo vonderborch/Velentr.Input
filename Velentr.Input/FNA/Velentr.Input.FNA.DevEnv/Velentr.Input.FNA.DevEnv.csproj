@@ -20,6 +20,10 @@
     <None Remove="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Velentr.Input.Core.DevEnv\Game1.cs" Link="Game1.cs" />
+    <Compile Include="..\..\Velentr.Input.Core.DevEnv\Program.cs" Link="Program.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Content\PlayfairDisplayRegular-ywLOY.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -38,7 +42,8 @@
     <PackageReference Include="fnalibs" Version="21.3.5" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\FNA\FNA.csproj" />
+    <ProjectReference Include="..\..\..\FNA\FNA.csproj" />
+    <ProjectReference Include="..\..\VoiceEngines\SystemSpeech\Velentr.Input.FNA.SystemSpeech\Velentr.Input.FNA.SystemSpeech.csproj" />
     <ProjectReference Include="..\Velentr.Input.FNA\Velentr.Input.FNA.csproj" />
   </ItemGroup>
   <ItemGroup>

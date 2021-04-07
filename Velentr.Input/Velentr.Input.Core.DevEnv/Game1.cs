@@ -5,8 +5,11 @@ using Velentr.Input.EventArguments;
 using Velentr.Input.GamePad;
 using Velentr.Input.Keyboard;
 using Velentr.Input.Mouse;
+#if SYSTEM_SPEECH
+using Velentr.Input.Voice.SystemSpeech;
+#endif
 
-namespace Velentr.Input.FNA.DevEnv
+namespace Velentr.Input.DevEnv
 {
     public class Game1 : Game
     {
@@ -32,6 +35,17 @@ namespace Velentr.Input.FNA.DevEnv
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             manager = new InputManager(this);
+#if SYSTEM_SPEECH
+            manager.Settings.VoiceEngine = new SystemSpeechEngine(manager);
+            manager.Setup();
+            var condition = new AnyCondition(
+                manager,
+                new KeyboardButtonPressedCondition(manager, Key.Escape),
+                new GamePadButtonPressedCondition(manager, GamePadButton.Back),
+                new MouseButtonPressedCondition(manager, MouseButton.MiddleButton),
+                new VoiceCommandCondition(manager, "Exit")
+            );
+#else
             manager.Setup();
             var condition = new AnyCondition(
                 manager,
@@ -39,6 +53,7 @@ namespace Velentr.Input.FNA.DevEnv
                 new GamePadButtonPressedCondition(manager, GamePadButton.Back),
                 new MouseButtonPressedCondition(manager, MouseButton.MiddleButton)
             );
+#endif
             condition.Event += ExitGame;
             manager.AddInputConditionToTracking(condition);
         }
@@ -57,6 +72,8 @@ namespace Velentr.Input.FNA.DevEnv
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }

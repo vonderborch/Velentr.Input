@@ -207,12 +207,15 @@ namespace Velentr.Input.Conditions
         /// <param name="newState">if set to <c>true</c> [new state].</param>
         protected void UpdateState(bool newState)
         {
-            ConditionMetState = newState;
-            CurrentStateStart = Manager.CurrentTime;
-
-            if (newState)
+            if (newState != ConditionMetState)
             {
-                LastFireTime = Manager.CurrentTime;
+                ConditionMetState = newState;
+                CurrentStateStart = Manager.CurrentTime;
+
+                if (newState)
+                {
+                    LastFireTime = null;
+                }
             }
         }
 

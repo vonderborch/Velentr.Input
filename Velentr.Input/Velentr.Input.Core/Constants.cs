@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using Velentr.Input.Touch;
+using Velentr.Input.Voice;
 using XnaGestureType = Microsoft.Xna.Framework.Input.Touch.GestureType;
 
 namespace Velentr.Input
@@ -57,6 +58,14 @@ namespace Velentr.Input
         /// The touch engine.
         /// </value>
         public TouchEngines TouchEngine { get; set; } = TouchEngines.XNA_derived;
+
+        /// <summary>
+        /// Gets or sets the voice engine we'll use for voice commands.
+        /// </summary>
+        /// <value>
+        /// The voice engine.
+        /// </value>
+        public VoiceEngine VoiceEngine { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the enabled touch gestures.

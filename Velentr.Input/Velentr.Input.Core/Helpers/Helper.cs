@@ -19,7 +19,28 @@ namespace Velentr.Input.Helpers
 
         public static uint ElapsedMilliSeconds(GameTime startTime, GameTime endTime)
         {
-            return Convert.ToUInt32((endTime.TotalGameTime - startTime.TotalGameTime).TotalMilliseconds);
+            if (startTime == null && endTime == null)
+            {
+                throw new ArgumentException("At least one time must not be null!");
+            }
+            if (startTime == null)
+            {
+                return Convert.ToUInt32(endTime.TotalGameTime.TotalMilliseconds);
+            }
+            if (endTime == null)
+            {
+                return Convert.ToUInt32(startTime.TotalGameTime.TotalMilliseconds);
+            }
+
+            var start = startTime;
+            var end = endTime;
+            if (start.TotalGameTime > end.TotalGameTime)
+            {
+                start = endTime;
+                end = startTime;
+            }
+
+            return Convert.ToUInt32((end.TotalGameTime - start.TotalGameTime).TotalMilliseconds);
         }
 
         public static Point ScalePointToChild(Point coordinates, Rectangle parentArea, Rectangle childArea)

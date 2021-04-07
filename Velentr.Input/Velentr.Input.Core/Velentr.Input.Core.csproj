@@ -3,12 +3,13 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Velentr.Input</RootNamespace>
     <AssemblyName>Velentr.Input</AssemblyName>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="System.Speech" Version="5.0.0" />
     <PackageReference Include="Velentr.Collections" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
