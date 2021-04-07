@@ -13,6 +13,11 @@ namespace Velentr.Input.Conditions.Internal
         protected KeyboardLockStateCondition(InputManager manager, KeyboardLock lockType, bool windowMustBeActive = true, bool consumable = true, bool allowedIfConsumed = false, uint milliSecondsForConditionMet = 0, uint milliSecondsForTimeOut = 0) : base(manager, InputSource.Keyboard, windowMustBeActive, consumable, allowedIfConsumed, milliSecondsForConditionMet, milliSecondsForTimeOut)
         {
             LockType = lockType;
+
+            if (manager.Settings.ThrowWhenCreatingConditionIfNoServiceEnabled && manager.Keyboard == null)
+            {
+                throw new Exception(Constants.NoEngineConfiguredError);
+            }
         }
 
         public KeyboardLock LockType { get; }

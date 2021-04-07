@@ -1,219 +1,218 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework.Input;
+﻿using System.Collections.Generic;
 using Velentr.Input.Enums;
 
 namespace Velentr.Input.Keyboard
 {
 
-    public class KeyboardService : InputService
+    /// <summary>
+    /// Defines what methods must be available at a minimum to support Keyboard inputs
+    /// </summary>
+    /// <seealso cref="Velentr.Input.InputService" />
+    public abstract class KeyboardService : InputService
     {
 
-        internal Dictionary<Key, Keys> KeyMapping = new Dictionary<Key, Keys>(Enum.GetNames(typeof(Key)).Length);
-
-        public ulong CurrentKeysPressedLastConsumed = ulong.MinValue;
-
-        public Dictionary<KeyboardLock, ulong> KeyboardLockLastConsumed = new Dictionary<KeyboardLock, ulong>(Enum.GetNames(typeof(KeyboardLock)).Length);
-
-        public Dictionary<Key, ulong> KeyLastConsumed = new Dictionary<Key, ulong>(Enum.GetNames(typeof(Key)).Length);
-
-        public ulong KeysPressedDeltaLastConsumed = ulong.MinValue;
-
-        public KeyboardService(InputManager inputManager) : base(inputManager)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyboardService"/> class.
+        /// </summary>
+        /// <param name="inputManager">The input manager.</param>
+        protected KeyboardService(InputManager inputManager) : base(inputManager)
         {
             Source = InputSource.Keyboard;
         }
 
-        public KeyboardState PreviousState { get; private set; }
+        /// <summary>
+        /// Gets or sets the engine.
+        /// </summary>
+        /// <value>
+        /// The engine.
+        /// </value>
+        protected KeyboardEngine Engine { get; set; }
 
-        public KeyboardState CurrentState { get; private set; }
+        /// <summary>
+        /// Gets a value indicating whether [current caps lock].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [current caps lock]; otherwise, <c>false</c>.
+        /// </value>
+        public abstract bool CurrentCapsLock { get; }
 
-#if MONOGAME
-#else
-        private bool _currentCapsLock { get; set; }
+        /// <summary>
+        /// Gets a value indicating whether [previous caps lock].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [previous caps lock]; otherwise, <c>false</c>.
+        /// </value>
+        public abstract bool PreviousCapsLock { get; }
 
-        private bool _previousCapsLock { get; set; }
+        /// <summary>
+        /// Gets a value indicating whether [current number lock].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [current number lock]; otherwise, <c>false</c>.
+        /// </value>
+        public abstract bool CurrentNumLock { get; }
 
-        private bool _currentNumLock { get; set; }
+        /// <summary>
+        /// Gets a value indicating whether [previous number lock].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [previous number lock]; otherwise, <c>false</c>.
+        /// </value>
+        public abstract bool PreviousNumLock { get; }
 
-        private bool _previousNumLock { get; set; }
-#endif
+        /// <summary>
+        /// Consumes the key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        public abstract void ConsumeKey(Key key);
 
-        public override void Setup()
-        {
-            PreviousState = Microsoft.Xna.Framework.Input.Keyboard.GetState();
-            CurrentState = Microsoft.Xna.Framework.Input.Keyboard.GetState();
+        /// <summary>
+        /// Determines whether [is key consumed] [the specified key].
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>
+        ///   <c>true</c> if [is key consumed] [the specified key]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsKeyConsumed(Key key);
 
-#if MONOGAME
-#else
-            _previousCapsLock = Console.CapsLock;
-            _currentCapsLock = Console.CapsLock;
-            _previousNumLock = Console.NumberLock;
-            _currentNumLock = Console.NumberLock;
-#endif
+        /// <summary>
+        /// Consumes the lock.
+        /// </summary>
+        /// <param name="lockType">Type of the lock.</param>
+        public abstract void ConsumeLock(KeyboardLock lockType);
 
-            // Update the mapping to match XNA's (right now we've got parity. In the future, this might need to be changed to better handle other keyboards, etc.)
-            foreach (var key in Enum.GetValues(typeof(Key)))
-            {
-                KeyMapping[(Key) key] = (Keys) (int) key;
-            }
-        }
+        /// <summary>
+        /// Determines whether [is lock consumed] [the specified lock type].
+        /// </summary>
+        /// <param name="lockType">Type of the lock.</param>
+        /// <returns>
+        ///   <c>true</c> if [is lock consumed] [the specified lock type]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsLockConsumed(KeyboardLock lockType);
 
-        public override void Update()
-        {
-            PreviousState = CurrentState;
-            CurrentState = Microsoft.Xna.Framework.Input.Keyboard.GetState();
+        /// <summary>
+        /// Consumes the current keys pressed count.
+        /// </summary>
+        public abstract void ConsumeCurrentKeysPressedCount();
 
-#if MONOGAME
-#else
-            _previousCapsLock = _currentCapsLock;
-            _currentCapsLock = Console.CapsLock;
-            _previousNumLock = _currentNumLock;
-            _currentNumLock = Console.NumberLock;
-#endif
-        }
+        /// <summary>
+        /// Determines whether [is current keys pressed count consumed].
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if [is current keys pressed count consumed]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsCurrentKeysPressedCountConsumed();
 
-        public void ConsumeKey(Key key)
-        {
-            KeyLastConsumed[key] = Manager.CurrentFrame;
-        }
+        /// <summary>
+        /// Consumes the keys pressed delta count.
+        /// </summary>
+        public abstract void ConsumeKeysPressedDeltaCount();
 
-        public bool IsKeyConsumed(Key key)
-        {
-            if (KeyLastConsumed.TryGetValue(key, out var frame))
-            {
-                return frame == Manager.CurrentFrame;
-            }
+        /// <summary>
+        /// Determines whether [is keys pressed delta consumed].
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if [is keys pressed delta consumed]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsKeysPressedDeltaConsumed();
 
-            return false;
-        }
+        /// <summary>
+        /// Determines whether [is key pressed] [the specified key].
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>
+        ///   <c>true</c> if [is key pressed] [the specified key]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsKeyPressed(Key key);
 
-        public void ConsumeLock(KeyboardLock lockType)
-        {
-            KeyboardLockLastConsumed[lockType] = Manager.CurrentFrame;
-        }
+        /// <summary>
+        /// Determines whether [was key pressed] [the specified key].
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>
+        ///   <c>true</c> if [was key pressed] [the specified key]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool WasKeyPressed(Key key);
 
-        public bool IsLockConsumed(KeyboardLock lockType)
-        {
-            if (KeyboardLockLastConsumed.TryGetValue(lockType, out var frame))
-            {
-                return frame == Manager.CurrentFrame;
-            }
+        /// <summary>
+        /// Determines whether [is key released] [the specified key].
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>
+        ///   <c>true</c> if [is key released] [the specified key]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsKeyReleased(Key key);
 
-            return false;
-        }
+        /// <summary>
+        /// Determines whether [was key released] [the specified key].
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>
+        ///   <c>true</c> if [was key released] [the specified key]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool WasKeyReleased(Key key);
 
-        public void ConsumeCurrentKeysPressedCount()
-        {
-            CurrentKeysPressedLastConsumed = Manager.CurrentFrame;
-        }
+        /// <summary>
+        /// Determines whether [is caps lock enabled].
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if [is caps lock enabled]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsCapsLockEnabled();
 
-        public bool IsCurrentKeysPressedCountConsumed()
-        {
-            return CurrentKeysPressedLastConsumed == Manager.CurrentFrame;
-        }
+        /// <summary>
+        /// Determines whether [was caps lock enabled].
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if [was caps lock enabled]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool WasCapsLockEnabled();
 
-        public void ConsumeKeysPressedDeltaCount()
-        {
-            KeysPressedDeltaLastConsumed = Manager.CurrentFrame;
-        }
+        /// <summary>
+        /// Determines whether [is number lock enabled].
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if [is number lock enabled]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsNumLockEnabled();
 
-        public bool IsKeysPressedDeltaConsumed()
-        {
-            return KeysPressedDeltaLastConsumed == Manager.CurrentFrame;
-        }
+        /// <summary>
+        /// Determines whether [was number lock enabled].
+        /// </summary>
+        /// <returns>
+        ///   <c>true</c> if [was number lock enabled]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool WasNumLockEnabled();
 
-        public bool IsKeyPressed(Key key)
-        {
-            return CurrentState.IsKeyDown(KeyMapping[key]);
-        }
+        /// <summary>
+        /// Determines the number of keys currently pressed.
+        /// </summary>
+        /// <returns>the number of keys pressed.</returns>
+        public abstract int CurrentKeysPressed();
 
-        public bool WasKeyPressed(Key key)
-        {
-            return PreviousState.IsKeyDown(KeyMapping[key]);
-        }
+        /// <summary>
+        /// Determines the number of keys previously pressed.
+        /// </summary>
+        /// <returns>the number of keys pressed.</returns>
+        public abstract int PreviousKeysPressed();
 
-        public bool IsKeyReleased(Key key)
-        {
-            return CurrentState.IsKeyUp(KeyMapping[key]);
-        }
+        /// <summary>
+        /// Determines the delta between the amount of keys pressed.
+        /// </summary>
+        /// <returns>the delta between the amount of keys pressed.</returns>
+        public abstract int KeysPressedCountDelta();
 
-        public bool WasKeyReleased(Key key)
-        {
-            return PreviousState.IsKeyUp(KeyMapping[key]);
-        }
+        /// <summary>
+        /// Gets the current pressed keys.
+        /// </summary>
+        /// <returns>A list of keys currently pressed.</returns>
+        public abstract List<Key> GetCurrentPressedKeys();
 
-        public bool IsCapsLockEnabled()
-        {
-#if MONOGAME
-            return CurrentState.CapsLock;
-#else
-            return _currentCapsLock;
-#endif
-        }
-
-        public bool WasCapsLockEnabled()
-        {
-#if MONOGAME
-            return PreviousState.CapsLock;
-#else
-            return _previousCapsLock;
-#endif
-        }
-
-        public bool IsNumLockEnabled()
-        {
-#if MONOGAME
-            return CurrentState.NumLock;
-#else
-            return _currentNumLock;
-#endif
-        }
-
-        public bool WasNumLockEnabled()
-        {
-#if MONOGAME
-            return PreviousState.NumLock;
-#else
-            return _previousNumLock;
-#endif
-        }
-
-        public int CurrentKeysPressed()
-        {
-#if MONOGAME
-            return CurrentState.GetPressedKeyCount();
-#else
-            return CurrentState.GetPressedKeys().Length;
-#endif
-        }
-
-        public int PreviousKeysPressed()
-        {
-#if MONOGAME
-            return PreviousState.GetPressedKeyCount();
-#else
-            return PreviousState.GetPressedKeys().Length;
-#endif
-        }
-
-        public int KeysPressedCountDelta()
-        {
-            return CurrentKeysPressed() - PreviousKeysPressed();
-        }
-
-        public List<Key> GetCurrentPressedKeys()
-        {
-            var rawKeys = CurrentState.GetPressedKeys();
-            return rawKeys.Select(t => (Key) (int) t).ToList();
-        }
-
-        public List<Key> GetPreviousPressedKeys()
-        {
-            var rawKeys = PreviousState.GetPressedKeys();
-            return rawKeys.Select(t => (Key) (int) t).ToList();
-        }
+        /// <summary>
+        /// Gets the previous pressed keys.
+        /// </summary>
+        /// <returns>A list of keys previously pressed.</returns>
+        public abstract List<Key> GetPreviousPressedKeys();
 
     }
 

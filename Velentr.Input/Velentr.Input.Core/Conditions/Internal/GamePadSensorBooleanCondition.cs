@@ -21,6 +21,11 @@ namespace Velentr.Input.Conditions.Internal
             {
                 throw new Exception("SensorValueMode must not be GamePadSensorValueMode.SingleGamePad when InputMode is set to GamePadInputMode.SingleGamePad!");
             }
+
+            if (manager.Settings.ThrowWhenCreatingConditionIfNoServiceEnabled && manager.GamePad == null)
+            {
+                throw new Exception(Constants.NoEngineConfiguredError);
+            }
         }
 
         public GamePadSensor Sensor { get; }
@@ -85,9 +90,9 @@ namespace Velentr.Input.Conditions.Internal
                 case GamePadInputMode.SingleGamePad:
                     return InternalCurrent(PlayerIndex);
                 case GamePadInputMode.AnyGamePad:
-                    for (var i = 0; i < Manager.GamePad.ConnectedGamePadIndexes.Count; i++)
+                    for (var i = 0; i < Manager.GamePad.GetConnectedGamePadCount(); i++)
                     {
-                        if (InternalCurrent(Manager.GamePad.ConnectedGamePadIndexes[i]))
+                        if (InternalCurrent(Manager.GamePad.GetIndexForConnectedGamePad(i)))
                         {
                             return true;
                         }
@@ -95,9 +100,9 @@ namespace Velentr.Input.Conditions.Internal
 
                     return false;
                 case GamePadInputMode.AllGamePads:
-                    for (var i = 0; i < Manager.GamePad.ConnectedGamePadIndexes.Count; i++)
+                    for (var i = 0; i < Manager.GamePad.GetConnectedGamePadCount(); i++)
                     {
-                        if (!InternalCurrent(Manager.GamePad.ConnectedGamePadIndexes[i]))
+                        if (!InternalCurrent(Manager.GamePad.GetIndexForConnectedGamePad(i)))
                         {
                             return false;
                         }
@@ -116,9 +121,9 @@ namespace Velentr.Input.Conditions.Internal
                 case GamePadInputMode.SingleGamePad:
                     return InternalPrevious(PlayerIndex);
                 case GamePadInputMode.AnyGamePad:
-                    for (var i = 0; i < Manager.GamePad.ConnectedGamePadIndexes.Count; i++)
+                    for (var i = 0; i < Manager.GamePad.GetConnectedGamePadCount(); i++)
                     {
-                        if (InternalPrevious(Manager.GamePad.ConnectedGamePadIndexes[i]))
+                        if (InternalPrevious(Manager.GamePad.GetIndexForConnectedGamePad(i)))
                         {
                             return true;
                         }
@@ -126,9 +131,9 @@ namespace Velentr.Input.Conditions.Internal
 
                     return false;
                 case GamePadInputMode.AllGamePads:
-                    for (var i = 0; i < Manager.GamePad.ConnectedGamePadIndexes.Count; i++)
+                    for (var i = 0; i < Manager.GamePad.GetConnectedGamePadCount(); i++)
                     {
-                        if (!InternalPrevious(Manager.GamePad.ConnectedGamePadIndexes[i]))
+                        if (!InternalPrevious(Manager.GamePad.GetIndexForConnectedGamePad(i)))
                         {
                             return false;
                         }
@@ -149,9 +154,9 @@ namespace Velentr.Input.Conditions.Internal
                     break;
                 case GamePadInputMode.AnyGamePad:
                 case GamePadInputMode.AllGamePads:
-                    for (var i = 0; i < Manager.GamePad.ConnectedGamePadIndexes.Count; i++)
+                    for (var i = 0; i < Manager.GamePad.GetConnectedGamePadCount(); i++)
                     {
-                        Manager.GamePad.ConsumeSensor(Sensor, Manager.GamePad.ConnectedGamePadIndexes[i]);
+                        Manager.GamePad.ConsumeSensor(Sensor, Manager.GamePad.GetIndexForConnectedGamePad(i));
                     }
 
                     break;
@@ -180,9 +185,9 @@ namespace Velentr.Input.Conditions.Internal
                 case GamePadInputMode.SingleGamePad:
                     return Manager.GamePad.IsSensorConsumed(Sensor, PlayerIndex);
                 case GamePadInputMode.AnyGamePad:
-                    for (var i = 0; i < Manager.GamePad.ConnectedGamePadIndexes.Count; i++)
+                    for (var i = 0; i < Manager.GamePad.GetConnectedGamePadCount(); i++)
                     {
-                        if (Manager.GamePad.IsSensorConsumed(Sensor, Manager.GamePad.ConnectedGamePadIndexes[i]))
+                        if (Manager.GamePad.IsSensorConsumed(Sensor, Manager.GamePad.GetIndexForConnectedGamePad(i)))
                         {
                             return true;
                         }
@@ -190,9 +195,9 @@ namespace Velentr.Input.Conditions.Internal
 
                     return false;
                 case GamePadInputMode.AllGamePads:
-                    for (var i = 0; i < Manager.GamePad.ConnectedGamePadIndexes.Count; i++)
+                    for (var i = 0; i < Manager.GamePad.GetConnectedGamePadCount(); i++)
                     {
-                        if (!Manager.GamePad.IsSensorConsumed(Sensor, Manager.GamePad.ConnectedGamePadIndexes[i]))
+                        if (!Manager.GamePad.IsSensorConsumed(Sensor, Manager.GamePad.GetIndexForConnectedGamePad(i)))
                         {
                             return false;
                         }

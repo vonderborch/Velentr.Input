@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Velentr.Input.Enums;
@@ -7,355 +6,208 @@ using Velentr.Input.Enums;
 namespace Velentr.Input.GamePad
 {
 
-    public class GamePadService : InputService
+    /// <summary>
+    /// Defines what methods must be available at a minimum to support GamePad inputs
+    /// </summary>
+    /// <seealso cref="Velentr.Input.InputService" />
+    public abstract class GamePadService : InputService
     {
 
-        internal Dictionary<GamePadButton, Func<GamePadState, ButtonState>> ButtonMapping = new Dictionary<GamePadButton, Func<GamePadState, ButtonState>>(Enum.GetNames(typeof(GamePadButton)).Length)
-        {
-            {GamePadButton.A, state => state.Buttons.A},
-            {GamePadButton.B, state => state.Buttons.B},
-            {GamePadButton.X, state => state.Buttons.X},
-            {GamePadButton.Y, state => state.Buttons.Y},
-            {GamePadButton.Back, state => state.Buttons.Back},
-            {GamePadButton.Start, state => state.Buttons.Start},
-            {GamePadButton.LeftShoulder, state => state.Buttons.LeftShoulder},
-            {GamePadButton.RightShoulder, state => state.Buttons.RightShoulder},
-            {GamePadButton.LeftStick, state => state.Buttons.LeftStick},
-            {GamePadButton.RightStick, state => state.Buttons.RightStick},
-            {GamePadButton.BigButton, state => state.Buttons.BigButton},
-            {GamePadButton.DPadDown, state => state.DPad.Down},
-            {GamePadButton.DPadLeft, state => state.DPad.Left},
-            {GamePadButton.DPadRight, state => state.DPad.Right},
-            {GamePadButton.DPadUp, state => state.DPad.Up}
-        };
-
-        public VilliGamePad[] GamePads;
-
-        public List<int> ConnectedGamePadIndexes;
-
-        public Dictionary<(int, GamePadButton), ulong> ButtonLastConsumed = new Dictionary<(int, GamePadButton), ulong>();
-
-        public GameTime LastConnectionCheckTime;
-
-        public Dictionary<(int, GamePadSensor), ulong> SensorConsumed = new Dictionary<(int, GamePadSensor), ulong>();
-
-        public GamePadService(InputManager manager) : base(manager)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GamePadService"/> class.
+        /// </summary>
+        /// <param name="manager">The manager.</param>
+        protected GamePadService(InputManager manager) : base(manager)
         {
             Source = InputSource.GamePad;
         }
 
-#if MONOGAME
-        public int MaximumGamePads => Microsoft.Xna.Framework.Input.GamePad.MaximumGamePadCount;
+        /// <summary>
+        /// Gets or sets the engine.
+        /// </summary>
+        /// <value>
+        /// The engine.
+        /// </value>
+        public GamePadEngine Engine { get; protected set; }
 
-        public int HighestGamePadIndex => Microsoft.Xna.Framework.Input.GamePad.MaximumGamePadCount - 1;
-#else
-        public int MaximumGamePads => 4;
+        /// <summary>
+        /// Gets the maximum game pads.
+        /// </summary>
+        /// <value>
+        /// The maximum game pads.
+        /// </value>
+        public abstract int MaximumGamePads { get; }
 
-        public int HighestGamePadIndex => 3;
-#endif
+        /// <summary>
+        /// Gets the index of the highest game pad.
+        /// </summary>
+        /// <value>
+        /// The index of the highest game pad.
+        /// </value>
+        public abstract int HighestGamePadIndex { get; }
 
-        public override void Setup()
-        {
-            GamePads = new VilliGamePad[MaximumGamePads];
-            ConnectedGamePadIndexes = new List<int>(MaximumGamePads);
+        /// <summary>
+        /// Gets the index for connected game pad.
+        /// </summary>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>the index.</returns>
+        public abstract int GetIndexForConnectedGamePad(int playerIndex);
 
-            for (var i = 0; i < MaximumGamePads; i++)
-            {
-#if MONOGAME
-                GamePads[i] = new VilliGamePad
-                {
-                    PlayerIndex = i,
-                    PreviousState = GamePadState.Default,
-                    CurrentState = GamePadState.Default,
-                    Capabilities = Microsoft.Xna.Framework.Input.GamePad.GetCapabilities(i),
-                    DeadZone = Constants.Settings.DefaultGamePadDeadZone
-                };
-#else
-                GamePads[i] = new VilliGamePad
-                {
-                    PlayerIndex = i,
-                    PreviousState = Microsoft.Xna.Framework.Input.GamePad.GetState(IntIndexToPlayerIndex(i)),
-                    CurrentState = Microsoft.Xna.Framework.Input.GamePad.GetState(IntIndexToPlayerIndex(i)),
-                    Capabilities = Microsoft.Xna.Framework.Input.GamePad.GetCapabilities(IntIndexToPlayerIndex(i)),
-                    DeadZone = Constants.Settings.DefaultGamePadDeadZone
-                };
-#endif
+        /// <summary>
+        /// Sets the game pad dead zone.
+        /// </summary>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <param name="deadZone">The dead zone.</param>
+        public abstract void SetGamePadDeadZone(int playerIndex, GamePadDeadZone deadZone);
 
-                if (GamePads[i].IsConnected)
-                {
-                    ConnectedGamePadIndexes.Add(i);
-                }
-            }
-        }
+        /// <summary>
+        /// Consumes the button.
+        /// </summary>
+        /// <param name="button">The button.</param>
+        /// <param name="playerIndex">Index of the player.</param>
+        public abstract void ConsumeButton(GamePadButton button, int playerIndex = 0);
 
-        public void CheckForConnectedGamePads()
-        {
-            ConnectedGamePadIndexes.Clear();
-            for (var i = 0; i < MaximumGamePads; i++)
-            {
-                GamePads[i].PreviousState = GamePads[i].CurrentState;
-#if MONOGAME
-                GamePads[i].CurrentState = Microsoft.Xna.Framework.Input.GamePad.GetState(i, GamePads[i].DeadZone);
-                GamePads[i].Capabilities = Microsoft.Xna.Framework.Input.GamePad.GetCapabilities(i);
-#else
-                GamePads[i].CurrentState = Microsoft.Xna.Framework.Input.GamePad.GetState(IntIndexToPlayerIndex(i), GamePads[i].DeadZone);
-                GamePads[i].Capabilities = Microsoft.Xna.Framework.Input.GamePad.GetCapabilities(IntIndexToPlayerIndex(i));
-#endif
-            }
+        /// <summary>
+        /// Consumes the sensor.
+        /// </summary>
+        /// <param name="sensor">The sensor.</param>
+        /// <param name="playerIndex">Index of the player.</param>
+        public abstract void ConsumeSensor(GamePadSensor sensor, int playerIndex = 0);
 
-            LastConnectionCheckTime = Manager.CurrentTime;
-        }
+        /// <summary>
+        /// Determines whether [is button consumed] [the specified button].
+        /// </summary>
+        /// <param name="button">The button.</param>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>
+        ///   <c>true</c> if [is button consumed] [the specified button]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsButtonConsumed(GamePadButton button, int playerIndex = 0);
 
-        public override void Update()
-        {
-            // check if we need to check for if any controllers have been connected to the system
-            if (Constants.Settings.SecondsBetweenGamePadConnectionCheck > 0)
-            {
-                var elapsedSecondsBetweenChecks = LastConnectionCheckTime == null
-                    ? Constants.Settings.SecondsBetweenGamePadConnectionCheck
-                    : (Manager.CurrentTime.TotalGameTime - LastConnectionCheckTime.TotalGameTime).TotalSeconds;
+        /// <summary>
+        /// Determines whether [is sensor consumed] [the specified sensor].
+        /// </summary>
+        /// <param name="sensor">The sensor.</param>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>
+        ///   <c>true</c> if [is sensor consumed] [the specified sensor]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsSensorConsumed(GamePadSensor sensor, int playerIndex = 0);
 
-                if (elapsedSecondsBetweenChecks >= Constants.Settings.SecondsBetweenGamePadConnectionCheck)
-                {
-                    ConnectedGamePadIndexes.Clear();
-                    for (var i = 0; i < GamePads.Length; i++)
-                    {
-#if MONOGAME
-                        GamePads[i].Capabilities = Microsoft.Xna.Framework.Input.GamePad.GetCapabilities(i);
-#else
-                        GamePads[i].Capabilities = Microsoft.Xna.Framework.Input.GamePad.GetCapabilities(IntIndexToPlayerIndex(i));
-#endif
+        /// <summary>
+        /// Sets the vibration.
+        /// </summary>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <param name="leftMotor">The left motor.</param>
+        /// <param name="rightMotor">The right motor.</param>
+        /// <returns></returns>
+        public abstract bool SetVibration(int playerIndex, float leftMotor, float rightMotor);
 
-                        if (GamePads[i].IsConnected)
-                        {
-                            ConnectedGamePadIndexes.Add(i);
-                        }
-                    }
-                }
-            }
+        /// <summary>
+        /// Determines whether [is button pressed] [the specified button].
+        /// </summary>
+        /// <param name="button">The button.</param>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>
+        ///   <c>true</c> if [is button pressed] [the specified button]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsButtonPressed(GamePadButton button, int playerIndex);
 
-            // update controller state
-            for (var i = 0; i < GamePads.Length; i++)
-            {
-                if (GamePads[i].IsConnected)
-                {
-                    GamePads[i].PreviousState = GamePads[i].CurrentState;
-#if MONOGAME
-                    GamePads[i].CurrentState = Microsoft.Xna.Framework.Input.GamePad.GetState(i, GamePads[i].DeadZone);
-#else
-                    GamePads[i].CurrentState = Microsoft.Xna.Framework.Input.GamePad.GetState(IntIndexToPlayerIndex(i), GamePads[i].DeadZone);
-#endif
-                }
-            }
-        }
+        /// <summary>
+        /// Determines whether [was button pressed] [the specified button].
+        /// </summary>
+        /// <param name="button">The button.</param>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>
+        ///   <c>true</c> if [was button pressed] [the specified button]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool WasButtonPressed(GamePadButton button, int playerIndex);
 
-        public static int PlayerIndexToIntIndex(PlayerIndex index)
-        {
-            switch (index)
-            {
-                case PlayerIndex.One:
-                    return 0;
-                case PlayerIndex.Two:
-                    return 1;
-                case PlayerIndex.Three:
-                    return 2;
-                case PlayerIndex.Four:
-                    return 3;
-                default:
-                    throw new Exception("Invalid PlayerIndex!");
-            }
-        }
+        /// <summary>
+        /// Determines whether [is button released] [the specified button].
+        /// </summary>
+        /// <param name="button">The button.</param>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>
+        ///   <c>true</c> if [is button released] [the specified button]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsButtonReleased(GamePadButton button, int playerIndex);
 
-        public static PlayerIndex IntIndexToPlayerIndex(int index)
-        {
-            switch (index)
-            {
-                case 0:
-                    return PlayerIndex.One;
-                case 1:
-                    return PlayerIndex.Two;
-                case 2:
-                    return PlayerIndex.Three;
-                case 3:
-                    return PlayerIndex.Four;
-                default:
-                    throw new Exception("Invalid PlayerIndex!");
-            }
-        }
+        /// <summary>
+        /// Determines whether [was button released] [the specified button].
+        /// </summary>
+        /// <param name="button">The button.</param>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>
+        ///   <c>true</c> if [was button released] [the specified button]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool WasButtonReleased(GamePadButton button, int playerIndex);
 
-        public void ValidatePlayerIndex(int playerIndex)
-        {
-            if (playerIndex < 0 || playerIndex > HighestGamePadIndex)
-            {
-                throw new ArgumentOutOfRangeException(Constants.PlayerIndexExceptionMessage);
-            }
-        }
+        /// <summary>
+        /// Determines the current left stick position.
+        /// </summary>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>the stick position.</returns>
+        public abstract Vector2 CurrentLeftStick(int playerIndex);
 
+        /// <summary>
+        /// Determines the previous left stick position.
+        /// </summary>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>the stick position.</returns>
+        public abstract Vector2 PreviousLeftStick(int playerIndex);
 
-        public void SetGamePadDeadZone(int playerIndex, GamePadDeadZone deadZone)
-        {
-            ValidatePlayerIndex(playerIndex);
+        /// <summary>
+        /// Determines the current right stick position.
+        /// </summary>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>the stick position.</returns>
+        public abstract Vector2 CurrentRightStick(int playerIndex);
 
-            GamePads[playerIndex].DeadZone = deadZone;
-        }
+        /// <summary>
+        /// Determines the previous right stick position.
+        /// </summary>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>the stick position.</returns>
+        public abstract Vector2 PreviousRightStick(int playerIndex);
 
+        /// <summary>
+        /// Determines the current left trigger position.
+        /// </summary>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>the trigger position.</returns>
+        public abstract float CurrentLeftTrigger(int playerIndex);
 
-        public void ConsumeButton(GamePadButton button, int playerIndex = 0)
-        {
-            ValidatePlayerIndex(playerIndex);
+        /// <summary>
+        /// Determines the previous left trigger position.
+        /// </summary>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>the trigger position.</returns>
+        public abstract float PreviousLeftTrigger(int playerIndex);
 
-            ButtonLastConsumed[(playerIndex, button)] = Manager.CurrentFrame;
-        }
+        /// <summary>
+        /// Determines the current right trigger position.
+        /// </summary>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>the trigger position.</returns>
+        public abstract float CurrentRightTrigger(int playerIndex);
 
-        public void ConsumeSensor(GamePadSensor sensor, int playerIndex = 0)
-        {
-            ValidatePlayerIndex(playerIndex);
+        /// <summary>
+        /// Determines the previous right trigger position.
+        /// </summary>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>the trigger position.</returns>
+        public abstract float PreviousRightTrigger(int playerIndex);
 
-            SensorConsumed[(playerIndex, sensor)] = Manager.CurrentFrame;
-        }
-
-        public bool IsButtonConsumed(GamePadButton button, int playerIndex = 0)
-        {
-            ValidatePlayerIndex(playerIndex);
-
-            if (!GamePads[playerIndex].IsConnected)
-            {
-                return false;
-            }
-
-            if (ButtonLastConsumed.TryGetValue((playerIndex, button), out var frame))
-            {
-                return frame == Manager.CurrentFrame;
-            }
-
-            return false;
-        }
-
-        public bool IsSensorConsumed(GamePadSensor sensor, int playerIndex = 0)
-        {
-            ValidatePlayerIndex(playerIndex);
-
-            if (!GamePads[playerIndex].IsConnected)
-            {
-                return false;
-            }
-
-            if (SensorConsumed.TryGetValue((playerIndex, sensor), out var frame))
-            {
-                return frame == Manager.CurrentFrame;
-            }
-
-            return false;
-        }
-
-
-        public bool SetVibration(int playerIndex, float leftMotor, float rightMotor)
-        {
-            ValidatePlayerIndex(playerIndex);
-
-            if (!GamePads[playerIndex].IsConnected)
-            {
-                return false;
-            }
-
-            return Microsoft.Xna.Framework.Input.GamePad.SetVibration(IntIndexToPlayerIndex(playerIndex), leftMotor, rightMotor);
-        }
-
-
-        public bool IsButtonPressed(GamePadButton button, int playerIndex)
-        {
-            ValidatePlayerIndex(playerIndex);
-
-            return ButtonMapping[button](GamePads[playerIndex].CurrentState) == ButtonState.Pressed;
-        }
-
-        public bool WasButtonPressed(GamePadButton button, int playerIndex)
-        {
-            ValidatePlayerIndex(playerIndex);
-
-            return ButtonMapping[button](GamePads[playerIndex].PreviousState) == ButtonState.Pressed;
-        }
-
-        public bool IsButtonReleased(GamePadButton button, int playerIndex)
-        {
-            ValidatePlayerIndex(playerIndex);
-
-            return ButtonMapping[button](GamePads[playerIndex].CurrentState) == ButtonState.Released;
-        }
-
-        public bool WasButtonReleased(GamePadButton button, int playerIndex)
-        {
-            ValidatePlayerIndex(playerIndex);
-
-            return ButtonMapping[button](GamePads[playerIndex].PreviousState) == ButtonState.Released;
-        }
-
-        private bool InternalIsButtonHelper(GamePadButton button, int playerIndex, ButtonState state)
-        {
-            ValidatePlayerIndex(playerIndex);
-
-            return ButtonMapping[button](GamePads[playerIndex].CurrentState) == state;
-        }
-
-        public Vector2 CurrentLeftStick(int playerIndex)
-        {
-            ValidatePlayerIndex(playerIndex);
-
-            return GamePads[playerIndex].CurrentState.ThumbSticks.Left;
-        }
-
-        public Vector2 PreviousLeftStick(int playerIndex)
-        {
-            ValidatePlayerIndex(playerIndex);
-
-            return GamePads[playerIndex].PreviousState.ThumbSticks.Left;
-        }
-
-        public Vector2 CurrentRightStick(int playerIndex)
-        {
-            ValidatePlayerIndex(playerIndex);
-
-            return GamePads[playerIndex].CurrentState.ThumbSticks.Right;
-        }
-
-        public Vector2 PreviousRightStick(int playerIndex)
-        {
-            ValidatePlayerIndex(playerIndex);
-
-            return GamePads[playerIndex].PreviousState.ThumbSticks.Right;
-        }
-
-        public float CurrentLeftTrigger(int playerIndex)
-        {
-            ValidatePlayerIndex(playerIndex);
-
-            return GamePads[playerIndex].CurrentState.Triggers.Left;
-        }
-
-        public float PreviousLeftTrigger(int playerIndex)
-        {
-            ValidatePlayerIndex(playerIndex);
-
-            return GamePads[playerIndex].PreviousState.Triggers.Left;
-        }
-
-        public float CurrentRightTrigger(int playerIndex)
-        {
-            ValidatePlayerIndex(playerIndex);
-
-            return GamePads[playerIndex].CurrentState.Triggers.Right;
-        }
-
-        public float PreviousRightTrigger(int playerIndex)
-        {
-            ValidatePlayerIndex(playerIndex);
-
-            return GamePads[playerIndex].PreviousState.Triggers.Right;
-        }
-
+        /// <summary>
+        /// Determines whether the specified sensor has moved.
+        /// </summary>
+        /// <param name="sensor">The sensor.</param>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>Whether the sensor moved.</returns>
         public bool SensorMoved(GamePadSensor sensor, int playerIndex)
         {
-            ValidatePlayerIndex(playerIndex);
+            GamePadHelpers.ValidatePlayerIndex(playerIndex, HighestGamePadIndex);
 
             switch (sensor)
             {
@@ -372,37 +224,78 @@ namespace Velentr.Input.GamePad
             return false;
         }
 
+        /// <summary>
+        /// Determines the delta for the left stick.
+        /// </summary>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>the delta.</returns>
         public Vector2 LeftStickDelta(int playerIndex)
         {
-            ValidatePlayerIndex(playerIndex);
+            GamePadHelpers.ValidatePlayerIndex(playerIndex, HighestGamePadIndex);
 
-            return GamePads[playerIndex].CurrentState.ThumbSticks.Left - GamePads[playerIndex].PreviousState.ThumbSticks.Left;
+            return CurrentLeftStick(playerIndex) - PreviousLeftStick(playerIndex);
         }
 
+        /// <summary>
+        /// Determines the delta for the right stick.
+        /// </summary>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>the delta.</returns>
         public Vector2 RightStickDelta(int playerIndex)
         {
-            ValidatePlayerIndex(playerIndex);
+            GamePadHelpers.ValidatePlayerIndex(playerIndex, HighestGamePadIndex);
 
-            return GamePads[playerIndex].CurrentState.ThumbSticks.Right - GamePads[playerIndex].PreviousState.ThumbSticks.Right;
+            return CurrentRightStick(playerIndex) - PreviousRightStick(playerIndex);
         }
 
+        /// <summary>
+        /// Determines the delta for the left trigger.
+        /// </summary>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>the delta.</returns>
         public float LeftTriggerDelta(int playerIndex)
         {
-            ValidatePlayerIndex(playerIndex);
+            GamePadHelpers.ValidatePlayerIndex(playerIndex, HighestGamePadIndex);
 
-            return GamePads[playerIndex].CurrentState.Triggers.Left - GamePads[playerIndex].PreviousState.Triggers.Left;
+            return CurrentLeftTrigger(playerIndex) - PreviousLeftTrigger(playerIndex);
         }
 
+        /// <summary>
+        /// Determines the delta for the right trigger.
+        /// </summary>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <returns>the delta.</returns>
         public float RightTriggerDelta(int playerIndex)
         {
-            ValidatePlayerIndex(playerIndex);
+            GamePadHelpers.ValidatePlayerIndex(playerIndex, HighestGamePadIndex);
 
-            return GamePads[playerIndex].CurrentState.Triggers.Right - GamePads[playerIndex].PreviousState.Triggers.Right;
+            return CurrentRightTrigger(playerIndex) - PreviousRightTrigger(playerIndex);
         }
 
+        /// <summary>
+        /// Gets the first index of the connected game pad.
+        /// </summary>
+        /// <returns></returns>
+        public abstract int GetFirstConnectedGamePadIndex();
+
+        /// <summary>
+        /// Gets the connected game pad count.
+        /// </summary>
+        /// <returns></returns>
+        public abstract int GetConnectedGamePadCount();
+
+        /// <summary>
+        /// Gets the stick delta.
+        /// </summary>
+        /// <param name="sensor">The sensor.</param>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <param name="inputMode">The input mode.</param>
+        /// <param name="valueConditionMode">The value condition mode.</param>
+        /// <returns>the stick delta</returns>
+        /// <exception cref="System.Exception"></exception>
         public Vector2 GetStickDelta(GamePadSensor sensor, int playerIndex, GamePadInputMode inputMode, GamePadSensorValueMode valueConditionMode)
         {
-            ValidatePlayerIndex(playerIndex);
+            GamePadHelpers.ValidatePlayerIndex(playerIndex, HighestGamePadIndex);
 
             if (sensor == GamePadSensor.LeftTrigger || sensor == GamePadSensor.RightTrigger)
             {
@@ -429,16 +322,16 @@ namespace Velentr.Input.GamePad
                 {
                     case GamePadSensorValueMode.First:
                         output = sensor == GamePadSensor.LeftStick
-                            ? LeftStickDelta(ConnectedGamePadIndexes[0])
-                            : RightStickDelta(ConnectedGamePadIndexes[0]);
+                            ? LeftStickDelta(GetFirstConnectedGamePadIndex())
+                            : RightStickDelta(GetFirstConnectedGamePadIndex());
                         break;
                     case GamePadSensorValueMode.Last:
                         output = sensor == GamePadSensor.LeftStick
-                            ? LeftStickDelta(ConnectedGamePadIndexes.Count - 1)
-                            : RightStickDelta(ConnectedGamePadIndexes.Count - 1);
+                            ? LeftStickDelta(GetConnectedGamePadCount() - 1)
+                            : RightStickDelta(GetConnectedGamePadCount() - 1);
                         break;
                     default:
-                        for (var i = 0; i < ConnectedGamePadIndexes.Count; i++)
+                        for (var i = 0; i < GetConnectedGamePadCount(); i++)
                         {
                             Vector2 indexValue;
                             switch (valueConditionMode)
@@ -515,7 +408,7 @@ namespace Velentr.Input.GamePad
 
                 if (valueConditionMode == GamePadSensorValueMode.Average)
                 {
-                    output /= ConnectedGamePadIndexes.Count;
+                    output /= GetConnectedGamePadCount();
                 }
 
                 return output;
@@ -524,9 +417,18 @@ namespace Velentr.Input.GamePad
             return Vector2.Zero;
         }
 
+        /// <summary>
+        /// Gets the trigger delta.
+        /// </summary>
+        /// <param name="sensor">The sensor.</param>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <param name="inputMode">The input mode.</param>
+        /// <param name="valueConditionMode">The value condition mode.</param>
+        /// <returns>the trigger delta</returns>
+        /// <exception cref="System.Exception"></exception>
         public float GetTriggerDelta(GamePadSensor sensor, int playerIndex, GamePadInputMode inputMode, GamePadSensorValueMode valueConditionMode)
         {
-            ValidatePlayerIndex(playerIndex);
+            GamePadHelpers.ValidatePlayerIndex(playerIndex, HighestGamePadIndex);
 
             if (sensor == GamePadSensor.LeftStick || sensor == GamePadSensor.RightStick)
             {
@@ -553,16 +455,16 @@ namespace Velentr.Input.GamePad
                 {
                     case GamePadSensorValueMode.First:
                         output = sensor == GamePadSensor.LeftTrigger
-                            ? LeftTriggerDelta(ConnectedGamePadIndexes[0])
-                            : RightTriggerDelta(ConnectedGamePadIndexes[0]);
+                            ? LeftTriggerDelta(GetFirstConnectedGamePadIndex())
+                            : RightTriggerDelta(GetFirstConnectedGamePadIndex());
                         break;
                     case GamePadSensorValueMode.Last:
                         output = sensor == GamePadSensor.LeftTrigger
-                            ? LeftTriggerDelta(ConnectedGamePadIndexes.Count - 1)
-                            : RightTriggerDelta(ConnectedGamePadIndexes.Count - 1);
+                            ? LeftTriggerDelta(GetConnectedGamePadCount() - 1)
+                            : RightTriggerDelta(GetConnectedGamePadCount() - 1);
                         break;
                     default:
-                        for (var i = 0; i < ConnectedGamePadIndexes.Count; i++)
+                        for (var i = 0; i < GetConnectedGamePadCount(); i++)
                         {
                             float indexValue;
                             switch (valueConditionMode)
@@ -615,7 +517,7 @@ namespace Velentr.Input.GamePad
 
                 if (valueConditionMode == GamePadSensorValueMode.Average)
                 {
-                    output /= ConnectedGamePadIndexes.Count;
+                    output /= GetConnectedGamePadCount();
                 }
 
                 return output;
@@ -624,9 +526,18 @@ namespace Velentr.Input.GamePad
             return float.MinValue;
         }
 
+        /// <summary>
+        /// Gets the stick position.
+        /// </summary>
+        /// <param name="sensor">The sensor.</param>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <param name="inputMode">The input mode.</param>
+        /// <param name="valueConditionMode">The value condition mode.</param>
+        /// <returns>the stick position</returns>
+        /// <exception cref="System.Exception"></exception>
         public Vector2 GetStickPosition(GamePadSensor sensor, int playerIndex, GamePadInputMode inputMode, GamePadSensorValueMode valueConditionMode)
         {
-            ValidatePlayerIndex(playerIndex);
+            GamePadHelpers.ValidatePlayerIndex(playerIndex, HighestGamePadIndex);
 
             if (sensor == GamePadSensor.LeftTrigger || sensor == GamePadSensor.RightTrigger)
             {
@@ -653,16 +564,16 @@ namespace Velentr.Input.GamePad
                 {
                     case GamePadSensorValueMode.First:
                         output = sensor == GamePadSensor.LeftStick
-                            ? CurrentLeftStick(ConnectedGamePadIndexes[0])
-                            : CurrentRightStick(ConnectedGamePadIndexes[0]);
+                            ? CurrentLeftStick(GetFirstConnectedGamePadIndex())
+                            : CurrentRightStick(GetFirstConnectedGamePadIndex());
                         break;
                     case GamePadSensorValueMode.Last:
                         output = sensor == GamePadSensor.LeftStick
-                            ? CurrentLeftStick(ConnectedGamePadIndexes.Count - 1)
-                            : CurrentRightStick(ConnectedGamePadIndexes.Count - 1);
+                            ? CurrentLeftStick(GetConnectedGamePadCount() - 1)
+                            : CurrentRightStick(GetConnectedGamePadCount() - 1);
                         break;
                     default:
-                        for (var i = 0; i < ConnectedGamePadIndexes.Count; i++)
+                        for (var i = 0; i < GetConnectedGamePadCount(); i++)
                         {
                             Vector2 indexValue;
                             switch (valueConditionMode)
@@ -739,7 +650,7 @@ namespace Velentr.Input.GamePad
 
                 if (valueConditionMode == GamePadSensorValueMode.Average)
                 {
-                    output /= ConnectedGamePadIndexes.Count;
+                    output /= GetConnectedGamePadCount();
                 }
 
                 return output;
@@ -748,9 +659,18 @@ namespace Velentr.Input.GamePad
             return Vector2.Zero;
         }
 
+        /// <summary>
+        /// Gets the trigger position.
+        /// </summary>
+        /// <param name="sensor">The sensor.</param>
+        /// <param name="playerIndex">Index of the player.</param>
+        /// <param name="inputMode">The input mode.</param>
+        /// <param name="valueConditionMode">The value condition mode.</param>
+        /// <returns>the trigger position</returns>
+        /// <exception cref="System.Exception"></exception>
         public float GetTriggerPosition(GamePadSensor sensor, int playerIndex, GamePadInputMode inputMode, GamePadSensorValueMode valueConditionMode)
         {
-            ValidatePlayerIndex(playerIndex);
+            GamePadHelpers.ValidatePlayerIndex(playerIndex, HighestGamePadIndex);
 
             if (sensor == GamePadSensor.LeftStick || sensor == GamePadSensor.RightStick)
             {
@@ -777,16 +697,16 @@ namespace Velentr.Input.GamePad
                 {
                     case GamePadSensorValueMode.First:
                         output = sensor == GamePadSensor.LeftTrigger
-                            ? CurrentLeftTrigger(ConnectedGamePadIndexes[0])
-                            : CurrentRightTrigger(ConnectedGamePadIndexes[0]);
+                            ? CurrentLeftTrigger(GetFirstConnectedGamePadIndex())
+                            : CurrentRightTrigger(GetFirstConnectedGamePadIndex());
                         break;
                     case GamePadSensorValueMode.Last:
                         output = sensor == GamePadSensor.LeftTrigger
-                            ? LeftTriggerDelta(ConnectedGamePadIndexes.Count - 1)
-                            : CurrentRightTrigger(ConnectedGamePadIndexes.Count - 1);
+                            ? LeftTriggerDelta(GetConnectedGamePadCount() - 1)
+                            : CurrentRightTrigger(GetConnectedGamePadCount() - 1);
                         break;
                     default:
-                        for (var i = 0; i < ConnectedGamePadIndexes.Count; i++)
+                        for (var i = 0; i < GetConnectedGamePadCount(); i++)
                         {
                             float indexValue;
                             switch (valueConditionMode)
@@ -839,7 +759,7 @@ namespace Velentr.Input.GamePad
 
                 if (valueConditionMode == GamePadSensorValueMode.Average)
                 {
-                    output /= ConnectedGamePadIndexes.Count;
+                    output /= GetConnectedGamePadCount();
                 }
 
                 return output;

@@ -83,6 +83,11 @@ namespace Velentr.Input.Conditions
 
                     break;
             }
+
+            if (manager.Settings.ThrowWhenCreatingConditionIfNoServiceEnabled && manager.Mouse == null)
+            {
+                throw new Exception(Constants.NoEngineConfiguredError);
+            }
         }
 
         /// <summary>

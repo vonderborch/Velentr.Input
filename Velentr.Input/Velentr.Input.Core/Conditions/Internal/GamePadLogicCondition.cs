@@ -33,6 +33,11 @@ namespace Velentr.Input.Conditions.Internal
             {
                 throw new Exception("logicValue contains an invalid type for GamePadSensor.LeftTrigger and GamePadSensor.RightTrigger, you must use a ValueType.Float!");
             }
+
+            if (manager.Settings.ThrowWhenCreatingConditionIfNoServiceEnabled && manager.GamePad == null)
+            {
+                throw new Exception(Constants.NoEngineConfiguredError);
+            }
         }
 
         public GamePadSensor Sensor { get; }
@@ -105,9 +110,9 @@ namespace Velentr.Input.Conditions.Internal
                     break;
                 case GamePadInputMode.AnyGamePad:
                 case GamePadInputMode.AllGamePads:
-                    for (var i = 0; i < Manager.GamePad.ConnectedGamePadIndexes.Count; i++)
+                    for (var i = 0; i < Manager.GamePad.GetConnectedGamePadCount(); i++)
                     {
-                        Manager.GamePad.ConsumeSensor(Sensor, Manager.GamePad.ConnectedGamePadIndexes[i]);
+                        Manager.GamePad.ConsumeSensor(Sensor, Manager.GamePad.GetIndexForConnectedGamePad(i));
                     }
 
                     break;
@@ -121,9 +126,9 @@ namespace Velentr.Input.Conditions.Internal
                 case GamePadInputMode.SingleGamePad:
                     return Manager.GamePad.IsSensorConsumed(Sensor, PlayerIndex);
                 case GamePadInputMode.AnyGamePad:
-                    for (var i = 0; i < Manager.GamePad.ConnectedGamePadIndexes.Count; i++)
+                    for (var i = 0; i < Manager.GamePad.GetConnectedGamePadCount(); i++)
                     {
-                        if (Manager.GamePad.IsSensorConsumed(Sensor, Manager.GamePad.ConnectedGamePadIndexes[i]))
+                        if (Manager.GamePad.IsSensorConsumed(Sensor, Manager.GamePad.GetIndexForConnectedGamePad(i)))
                         {
                             return true;
                         }
@@ -131,9 +136,9 @@ namespace Velentr.Input.Conditions.Internal
 
                     return false;
                 case GamePadInputMode.AllGamePads:
-                    for (var i = 0; i < Manager.GamePad.ConnectedGamePadIndexes.Count; i++)
+                    for (var i = 0; i < Manager.GamePad.GetConnectedGamePadCount(); i++)
                     {
-                        if (!Manager.GamePad.IsSensorConsumed(Sensor, Manager.GamePad.ConnectedGamePadIndexes[i]))
+                        if (!Manager.GamePad.IsSensorConsumed(Sensor, Manager.GamePad.GetIndexForConnectedGamePad(i)))
                         {
                             return false;
                         }

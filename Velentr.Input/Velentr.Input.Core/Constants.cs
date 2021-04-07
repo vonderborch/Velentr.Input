@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using Velentr.Input.Touch;
+using Velentr.Input.Voice;
 using XnaGestureType = Microsoft.Xna.Framework.Input.Touch.GestureType;
 
 namespace Velentr.Input
@@ -21,6 +22,11 @@ namespace Velentr.Input
         /// The invalid game pad trigger sensor exception message
         /// </summary>
         public const string InvalidGamePadTriggerSensor = "Invalid sensor! Must use GamePadSensor.LeftTrigger or GamePadSensor.RightTrigger!";
+
+        /// <summary>
+        /// The invalid game pad trigger sensor exception message
+        /// </summary>
+        public const string NoEngineConfiguredError = "No engine is configured that supports the Condition!";
 
         static Constants() { }
 
@@ -51,14 +57,6 @@ namespace Velentr.Input
         public int SecondsBetweenGamePadConnectionCheck { get; set; } = 15;
 
         /// <summary>
-        /// Gets or sets the default touch engine
-        /// </summary>
-        /// <value>
-        /// The touch engine.
-        /// </value>
-        public TouchEngines TouchEngine { get; set; } = TouchEngines.XNA_derived;
-
-        /// <summary>
         /// Gets or sets the enabled touch gestures.
         /// </summary>
         /// <value>
@@ -82,14 +80,37 @@ namespace Velentr.Input
         /// </value>
         public double MaxDoubleDifference { get; set; } = 0.0000001d;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to throw a new exception when creating a new InputCondition if the related service doesn't exist.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [throw when creating condition if no service enabled]; otherwise, <c>false</c>.
+        /// </value>
+        public bool ThrowWhenCreatingConditionIfNoServiceEnabled { get; set; } = true;
+
+        /// <summary>
+        /// The game pad service name
+        /// </summary>
         public static string GamePadService = "GAMEPAD_SERVICE";
 
+        /// <summary>
+        /// The keyboard service name
+        /// </summary>
         public static string KeyboardService = "KEYBOARD_SERVICE";
 
+        /// <summary>
+        /// The mouse service name
+        /// </summary>
         public static string MouseService = "MOUSE_SERVICE";
 
+        /// <summary>
+        /// The touch service name
+        /// </summary>
         public static string TouchService = "TOUCH_SERVICE";
 
+        /// <summary>
+        /// The voice service name
+        /// </summary>
         public static string VoiceService = "VOICE_SERVICE";
 
     }

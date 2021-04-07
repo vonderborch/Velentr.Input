@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Velentr.Input.Conditions.Internal;
-using Velentr.Input.Enums;
 using Velentr.Input.EventArguments;
 using Velentr.Input.Helpers;
 using Velentr.Input.Mouse;
+using ValueType = Velentr.Input.Enums.ValueType;
 
 namespace Velentr.Input.Conditions
 {

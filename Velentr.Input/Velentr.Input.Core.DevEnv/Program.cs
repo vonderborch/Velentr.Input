@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Velentr.Input.Monogame.DevEnv
+namespace Velentr.Input.DevEnv
 {
     public static class Program
     {

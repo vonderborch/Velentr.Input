@@ -1,156 +1,245 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
 using Velentr.Input.Enums;
 using Velentr.Input.Helpers;
 
 namespace Velentr.Input.Mouse
 {
 
-    public class MouseService : InputService
+    /// <summary>
+    /// Defines what methods must be available at a minimum to support Mouse inputs
+    /// </summary>
+    /// <seealso cref="Velentr.Input.InputService" />
+    public abstract class MouseService : InputService
     {
 
-        private readonly List<MouseButton> buttons = new List<MouseButton>(Enum.GetValues(typeof(MouseButton)).Cast<MouseButton>().ToList());
-
-        internal Dictionary<MouseButton, ulong> ButtonLastConsumed = new Dictionary<MouseButton, ulong>(Enum.GetNames(typeof(MouseButton)).Length);
-
-        internal Dictionary<MouseSensor, ulong> SensorLastConsumed = new Dictionary<MouseSensor, ulong>(Enum.GetNames(typeof(MouseSensor)).Length);
-
-        internal Dictionary<MouseButton, Func<MouseState, ButtonState>> ButtonMapping = new Dictionary<MouseButton, Func<MouseState, ButtonState>>(Enum.GetNames(typeof(MouseButton)).Length)
-        {
-            {MouseButton.LeftButton, state => state.LeftButton},
-            {MouseButton.MiddleButton, state => state.MiddleButton},
-            {MouseButton.RightButton, state => state.RightButton},
-            {MouseButton.XButton1, state => state.XButton1},
-            {MouseButton.XButton2, state => state.XButton2}
-        };
-
-        public MouseService(InputManager inputManager) : base(inputManager)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MouseService"/> class.
+        /// </summary>
+        /// <param name="inputManager">The input manager.</param>
+        protected MouseService(InputManager inputManager) : base(inputManager)
         {
             Source = InputSource.Mouse;
         }
 
-        public MouseState PreviousState { get; private set; }
+        public MouseEngine Engine { get; protected set; }
 
-        public MouseState CurrentState { get; private set; }
-
+        /// <summary>
+        /// Gets or sets a value indicating whether [reset mouse coords to center of screen].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [reset mouse coords to center of screen]; otherwise, <c>false</c>.
+        /// </value>
         public bool ResetMouseCoordsToCenterOfScreen { get; set; } = false;
 
-#if MONOGAME
-        public int CurrentHorizontalScrollWheelValue => CurrentState.HorizontalScrollWheelValue;
+        /// <summary>
+        /// Gets the current horizontal scroll wheel value.
+        /// </summary>
+        /// <value>
+        /// The current horizontal scroll wheel value.
+        /// </value>
+        public abstract int CurrentHorizontalScrollWheelValue { get; }
 
-        public int PreviousHorizontalScrollWheelValue => PreviousState.HorizontalScrollWheelValue;
-#else
-        public int CurrentHorizontalScrollWheelValue => CurrentState.ScrollWheelValue;
+        /// <summary>
+        /// Gets the previous horizontal scroll wheel value.
+        /// </summary>
+        /// <value>
+        /// The previous horizontal scroll wheel value.
+        /// </value>
+        public abstract int PreviousHorizontalScrollWheelValue { get; }
 
-        public int PreviousHorizontalScrollWheelValue => PreviousState.ScrollWheelValue;
-#endif
+        /// <summary>
+        /// Gets the current vertical scroll wheel value.
+        /// </summary>
+        /// <value>
+        /// The current vertical scroll wheel value.
+        /// </value>
+        public abstract int CurrentVerticalScrollWheelValue { get; }
 
-        public int CurrentVerticalScrollWheelValue => CurrentState.ScrollWheelValue;
+        /// <summary>
+        /// Gets the previous vertical scroll wheel value.
+        /// </summary>
+        /// <value>
+        /// The previous vertical scroll wheel value.
+        /// </value>
+        public abstract int PreviousVerticalScrollWheelValue { get; }
 
-        public int PreviousVerticalScrollWheelValue => PreviousState.ScrollWheelValue;
+        /// <summary>
+        /// Gets the horizontal scroll delta.
+        /// </summary>
+        /// <value>
+        /// The horizontal scroll delta.
+        /// </value>
+        public abstract int HorizontalScrollDelta { get; }
 
-        public int HorizontalScrollDelta => CurrentHorizontalScrollWheelValue - PreviousHorizontalScrollWheelValue;
+        /// <summary>
+        /// Gets the vertical scroll delta.
+        /// </summary>
+        /// <value>
+        /// The vertical scroll delta.
+        /// </value>
+        public abstract int VerticalScrollDelta { get; }
 
-        public int VerticalScrollDelta => CurrentVerticalScrollWheelValue - PreviousVerticalScrollWheelValue;
+        /// <summary>
+        /// Gets the scroll delta.
+        /// </summary>
+        /// <value>
+        /// The scroll delta.
+        /// </value>
+        public abstract Point ScrollDelta { get; }
 
-        public Point ScrollDelta => new Point(HorizontalScrollDelta, VerticalScrollDelta);
+        /// <summary>
+        /// Gets the current scroll positions.
+        /// </summary>
+        /// <value>
+        /// The current scroll positions.
+        /// </value>
+        public abstract Point CurrentScrollPositions { get; }
 
-        public Point CurrentScrollPositions => new Point(CurrentHorizontalScrollWheelValue, CurrentVerticalScrollWheelValue);
+        /// <summary>
+        /// Gets the previous scroll positions.
+        /// </summary>
+        /// <value>
+        /// The previous scroll positions.
+        /// </value>
+        public abstract Point PreviousScrollPositions { get; }
 
-        public Point PreviousScrollPositions => new Point(PreviousHorizontalScrollWheelValue, PreviousVerticalScrollWheelValue);
+        /// <summary>
+        /// Gets the current cursor position.
+        /// </summary>
+        /// <value>
+        /// The current cursor position.
+        /// </value>
+        public abstract Point CurrentCursorPosition { get; }
 
-#if MONOGAME
-        public Point CurrentCursorPosition => CurrentState.Position;
+        /// <summary>
+        /// Gets the previous cursor position.
+        /// </summary>
+        /// <value>
+        /// The previous cursor position.
+        /// </value>
+        public abstract Point PreviousCursorPosition { get; }
 
-        public Point PreviousCursorPosition => PreviousState.Position;
-#else
-        public Point CurrentCursorPosition => new Point(CurrentState.X, CurrentState.Y);
+        /// <summary>
+        /// Gets the cursor position delta.
+        /// </summary>
+        /// <value>
+        /// The cursor position delta.
+        /// </value>
+        public abstract Point CursorPositionDelta { get; }
 
-        public Point PreviousCursorPosition => new Point(PreviousState.X, PreviousState.Y);
-#endif
+        /// <summary>
+        /// Gets a value indicating whether [scrolled vertically].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [scrolled vertically]; otherwise, <c>false</c>.
+        /// </value>
+        public abstract bool ScrolledVertically { get; }
 
-        public Point CursorPositionDelta => CurrentCursorPosition - PreviousCursorPosition;
+        /// <summary>
+        /// Gets a value indicating whether [scrolled horizontally].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [scrolled horizontally]; otherwise, <c>false</c>.
+        /// </value>
+        public abstract bool ScrolledHorizontally { get; }
 
-        public bool ScrolledVertically => VerticalScrollDelta != 0;
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="MouseService"/> is scrolled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if scrolled; otherwise, <c>false</c>.
+        /// </value>
+        public abstract bool Scrolled { get; }
 
-        public bool ScrolledHorizontally => HorizontalScrollDelta != 0;
+        /// <summary>
+        /// Gets a value indicating whether [cursor moved].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [cursor moved]; otherwise, <c>false</c>.
+        /// </value>
+        public abstract bool CursorMoved { get; }
 
-        public bool Scrolled => ScrolledVertically || ScrolledHorizontally;
+        /// <summary>
+        /// Gets a value indicating whether this instance is mouse in window.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is mouse in window; otherwise, <c>false</c>.
+        /// </value>
+        public abstract bool IsMouseInWindow { get; }
 
-        public bool CursorMoved => CursorPositionDelta != Point.Zero;
+        /// <summary>
+        /// Consumes the button.
+        /// </summary>
+        /// <param name="button">The button.</param>
+        public abstract void ConsumeButton(MouseButton button);
 
-        public bool IsMouseInWindow => Manager.IsWindowActive && Helper.CoordinateInRectangle(CurrentCursorPosition, Manager.Window.ClientBounds);
+        /// <summary>
+        /// Consumes the sensor.
+        /// </summary>
+        /// <param name="sensor">The sensor.</param>
+        public abstract void ConsumeSensor(MouseSensor sensor);
 
-        public override void Setup()
-        {
-            PreviousState = Microsoft.Xna.Framework.Input.Mouse.GetState();
-            CurrentState = Microsoft.Xna.Framework.Input.Mouse.GetState();
-        }
+        /// <summary>
+        /// Determines whether [is button consumed] [the specified button].
+        /// </summary>
+        /// <param name="button">The button.</param>
+        /// <returns>
+        ///   <c>true</c> if [is button consumed] [the specified button]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsButtonConsumed(MouseButton button);
 
-        public override void Update()
-        {
-            PreviousState = CurrentState;
-            CurrentState = Microsoft.Xna.Framework.Input.Mouse.GetState();
+        /// <summary>
+        /// Determines whether [is sensor consumed] [the specified sensor].
+        /// </summary>
+        /// <param name="sensor">The sensor.</param>
+        /// <returns>
+        ///   <c>true</c> if [is sensor consumed] [the specified sensor]; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsSensorConsumed(MouseSensor sensor);
 
-            if (ResetMouseCoordsToCenterOfScreen)
-            {
-                Microsoft.Xna.Framework.Input.Mouse.SetPosition(Manager.CenterCoordinates.X, Manager.CenterCoordinates.Y);
-            }
-        }
+        /// <summary>
+        /// Determines whether the specified button is pressed.
+        /// </summary>
+        /// <param name="button">The button.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified button is pressed; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsPressed(MouseButton button);
 
-        public void ConsumeButton(MouseButton button)
-        {
-            ButtonLastConsumed[button] = Manager.CurrentFrame;
-        }
+        /// <summary>
+        /// Determines whether the specified button was pressed.
+        /// </summary>
+        /// <param name="button">The button.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified button was pressed; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool WasPressed(MouseButton button);
 
-        public void ConsumeSensor(MouseSensor sensor)
-        {
-            SensorLastConsumed[sensor] = Manager.CurrentFrame;
-        }
+        /// <summary>
+        /// Determines whether the specified button is released.
+        /// </summary>
+        /// <param name="button">The button.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified button is released; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool IsReleased(MouseButton button);
 
-        public bool IsButtonConsumed(MouseButton button)
-        {
-            if (ButtonLastConsumed.TryGetValue(button, out var frame))
-            {
-                return frame == Manager.CurrentFrame;
-            }
+        /// <summary>
+        /// Determines whether the specified button was released.
+        /// </summary>
+        /// <param name="button">The button.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified button was released; otherwise, <c>false</c>.
+        /// </returns>
+        public abstract bool WasReleased(MouseButton button);
 
-            return false;
-        }
-
-        public bool IsSensorConsumed(MouseSensor sensor)
-        {
-            if (SensorLastConsumed.TryGetValue(sensor, out var frame))
-            {
-                return frame == Manager.CurrentFrame;
-            }
-
-            return false;
-        }
-
-        public bool IsPressed(MouseButton button)
-        {
-            return ButtonMapping[button](CurrentState) == ButtonState.Pressed;
-        }
-
-        public bool WasPressed(MouseButton button)
-        {
-            return ButtonMapping[button](PreviousState) == ButtonState.Pressed;
-        }
-
-        public bool IsReleased(MouseButton button)
-        {
-            return ButtonMapping[button](CurrentState) == ButtonState.Released;
-        }
-
-        public bool WasReleased(MouseButton button)
-        {
-            return ButtonMapping[button](PreviousState) == ButtonState.Released;
-        }
-
+        /// <summary>
+        /// Checks if the cursor is within the specified boundaries.
+        /// </summary>
+        /// <param name="boundaries">The boundaries.</param>
+        /// <param name="scaleCoordinatesToArea">if set to <c>true</c> [scale coordinates to area].</param>
+        /// <param name="parentBoundaries">The parent boundaries.</param>
+        /// <returns></returns>
         public bool CursorInBounds(Rectangle boundaries, bool scaleCoordinatesToArea = false, Rectangle? parentBoundaries = null)
         {
             return Helper.CoordinateInRectangle(
