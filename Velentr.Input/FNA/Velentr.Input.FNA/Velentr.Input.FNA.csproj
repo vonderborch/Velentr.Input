@@ -11,7 +11,7 @@
     <RepositoryUrl>https://github.com/vonderborch/Velentr.Input</RepositoryUrl>
     <PackageTags>FNA, Input, Keyboard, Mouse, GamePad, Touch, Voice</PackageTags>
     <Description>A simple and easy-to-use input library for XNA/Monogame/FNA.</Description>
-    <Version>1.2.1</Version>
+    <Version>1.2.2</Version>
     <PackageProjectUrl>https://github.com/vonderborch/Velentr.Input</PackageProjectUrl>
     <PackageLicenseExpression></PackageLicenseExpression>
   </PropertyGroup>
@@ -126,7 +126,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="fnalibs" Version="21.3.5" />
-    <PackageReference Include="System.Speech" Version="5.0.0" />
     <PackageReference Include="Velentr.Collections" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
