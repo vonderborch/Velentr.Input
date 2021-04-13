@@ -192,7 +192,7 @@ namespace Velentr.Input.Voice
         /// <param name="phrase">The phrase.</param>
         public override void PhraseRecognized(string phrase)
         {
-            _availablePhrases[phrase] = new RecognizedPhrase(phrase, false, Manager.CurrentTime);
+            _availablePhrases[phrase] = new RecognizedPhrase(phrase, false, Manager.CurrentTime.TotalGameTime);
         }
     }
 

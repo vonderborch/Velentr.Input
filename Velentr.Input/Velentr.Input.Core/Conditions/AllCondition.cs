@@ -68,7 +68,7 @@ namespace Velentr.Input.Conditions
         /// <returns></returns>
         public override bool InternalConditionMet(bool consumable, bool allowedIfConsumed)
         {
-            GameTime time = null;
+            TimeSpan time;
             _arguments = new List<ConditionEventArguments>(Conditions.Length);
 
             for (var i = 0; i < Conditions.Length; i++)
@@ -84,7 +84,7 @@ namespace Velentr.Input.Conditions
                         return false;
                     }
 
-                    if (time == null || time.TotalGameTime <= Conditions[i].CurrentStateStart.TotalGameTime)
+                    if (time == null || time <= Conditions[i].CurrentStateStart)
                     {
                         time = Conditions[i].CurrentStateStart;
                         _arguments.Add(Conditions[i].GetArguments());

@@ -13,7 +13,7 @@ namespace Velentr.Input.EventArguments
 
         public InputCondition Condition { get; internal set; }
 
-        public GameTime ConditionStateStartTime { get; internal set; }
+        public TimeSpan ConditionStateStartTime { get; internal set; }
 
         public uint ConditionStateTimeMilliSeconds { get; internal set; }
 

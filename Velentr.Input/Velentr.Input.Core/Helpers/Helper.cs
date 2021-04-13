@@ -12,35 +12,9 @@ namespace Velentr.Input.Helpers
             return rectangle.X <= point.X && point.X <= rectangle.Width && rectangle.Y <= point.Y && point.Y <= rectangle.Height;
         }
 
-        public static uint ElapsedSeconds(GameTime startTime, GameTime endTime)
+        public static uint ElapsedMilliSeconds(TimeSpan startTime, GameTime endTime)
         {
-            return Convert.ToUInt32((endTime.TotalGameTime - startTime.TotalGameTime).TotalSeconds);
-        }
-
-        public static uint ElapsedMilliSeconds(GameTime startTime, GameTime endTime)
-        {
-            if (startTime == null && endTime == null)
-            {
-                throw new ArgumentException("At least one time must not be null!");
-            }
-            if (startTime == null)
-            {
-                return Convert.ToUInt32(endTime.TotalGameTime.TotalMilliseconds);
-            }
-            if (endTime == null)
-            {
-                return Convert.ToUInt32(startTime.TotalGameTime.TotalMilliseconds);
-            }
-
-            var start = startTime;
-            var end = endTime;
-            if (start.TotalGameTime > end.TotalGameTime)
-            {
-                start = endTime;
-                end = startTime;
-            }
-
-            return Convert.ToUInt32((end.TotalGameTime - start.TotalGameTime).TotalMilliseconds);
+            return Convert.ToUInt32(Math.Abs((endTime.TotalGameTime - startTime).TotalMilliseconds));
         }
 
         public static Point ScalePointToChild(Point coordinates, Rectangle parentArea, Rectangle childArea)

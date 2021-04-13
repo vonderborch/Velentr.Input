@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Velentr.Input.Enums;
 using Velentr.Input.EventArguments;
+using ValueType = Velentr.Input.Enums.ValueType;
 
 namespace Velentr.Input.Conditions
 {
@@ -83,7 +85,7 @@ namespace Velentr.Input.Conditions
         /// <value>
         /// The current state start.
         /// </value>
-        public GameTime CurrentStateStart { get; protected set; }
+        public TimeSpan CurrentStateStart { get; protected set; }
 
         /// <summary>
         /// Gets a value indicating whether [window must be active].
@@ -115,7 +117,7 @@ namespace Velentr.Input.Conditions
         /// <value>
         /// The last fire time.
         /// </value>
-        public GameTime LastFireTime { get; protected set; }
+        public TimeSpan LastFireTime { get; protected set; }
 
         /// <summary>
         /// Gets the milliseconds when inputs are valid between the condition being met.
@@ -210,11 +212,11 @@ namespace Velentr.Input.Conditions
             if (newState != ConditionMetState)
             {
                 ConditionMetState = newState;
-                CurrentStateStart = Manager.CurrentTime;
+                CurrentStateStart = Manager.CurrentTime.TotalGameTime;
 
                 if (newState)
                 {
-                    LastFireTime = null;
+                    LastFireTime = TimeSpan.Zero;
                 }
             }
         }
@@ -231,7 +233,7 @@ namespace Velentr.Input.Conditions
                 Consume();
             }
 
-            LastFireTime = Manager.CurrentTime;
+            LastFireTime = Manager.CurrentTime.TotalGameTime;
             if (Event.Delegates.Count > 0)
             {
                 Event.TriggerEvent(this, arguments);

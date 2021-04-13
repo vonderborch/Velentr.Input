@@ -1,11 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace Velentr.Input.Voice
 {
     public class RecognizedPhrase
     {
 
-        public RecognizedPhrase(string phrase, bool consumed, GameTime timeStamp)
+        public RecognizedPhrase(string phrase, bool consumed, TimeSpan timeStamp)
         {
             Phrase = phrase;
             Consumed = consumed;
@@ -16,6 +17,6 @@ namespace Velentr.Input.Voice
 
         public string Phrase { get; }
 
-        public GameTime PhraseSaid { get; }
+        public TimeSpan PhraseSaid { get; }
     }
 }
