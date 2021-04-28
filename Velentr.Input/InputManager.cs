@@ -26,7 +26,7 @@ namespace Velentr.Input
         /// <summary>
         /// The tracked conditions
         /// </summary>
-        public Bank<string, InputCondition> TrackedConditions = new Bank<string, InputCondition>();
+        public OrderedDictionary<string, InputCondition> TrackedConditions = new OrderedDictionary<string, InputCondition>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InputManager"/> class.
