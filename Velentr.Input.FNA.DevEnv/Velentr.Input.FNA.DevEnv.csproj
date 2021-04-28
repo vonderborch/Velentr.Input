@@ -13,6 +13,12 @@
     <RootNamespace>Velentr.Input.FNA.DevEnv</RootNamespace>
     <Version>1.0.0</Version>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;FNA</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;FNA</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <None Remove="Content\PlayfairDisplayRegular-ywLOY.ttf" />
     <None Remove="Content\Trueno-wml2.otf" />
