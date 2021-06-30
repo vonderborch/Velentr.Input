@@ -5,8 +5,8 @@ using Velentr.Input.EventArguments;
 using Velentr.Input.GamePad;
 using Velentr.Input.Keyboard;
 using Velentr.Input.Mouse;
-using Velentr.Input.Voice;
 #if SYSTEM_SPEECH
+using Velentr.Input.Voice;
 using Velentr.Input.Voice.SystemSpeech;
 #endif
 

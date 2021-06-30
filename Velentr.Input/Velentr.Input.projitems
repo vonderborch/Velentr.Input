@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>5e5602c3-4a93-4b86-be1b-3e6b5725f1de</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Velentr.Input</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\AllCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\AnyCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\GamePadButtonPressedCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\GamePadButtonPressStartedCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\GamePadButtonReleasedCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\GamePadButtonReleaseStartedCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\GamePadButtonSensorDeltaCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\GamePadButtonSensorMovedCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\GamePadButtonSensorPositionCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\GamePadButtonSensorStationaryCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\InputCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\Internal\BooleanCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\Internal\GamePadButtonCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\Internal\GamePadLogicCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\Internal\GamePadSensorBooleanCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\Internal\KeyboardButtonCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\Internal\KeyboardLockStateCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\Internal\LogicCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\Internal\MouseBooleanCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\KeyboardButtonPressedCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\KeyboardButtonPressStartedCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\KeyboardButtonReleasedCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\KeyboardButtonReleaseStartedCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\KeyboardCurrentKeysPressedCountCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\KeyboardKeysPressedDeltaCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\KeyboardLockDisabledCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\KeyboardLockDisabledStartedCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\KeyboardLockEnabledCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\KeyboardLockEnabledStartedCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\MouseButtonPressedCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\MouseButtonPressStartedCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\MouseButtonReleasedCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\MouseButtonReleaseStartedCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\MouseSensorCurrentPositionCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\MouseSensorDeltaCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\MouseSensorMovedCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\MouseSensorPreviousPositionCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\MouseSensorStationaryCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\TouchGestureCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Conditions\VoiceCommandCondition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\Comparison.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\InputSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\InputState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\ValueType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventArguments\AllConditionEventArguments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventArguments\AnyConditionalEventArguments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventArguments\ConditionEventArguments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventArguments\GamePadButtonEventArguments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventArguments\GamePadStickSensorEventArguments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventArguments\GamePadTriggerSensorEventArguments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventArguments\KeyboardButtonEventArguments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventArguments\KeyboardKeysPressedCountEventArguments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventArguments\KeyboardLockStateEventArguments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventArguments\MouseButtonEventArguments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventArguments\MouseSensorMovementEventArguments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventArguments\TouchEventArguments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EventArguments\VoiceEventArguments.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GamePad\DefaultGamePadService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GamePad\GamePadButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GamePad\GamePadEngine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GamePad\GamePadHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GamePad\GamePadInputMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GamePad\GamePadSensor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GamePad\GamePadSensorValueMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GamePad\GamePadService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GamePad\VilliGamePad.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GamePad\XnaGamePadEngine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Helper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InputConditionEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InputEngine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InputManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InputService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Keyboard\DefaultKeyboardService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Keyboard\Key.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Keyboard\KeyboardEngine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Keyboard\KeyboardLock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Keyboard\KeyboardService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Keyboard\XnaKeyboardEngine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mouse\DefaultMouseService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mouse\MouseButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mouse\MouseEngine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mouse\MouseSensor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mouse\MouseService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mouse\XnaMouseEngine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Touch\DefaultTouchService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Touch\Gesture.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Touch\GestureType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Touch\TouchEngine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Touch\TouchGestureMapping.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Touch\TouchService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Touch\XnaTouchEngine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Value.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ValueLogic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Voice\DefaultVoiceService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Voice\RecognizedPhrase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Voice\VoiceEngine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Voice\VoiceService.cs" />
+  </ItemGroup>
+</Project>
